@@ -124,6 +124,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
             @Override
             public void afterTextChanged(Editable s) {
+                Log.d("TAG", "usernameEditText afterTextChanged: -------------");
                 ///[EditText错误提示]
                 loginViewModel.loginDataChanged(usernameEditText.getText().toString(),
                         passwordEditText.getText().toString());
@@ -149,6 +150,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
             @Override
             public void afterTextChanged(Editable s) {
+                Log.d("TAG", "passwordEditText afterTextChanged: -------------");
                 ///[EditText错误提示]
                 loginViewModel.loginDataChanged(usernameEditText.getText().toString(),
                         passwordEditText.getText().toString());
@@ -166,8 +168,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    loginViewModel.login(usernameEditText.getText().toString(),
-                            passwordEditText.getText().toString());
+                    ///[FIX#IME_ACTION_DONE没检验form表单状态]
+                    if (loginViewModel.getLoginFormState().getValue() != null
+                        && loginViewModel.getLoginFormState().getValue().isDataValid()) {
+                        loginViewModel.login(usernameEditText.getText().toString(),
+                                passwordEditText.getText().toString());
+                    }
+
                 }
                 return false;
             }
