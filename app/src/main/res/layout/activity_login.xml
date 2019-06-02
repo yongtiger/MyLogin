@@ -11,106 +11,38 @@
     android:paddingBottom="@dimen/activity_vertical_margin"
     tools:context=".ui.login.LoginActivity">
 
-    <LinearLayout
-        android:id="@+id/ll_username"
-        android:layout_width="match_parent"
+    <EditText
+        android:id="@+id/username"
+        android:layout_width="0dp"
         android:layout_height="55dp"
+        android:layout_weight="1"
         android:layout_marginTop="96dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:focusable="true"
-        android:focusableInTouchMode="true"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
+
+        android:background="@null"
+        android:drawableStart="@drawable/ic_user"
+        android:drawableLeft="@drawable/ic_user"
+        android:drawablePadding="14dp"
+        android:textSize="14sp"
+
+        android:hint="@string/prompt_email"
+        android:inputType="textEmailAddress"
+        android:selectAllOnFocus="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
+        app:layout_constraintTop_toTopOf="parent" />
         <!--输入框左侧图标：drawableLeft、drawablePadding-->
-        <EditText
-            android:id="@+id/username"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
+        <!--分割线：background="@null"-->
 
-
-            android:background="@null"
-            android:drawableStart="@drawable/ic_user"
-            android:drawableLeft="@drawable/ic_user"
-
-            android:drawablePadding="14dp"
-            android:hint="@string/prompt_email"
-            android:inputType="textEmailAddress"
-
-
-            android:maxLength="50"
-            android:selectAllOnFocus="true"
-            android:textSize="14sp" />
-
-        <ImageView
-            android:id="@+id/iv_clear_username"
-            android:layout_width="16dp"
-            android:layout_height="match_parent"
-            android:scaleType="centerInside"
-            android:src="@drawable/ic_clear"
-            android:visibility="gone" />
-
-    </LinearLayout>
-
-    <!--分割线-->
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:background="@color/colorDivider"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ll_username" />
-
-    <LinearLayout
-        android:id="@+id/ll_password"
-        android:layout_width="match_parent"
+    <ImageView
+        android:id="@+id/iv_clear_username"
+        android:layout_width="16dp"
         android:layout_height="55dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:focusable="true"
-        android:focusableInTouchMode="true"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ll_username" >
-
-        <!--输入框左侧图标：drawableLeft、drawablePadding-->
-        <EditText
-            android:id="@+id/password"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-
-            android:background="@null"
-            android:drawableStart="@drawable/ic_lock"
-            android:drawableLeft="@drawable/ic_lock"
-            android:drawablePadding="14dp"
-            android:hint="@string/prompt_password"
-
-
-            android:imeActionLabel="@string/action_sign_in_short"
-            android:imeOptions="actionDone"
-            android:inputType="textPassword"
-
-            android:maxLength="30"
-            android:selectAllOnFocus="true"
-            android:textSize="14sp" />
-
-        <ImageView
-            android:id="@+id/iv_clear_password"
-            android:layout_width="16dp"
-            android:layout_height="match_parent"
-            android:scaleType="centerInside"
-            android:src="@drawable/ic_clear"
-            android:visibility="gone" />
-
-    </LinearLayout>
+        android:scaleType="centerInside"
+        android:src="@drawable/ic_clear"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/username"
+        app:layout_constraintEnd_toEndOf="@+id/username"
+        app:layout_constraintTop_toTopOf="@+id/username" />
 
     <!--分割线-->
     <View
@@ -119,7 +51,50 @@
         android:background="@color/colorDivider"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ll_password" />
+        app:layout_constraintTop_toTopOf="@+id/username" />
+
+    <EditText
+        android:id="@+id/password"
+        android:layout_width="0dp"
+        android:layout_height="55dp"
+        android:layout_weight="1"
+
+        android:background="@null"
+        android:drawableStart="@drawable/ic_lock"
+        android:drawableLeft="@drawable/ic_lock"
+        android:drawablePadding="14dp"
+        android:textSize="14sp"
+
+        android:imeActionLabel="@string/action_sign_in_short"
+        android:imeOptions="actionDone"
+        android:hint="@string/prompt_password"
+        android:inputType="textPassword"
+        android:selectAllOnFocus="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/username" />
+        <!--输入框左侧图标：drawableLeft、drawablePadding-->
+        <!--分割线：background="@null"-->
+
+    <ImageView
+        android:id="@+id/iv_clear_password"
+        android:layout_width="16dp"
+        android:layout_height="55dp"
+        android:scaleType="centerInside"
+        android:src="@drawable/ic_clear"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="@+id/password"
+        app:layout_constraintEnd_toEndOf="@+id/password"
+        app:layout_constraintTop_toTopOf="@+id/password" />
+
+    <!--分割线-->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/colorDivider"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/password" />
 
     <Button
         android:id="@+id/login"
@@ -135,7 +110,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ll_password"
+        app:layout_constraintTop_toBottomOf="@+id/password"
         app:layout_constraintVertical_bias="0.2" />
 
     <ProgressBar
@@ -149,8 +124,8 @@
         android:layout_marginBottom="64dp"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/ll_password"
-        app:layout_constraintStart_toStartOf="@+id/ll_password"
+        app:layout_constraintEnd_toEndOf="@+id/password"
+        app:layout_constraintStart_toStartOf="@+id/password"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.3" />
 
