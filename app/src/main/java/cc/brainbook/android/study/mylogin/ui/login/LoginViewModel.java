@@ -41,11 +41,18 @@ public class LoginViewModel extends ViewModel {
     }
 
     public void loginDataChanged(String username, String password) {
+        ///[EditText错误提示]
+        ///[FIX#只显示username或password其中一个错误提示！应该同时都显示]
+        boolean isUserNameValid = true, isPasswordValid = true;
         if (!isUserNameValid(username)) {
+            isUserNameValid = false;
             loginFormState.setValue(new LoginFormState(R.string.invalid_username, null));
-        } else if (!isPasswordValid(password)) {
+        }
+        if (!isPasswordValid(password)) {
+            isPasswordValid = false;
             loginFormState.setValue(new LoginFormState(null, R.string.invalid_password));
-        } else {
+        }
+        if (isUserNameValid && isPasswordValid){
             loginFormState.setValue(new LoginFormState(true));
         }
     }

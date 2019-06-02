@@ -8,23 +8,31 @@ import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.text.method.HideReturnsTransformationMethod;
+import android.text.method.PasswordTransformationMethod;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import cc.brainbook.android.study.mylogin.R;
-import cc.brainbook.android.study.mylogin.ui.login.LoginViewModel;
-import cc.brainbook.android.study.mylogin.ui.login.LoginViewModelFactory;
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
     private LoginViewModel loginViewModel;
+
+    ///
+    private EditText usernameEditText;
+    private EditText passwordEditText;
+    private ImageView showPasswordImageView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -33,8 +41,8 @@ public class LoginActivity extends AppCompatActivity {
         loginViewModel = ViewModelProviders.of(this, new LoginViewModelFactory())
                 .get(LoginViewModel.class);
 
-        final EditText usernameEditText = findViewById(R.id.username);
-        final EditText passwordEditText = findViewById(R.id.password);
+        usernameEditText = findViewById(R.id.username);
+        passwordEditText = findViewById(R.id.password);
         final Button loginButton = findViewById(R.id.login);
         final ProgressBar loadingProgressBar = findViewById(R.id.loading);
 
@@ -46,9 +54,11 @@ public class LoginActivity extends AppCompatActivity {
                 }
                 loginButton.setEnabled(loginFormState.isDataValid());
                 if (loginFormState.getUsernameError() != null) {
+                    ///[EditText错误提示]
                     usernameEditText.setError(getString(loginFormState.getUsernameError()));
                 }
                 if (loginFormState.getPasswordError() != null) {
+                    ///[EditText错误提示]
                     passwordEditText.setError(getString(loginFormState.getPasswordError()));
                 }
             }
@@ -74,25 +84,83 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        TextWatcher afterTextChangedListener = new TextWatcher() {
+//        TextWatcher afterTextChangedListener = new TextWatcher() {
+//            @Override
+//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+//                // ignore
+//            }
+//
+//            @Override
+//            public void onTextChanged(CharSequence s, int start, int before, int count) {
+//                // ignore
+//            }
+//
+//            @Override
+//            public void afterTextChanged(Editable s) {
+//                ///[EditText错误提示]
+//                loginViewModel.loginDataChanged(usernameEditText.getText().toString(),
+//                        passwordEditText.getText().toString());
+//            }
+//        };
+
+        ///
+        final ImageView clearUsernameImageView = findViewById(R.id.iv_clear_username);
+        clearUsernameImageView.setOnClickListener(this);
+        final ImageView clearPasswordImageView = findViewById(R.id.iv_clear_password);
+        clearPasswordImageView.setOnClickListener(this);
+        showPasswordImageView = findViewById(R.id.iv_show_password);
+        showPasswordImageView.setOnClickListener(this);
+
+        usernameEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                // ignore
+
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                // ignore
+
             }
 
             @Override
             public void afterTextChanged(Editable s) {
+                ///[EditText错误提示]
                 loginViewModel.loginDataChanged(usernameEditText.getText().toString(),
                         passwordEditText.getText().toString());
+
+                ///[EditText清除输入框]
+                if (!TextUtils.isEmpty(s) && clearUsernameImageView.getVisibility() == View.GONE) {
+                    clearUsernameImageView.setVisibility(View.VISIBLE);
+                } else if (TextUtils.isEmpty(s)) {
+                    clearUsernameImageView.setVisibility(View.GONE);
+                }
             }
-        };
-        usernameEditText.addTextChangedListener(afterTextChangedListener);
-        passwordEditText.addTextChangedListener(afterTextChangedListener);
+        });
+        passwordEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                ///[EditText错误提示]
+                loginViewModel.loginDataChanged(usernameEditText.getText().toString(),
+                        passwordEditText.getText().toString());
+
+                ///[EditText清除输入框]
+                if (!TextUtils.isEmpty(s) && clearPasswordImageView.getVisibility() == View.GONE) {
+                    clearPasswordImageView.setVisibility(View.VISIBLE);
+                } else if (TextUtils.isEmpty(s)) {
+                    clearPasswordImageView.setVisibility(View.GONE);
+                }
+            }
+        });
         passwordEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
 
             @Override
@@ -113,6 +181,38 @@ public class LoginActivity extends AppCompatActivity {
                         passwordEditText.getText().toString());
             }
         });
+    }
+
+    ///
+    private boolean flag = false;
+    @Override
+    public void onClick(View v) {
+        Log.d("TAG", "onClick: ");
+        switch (v.getId()) {
+            case R.id.iv_clear_username:
+                ///[EditText清除输入框]
+                usernameEditText.setText("");
+                break;
+            case R.id.iv_clear_password:
+                ///[EditText清除输入框]
+                passwordEditText.setText("");
+                break;
+            case R.id.iv_show_password:
+                ///[EditText显示/隐藏Password]
+                if(flag){
+                    passwordEditText.setTransformationMethod(PasswordTransformationMethod.getInstance());
+                    showPasswordImageView.setImageResource(R.drawable.ic_visibility_off);
+                    flag = false;
+                }else{
+                    passwordEditText.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+                    showPasswordImageView.setImageResource(R.drawable.ic_visibility);
+                    flag = true;
+                }
+                String pwd = passwordEditText.getText().toString();
+                if (!TextUtils.isEmpty(pwd))
+                    passwordEditText.setSelection(pwd.length());
+                break;
+        }
     }
 
     private void updateUiWithUser(LoggedInUserView model) {

@@ -15,35 +15,38 @@
         android:id="@+id/username"
         android:layout_width="0dp"
         android:layout_height="55dp"
-        android:layout_weight="1"
         android:layout_marginTop="96dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_weight="1"
 
         android:background="@null"
         android:drawableStart="@drawable/ic_user"
         android:drawableLeft="@drawable/ic_user"
         android:drawablePadding="14dp"
-        android:textSize="14sp"
 
         android:hint="@string/prompt_email"
         android:inputType="textEmailAddress"
         android:selectAllOnFocus="true"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toStartOf="@+id/iv_clear_username"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
         <!--输入框左侧图标：drawableLeft、drawablePadding-->
         <!--分割线：background="@null"-->
 
+    <!--///[EditText清除输入框]-->
     <ImageView
         android:id="@+id/iv_clear_username"
-        android:layout_width="16dp"
+        android:layout_width="24dp"
         android:layout_height="55dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
         android:scaleType="centerInside"
         android:src="@drawable/ic_clear"
-        android:visibility="visible"
+        android:clickable="true"
+        android:focusable="true"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@+id/username"
-        app:layout_constraintEnd_toEndOf="@+id/username"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/username" />
 
     <!--分割线-->
@@ -60,6 +63,8 @@
         android:layout_width="0dp"
         android:layout_height="55dp"
         android:layout_weight="1"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
 
         android:background="@null"
         android:drawableStart="@drawable/ic_lock"
@@ -72,33 +77,38 @@
         android:hint="@string/prompt_password"
         android:inputType="textPassword"
         android:selectAllOnFocus="true"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/iv_clear_password"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/username" />
         <!--输入框左侧图标：drawableLeft、drawablePadding-->
         <!--分割线：background="@null"-->
 
+    <!--///[EditText清除输入框]-->
     <ImageView
         android:id="@+id/iv_clear_password"
-        android:layout_width="16dp"
+        android:layout_width="24dp"
         android:layout_height="55dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
+        android:layout_margin="8dp"
         android:scaleType="centerInside"
         android:src="@drawable/ic_clear"
-        android:visibility="visible"
+        android:clickable="true"
+        android:focusable="true"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@+id/password"
         app:layout_constraintEnd_toStartOf="@+id/iv_show_password"
         app:layout_constraintTop_toTopOf="@+id/password" />
 
+    <!--///[EditText显示/隐藏Password]-->
     <ImageView
         android:id="@+id/iv_show_password"
-        android:layout_width="16dp"
+        android:layout_width="24dp"
         android:layout_height="55dp"
         android:scaleType="centerInside"
         android:src="@drawable/ic_visibility_off"
+        android:clickable="true"
+        android:focusable="true"
         app:layout_constraintBottom_toBottomOf="@+id/password"
-        app:layout_constraintEnd_toEndOf="@+id/password"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/password" />
 
     <!--分割线-->
