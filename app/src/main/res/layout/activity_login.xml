@@ -37,9 +37,11 @@
         android:id="@+id/iv_clear_username"
         android:layout_width="16dp"
         android:layout_height="55dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
         android:scaleType="centerInside"
         android:src="@drawable/ic_clear"
-        android:visibility="gone"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="@+id/username"
         app:layout_constraintEnd_toEndOf="@+id/username"
         app:layout_constraintTop_toTopOf="@+id/username" />
@@ -51,7 +53,7 @@
         android:background="@color/colorDivider"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/username" />
+        app:layout_constraintTop_toBottomOf="@+id/username" />
 
     <EditText
         android:id="@+id/password"
@@ -80,9 +82,21 @@
         android:id="@+id/iv_clear_password"
         android:layout_width="16dp"
         android:layout_height="55dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
         android:scaleType="centerInside"
         android:src="@drawable/ic_clear"
-        android:visibility="gone"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="@+id/password"
+        app:layout_constraintEnd_toStartOf="@+id/iv_show_password"
+        app:layout_constraintTop_toTopOf="@+id/password" />
+
+    <ImageView
+        android:id="@+id/iv_show_password"
+        android:layout_width="16dp"
+        android:layout_height="55dp"
+        android:scaleType="centerInside"
+        android:src="@drawable/ic_visibility_off"
         app:layout_constraintBottom_toBottomOf="@+id/password"
         app:layout_constraintEnd_toEndOf="@+id/password"
         app:layout_constraintTop_toTopOf="@+id/password" />
@@ -126,7 +140,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/password"
         app:layout_constraintStart_toStartOf="@+id/password"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.3" />
+        app:layout_constraintTop_toTopOf="parent" />
 
 </android.support.constraint.ConstraintLayout>
