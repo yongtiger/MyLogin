@@ -1,9 +1,8 @@
-package cc.brainbook.android.study.mylogin.ui.register;
-
+package cc.brainbook.android.study.mylogin;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -15,10 +14,6 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
-import cc.brainbook.android.study.mylogin.R;
-import cc.brainbook.android.study.mylogin.SessionHandler;
-import cc.brainbook.android.study.mylogin.ui.DashboardActivity;
-import cc.brainbook.android.study.mylogin.ui.login.LoginActivity;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.MediaType;
@@ -27,7 +22,7 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-public class RegisterActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity {
     private static final String KEY_STATUS = "status";
     private static final String KEY_MESSAGE = "message";
     private static final String KEY_FULL_NAME = "full_name";
@@ -36,71 +31,54 @@ public class RegisterActivity extends AppCompatActivity {
     private static final String KEY_EMPTY = "";
     private EditText etUsername;
     private EditText etPassword;
-    private EditText etConfirmPassword;
-    private EditText etFullName;
     private String username;
     private String password;
-    private String confirmPassword;
-    private String fullName;
     private ProgressDialog pDialog;
-    private String register_url = "http://192.168.1.108/_study/_login/MyLogin/member/register.php?start_debug=1&debug_stop=1&use_remote=1&debug_host=192.168.1.108";
+    private String login_url = "http://192.168.1.108/_study/_login/MyLogin/member/login.php?start_debug=1&debug_stop=1&use_remote=1&debug_host=192.168.1.108";
+//    private String login_url = "http://192.168.1.108/_study/_login/MyLogin/member/login.php";
     private SessionHandler session;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         session = new SessionHandler(getApplicationContext());
-        setContentView(R.layout.activity_register);
 
-        etUsername = findViewById(R.id.etUsername);
-        etPassword = findViewById(R.id.etPassword);
-        etConfirmPassword = findViewById(R.id.etConfirmPassword);
-        etFullName = findViewById(R.id.etFullName);
+        if(session.isLoggedIn()){
+            loadDashboard();
+        }
+        setContentView(R.layout.activity_login);
 
-        Button login = findViewById(R.id.btnRegisterLogin);
-        Button register = findViewById(R.id.btnRegister);
+        etUsername = findViewById(R.id.username);
+        etPassword = findViewById(R.id.password);
 
-        //Launch Login screen when Login Button is clicked
-        login.setOnClickListener(new View.OnClickListener() {
+        Button register = findViewById(R.id.login);
+        Button login = findViewById(R.id.login);
+
+        //Launch Registration screen when Register Button is clicked
+        register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(RegisterActivity.this, LoginActivity.class);
+                Intent i = new Intent(LoginActivity.this, RegisterActivity.class);
                 startActivity(i);
                 finish();
             }
         });
 
-        register.setOnClickListener(new View.OnClickListener() {
+        login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //Retrieve the data entered in the edit texts
                 username = etUsername.getText().toString().toLowerCase().trim();
                 password = etPassword.getText().toString().trim();
-                confirmPassword = etConfirmPassword.getText().toString().trim();
-                fullName = etFullName.getText().toString().trim();
                 if (validateInputs()) {
-                    registerUser();
+                    login();
                 }
-
             }
         });
-
     }
 
     /**
-     * Display Progress bar while registering
-     */
-    private void displayLoader() {
-        pDialog = new ProgressDialog(RegisterActivity.this);
-        pDialog.setMessage("Signing Up.. Please wait...");
-        pDialog.setIndeterminate(false);
-        pDialog.setCancelable(false);
-        pDialog.show();
-
-    }
-
-    /**
-     * Launch Dashboard Activity on Successful Sign Up
+     * Launch Dashboard Activity on Successful Login
      */
     private void loadDashboard() {
         Intent i = new Intent(getApplicationContext(), DashboardActivity.class);
@@ -109,7 +87,20 @@ public class RegisterActivity extends AppCompatActivity {
 
     }
 
-    private void registerUser() {
+    /**
+     * Display Progress bar while Logging in
+     */
+
+    private void displayLoader() {
+        pDialog = new ProgressDialog(LoginActivity.this);
+        pDialog.setMessage("Logging In.. Please wait...");
+        pDialog.setIndeterminate(false);
+        pDialog.setCancelable(false);
+        pDialog.show();
+
+    }
+
+    private void login() {
         displayLoader();
 
         ///https://stackoverflow.com/questions/34179922/okhttp-post-body-as-json
@@ -118,7 +109,6 @@ public class RegisterActivity extends AppCompatActivity {
             //Populate the request parameters
             jsonObject.put(KEY_USERNAME, username);
             jsonObject.put(KEY_PASSWORD, password);
-            jsonObject.put(KEY_FULL_NAME, fullName);
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -129,14 +119,14 @@ public class RegisterActivity extends AppCompatActivity {
 
         // 创建okHttpClient对象
         final OkHttpClient mOkHttpClient = new OkHttpClient.Builder()
-                .connectTimeout(30, TimeUnit.SECONDS)
-                .readTimeout(30, TimeUnit.SECONDS)
+                .connectTimeout(300, TimeUnit.SECONDS)
+                .readTimeout(300, TimeUnit.SECONDS)
                 .build();
 
 
         // 创建一个Request
         final Request request = new Request.Builder()
-                .url(register_url)
+                .url(login_url)
                 .post(requestBody)
                 .build();
         // new call
@@ -167,16 +157,10 @@ public class RegisterActivity extends AppCompatActivity {
 
                 pDialog.dismiss();
                 try {
-                    //Check if user got registered successfully
+                    //Check if user got logged in successfully
                     if (jsonObject.getInt(KEY_STATUS) == 0) {
-                        //Set the user session
-                        session.loginUser(username,fullName);
+                        session.loginUser(username,jsonObject.getString(KEY_FULL_NAME));
                         loadDashboard();
-
-                    }else if(jsonObject.getInt(KEY_STATUS) == 1){
-                        //Display error message if username is already existing
-                        etUsername.setError("Username already taken!");
-                        etUsername.requestFocus();
 
                     }else{
                         Toast.makeText(getApplicationContext(),
@@ -195,34 +179,16 @@ public class RegisterActivity extends AppCompatActivity {
      * @return
      */
     private boolean validateInputs() {
-        if (KEY_EMPTY.equals(fullName)) {
-            etFullName.setError("Full Name cannot be empty");
-            etFullName.requestFocus();
-            return false;
-
-        }
-        if (KEY_EMPTY.equals(username)) {
+        if(KEY_EMPTY.equals(username)){
             etUsername.setError("Username cannot be empty");
             etUsername.requestFocus();
             return false;
         }
-        if (KEY_EMPTY.equals(password)) {
+        if(KEY_EMPTY.equals(password)){
             etPassword.setError("Password cannot be empty");
             etPassword.requestFocus();
             return false;
         }
-
-        if (KEY_EMPTY.equals(confirmPassword)) {
-            etConfirmPassword.setError("Confirm Password cannot be empty");
-            etConfirmPassword.requestFocus();
-            return false;
-        }
-        if (!password.equals(confirmPassword)) {
-            etConfirmPassword.setError("Password and Confirm Password does not match");
-            etConfirmPassword.requestFocus();
-            return false;
-        }
-
         return true;
     }
 }

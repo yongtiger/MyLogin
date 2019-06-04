@@ -7,7 +7,7 @@ import java.util.Date;
 /**
  * Created by AndroidIgniter on 23 Mar 2019 020.
  */
-
+///https://github.com/androidigniter/Login-and-Registration-in-Android-with-PHP-and-MySQL
 public class SessionHandler {
     private static final String PREF_NAME = "UserSession";
     private static final String KEY_USERNAME = "username";

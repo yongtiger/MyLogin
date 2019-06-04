@@ -5,7 +5,7 @@ import java.util.Date;
 /**
  * Created by AndroidIgniter on 23 Mar 2019 020.
  */
-
+///https://github.com/androidigniter/Login-and-Registration-in-Android-with-PHP-and-MySQL
 public class User {
     String username;
     String fullName;

@@ -7,7 +7,7 @@
     android:gravity="center_vertical"
     android:orientation="vertical"
     android:padding="50dp"
-    tools:context="cc.brainbook.android.study.mylogin.ui.register.RegisterActivity">
+    tools:context="cc.brainbook.android.study.mylogin.RegisterActivity">
     <TextView
         android:id="@+id/textView"
         android:layout_width="match_parent"
