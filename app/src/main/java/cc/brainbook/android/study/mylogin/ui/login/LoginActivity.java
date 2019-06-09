@@ -3,6 +3,7 @@ package cc.brainbook.android.study.mylogin.ui.login;
 import android.app.Activity;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
@@ -12,11 +13,11 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -24,27 +25,39 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import cc.brainbook.android.study.mylogin.R;
+import cc.brainbook.android.study.mylogin.ui.login.view.LoggedInUserView;
+import cc.brainbook.android.study.mylogin.ui.register.RegisterActivity;
+import cc.brainbook.android.study.mylogin.util.PrefsUtil;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
+    private static final String KEY_REMEMBER_USERNAME = "remember_username";
+    private static final String KEY_REMEMBER_PASSWORD = "remember_password";
 
     private LoginViewModel loginViewModel;
 
-    ///
-    private EditText usernameEditText;
-    private EditText passwordEditText;
-    private ImageView showPasswordImageView;
+    private EditText etUsername;
+    private ImageView ivClearUsername;
+    private EditText etPassword;
+    private ImageView ivClearPassword;
+    private ImageView ivPasswordVisibility;
+    private CheckBox cbRememberMe;
+    private Button btnLogin;
+    private Button btnRegister;
+    private ProgressBar pbLoading;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        usernameEditText = findViewById(R.id.username);
-        passwordEditText = findViewById(R.id.password);
-        final Button loginButton = findViewById(R.id.login);
-        final ProgressBar loadingProgressBar = findViewById(R.id.loading);
+        initView();
+        initListener();
 
-        loginViewModel = ViewModelProviders.of(this, new LoginViewModelFactory())
+        // Create a ViewModel the first time the system calls an activity's onCreate() method.
+        // Re-created activities receive the same MyViewModel instance created by the first activity.
+        // Note: A ViewModel must never reference a view, Lifecycle, or any class that may hold a reference to the activity context.
+        ///https://developer.android.com/topic/libraries/architecture/viewmodel
+        loginViewModel = ViewModelProviders.of(this, new LoginViewModelFactory(false))  ///[EditText显示/隐藏Password]初始化
                 .get(LoginViewModel.class);
 
         loginViewModel.getLoginFormState().observe(this, new Observer<LoginFormState>() {
@@ -53,14 +66,18 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 if (loginFormState == null) {
                     return;
                 }
-                loginButton.setEnabled(loginFormState.isDataValid());
-                if (loginFormState.getUsernameError() != null) {
-                    ///[EditText错误提示]
-                    usernameEditText.setError(getString(loginFormState.getUsernameError()));
+                btnLogin.setEnabled(loginFormState.isDataValid());
+
+                ///[EditText错误提示]
+                if (loginFormState.getUsernameError() == null) {
+                    etUsername.setError(null);
+                } else {
+                    etUsername.setError(getString(loginFormState.getUsernameError()));
                 }
-                if (loginFormState.getPasswordError() != null) {
-                    ///[EditText错误提示]
-                    passwordEditText.setError(getString(loginFormState.getPasswordError()));
+                if (loginFormState.getPasswordError() == null) {
+                    etPassword.setError(null);
+                } else {
+                    etPassword.setError(getString(loginFormState.getPasswordError()));
                 }
             }
         });
@@ -71,48 +88,119 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 if (loginResult == null) {
                     return;
                 }
-                loadingProgressBar.setVisibility(View.GONE);
+                pbLoading.setVisibility(View.GONE);
                 if (loginResult.getError() != null) {
+                    ///[Request focus#根据返回错误来请求表单焦点]
+                    switch (loginResult.getError()) {
+                        case R.string.login_exception_invalid_parameters:
+                            etUsername.requestFocus();
+                            break;
+                        case R.string.login_exception_invalid_username:
+                            etUsername.requestFocus();
+                            break;
+                        case R.string.login_exception_invalid_password:
+                            etPassword.requestFocus();
+                            break;
+                        default:
+                    }
+                    ///Display login failed
                     showLoginFailed(loginResult.getError());
                 }
                 if (loginResult.getSuccess() != null) {
+                    ///[RememberMe]登陆成功后如果勾选了RememberMe，则保存SharedPreferences为用户名/密码，否则保存为null
+                    saveRememberMe(true);
+
                     updateUiWithUser(loginResult.getSuccess());
-                }
-                setResult(Activity.RESULT_OK);
 
-                //Complete and destroy login activity once successful
-                finish();
+                    setResult(Activity.RESULT_OK);
+
+                    //Complete and destroy login activity once successful
+                    finish();
+                }
             }
         });
 
-//        TextWatcher afterTextChangedListener = new TextWatcher() {
-//            @Override
-//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-//                // ignore
-//            }
-//
-//            @Override
-//            public void onTextChanged(CharSequence s, int start, int before, int count) {
-//                // ignore
-//            }
-//
-//            @Override
-//            public void afterTextChanged(Editable s) {
-//                ///[EditText错误提示]
-//                loginViewModel.loginDataChanged(usernameEditText.getText().toString(),
-//                        passwordEditText.getText().toString());
-//            }
-//        };
+        ///[EditText显示/隐藏Password]
+        loginViewModel.getPasswordVisibility().observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(@Nullable Boolean aBoolean) {
+                if (aBoolean == null) {
+                    return;
+                }
+                if(aBoolean){
+                    etPassword.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+                    ivPasswordVisibility.setImageResource(R.drawable.ic_visibility);
+                }else{
+                    etPassword.setTransformationMethod(PasswordTransformationMethod.getInstance());
+                    ivPasswordVisibility.setImageResource(R.drawable.ic_visibility_off);
+                }
+                final String pwd = etPassword.getText().toString();
+                if (!TextUtils.isEmpty(pwd))
+                    etPassword.setSelection(pwd.length());
+            }
+        });
 
-        ///
-        final ImageView clearUsernameImageView = findViewById(R.id.iv_clear_username);
-        clearUsernameImageView.setOnClickListener(this);
-        final ImageView clearPasswordImageView = findViewById(R.id.iv_clear_password);
-        clearPasswordImageView.setOnClickListener(this);
-        showPasswordImageView = findViewById(R.id.iv_show_password);
-        showPasswordImageView.setOnClickListener(this);
+        ///[RememberMe#记住用户名密码自动登陆]
+        initRememberMe();
+    }
 
-        usernameEditText.addTextChangedListener(new TextWatcher() {
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.iv_clear_username:
+                ///[EditText清除输入框]
+                etUsername.setText("");
+                break;
+            case R.id.iv_clear_password:
+                ///[EditText清除输入框]
+                etPassword.setText("");
+                break;
+            case R.id.iv_password_visibility:
+                ///[EditText显示/隐藏Password]
+                ///注意：因为初始化了，所以不会产生NullPointerException
+                loginViewModel.setPasswordVisibility(!loginViewModel.getPasswordVisibility().getValue());
+                break;
+            case R.id.cb_remember_me:
+                ///[RememberM]如果RememberMe未勾选，则保存SharedPreferences的用户名/密码为null
+                saveRememberMe(false);
+                break;
+            case R.id.btn_login:
+                pbLoading.setVisibility(View.VISIBLE);
+                loginViewModel.login(etUsername.getText().toString(),
+                        etPassword.getText().toString());
+                break;
+            case R.id.btn_register:
+                startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
+                break;
+        }
+    }
+
+    private void initView() {
+        etUsername = findViewById(R.id.et_username);
+        ivClearUsername = findViewById(R.id.iv_clear_username);
+        etPassword = findViewById(R.id.et_password);
+        ivClearPassword = findViewById(R.id.iv_clear_password);
+        ivPasswordVisibility = findViewById(R.id.iv_password_visibility);
+
+        cbRememberMe = findViewById(R.id.cb_remember_me);
+
+        btnLogin = findViewById(R.id.btn_login);
+        btnRegister = findViewById(R.id.btn_register);
+
+        pbLoading = findViewById(R.id.pb_loading);
+    }
+
+    private void initListener() {
+        ivClearUsername.setOnClickListener(this);
+        ivClearPassword.setOnClickListener(this);
+        ivPasswordVisibility.setOnClickListener(this);
+
+        cbRememberMe.setOnClickListener(this);
+
+        btnLogin.setOnClickListener(this);
+        btnRegister.setOnClickListener(this);
+
+        etUsername.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
@@ -121,20 +209,19 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
             @Override
             public void afterTextChanged(Editable s) {
-                Log.d("TAG", "usernameEditText afterTextChanged: -------------");
                 ///[EditText错误提示]
-                loginViewModel.loginDataChanged(usernameEditText.getText().toString(),
-                        passwordEditText.getText().toString());
+                loginViewModel.loginDataChanged(etUsername.getText().toString(),
+                        etPassword.getText().toString());
 
                 ///[EditText清除输入框]
-                if (!TextUtils.isEmpty(s) && clearUsernameImageView.getVisibility() == View.GONE) {
-                    clearUsernameImageView.setVisibility(View.VISIBLE);
+                if (!TextUtils.isEmpty(s) && ivClearUsername.getVisibility() == View.GONE) {
+                    ivClearUsername.setVisibility(View.VISIBLE);
                 } else if (TextUtils.isEmpty(s)) {
-                    clearUsernameImageView.setVisibility(View.GONE);
+                    ivClearUsername.setVisibility(View.GONE);
                 }
             }
         });
-        passwordEditText.addTextChangedListener(new TextWatcher() {
+        etPassword.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
@@ -143,79 +230,69 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
             @Override
             public void afterTextChanged(Editable s) {
-                Log.d("TAG", "passwordEditText afterTextChanged: -------------");
                 ///[EditText错误提示]
-                loginViewModel.loginDataChanged(usernameEditText.getText().toString(),
-                        passwordEditText.getText().toString());
+                loginViewModel.loginDataChanged(etUsername.getText().toString(),
+                        etPassword.getText().toString());
 
                 ///[EditText清除输入框]
-                if (!TextUtils.isEmpty(s) && clearPasswordImageView.getVisibility() == View.GONE) {
-                    clearPasswordImageView.setVisibility(View.VISIBLE);
+                if (!TextUtils.isEmpty(s) && ivClearPassword.getVisibility() == View.GONE) {
+                    ivClearPassword.setVisibility(View.VISIBLE);
                 } else if (TextUtils.isEmpty(s)) {
-                    clearPasswordImageView.setVisibility(View.GONE);
+                    ivClearPassword.setVisibility(View.GONE);
                 }
             }
         });
-        passwordEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+
+        etPassword.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
                     ///[FIX#IME_ACTION_DONE没检验form表单状态]
                     if (loginViewModel.getLoginFormState().getValue() != null
-                        && loginViewModel.getLoginFormState().getValue().isDataValid()) {
-                        loginViewModel.login(usernameEditText.getText().toString(),
-                                passwordEditText.getText().toString());
+                            && loginViewModel.getLoginFormState().getValue().isDataValid()) {
+                        loginViewModel.login(etUsername.getText().toString(),
+                                etPassword.getText().toString());
                     }
 
                 }
                 return false;
             }
         });
-
-        loginButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                loadingProgressBar.setVisibility(View.VISIBLE);
-                loginViewModel.login(usernameEditText.getText().toString(),
-                        passwordEditText.getText().toString());
-            }
-        });
     }
 
-    ///
-    private boolean flag = false;
-    @Override
-    public void onClick(View v) {
-        Log.d("TAG", "onClick: ");
-        switch (v.getId()) {
-            case R.id.iv_clear_username:
-                ///[EditText清除输入框]
-                usernameEditText.setText("");
-                break;
-            case R.id.iv_clear_password:
-                ///[EditText清除输入框]
-                passwordEditText.setText("");
-                break;
-            case R.id.iv_show_password:
-                ///[EditText显示/隐藏Password]
-                if(flag){
-                    passwordEditText.setTransformationMethod(PasswordTransformationMethod.getInstance());
-                    showPasswordImageView.setImageResource(R.drawable.ic_visibility_off);
-                    flag = false;
-                }else{
-                    passwordEditText.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
-                    showPasswordImageView.setImageResource(R.drawable.ic_visibility);
-                    flag = true;
-                }
-                String pwd = passwordEditText.getText().toString();
-                if (!TextUtils.isEmpty(pwd))
-                    passwordEditText.setSelection(pwd.length());
-                break;
+    /**
+     * 根据SharedPreferences是否保存用户名/密码来设置RememberMe的初始选择状态
+     *
+     * 注意：CheckBox跟EditText一样可以在屏幕翻转时记住状态，所以可不必LiveDate！
+     * 况且PrefsUtil需要context，最好不用UserRepository
+     */
+    private void initRememberMe() {
+        final String rememberUsername = PrefsUtil.getString(getApplicationContext(), KEY_REMEMBER_USERNAME, null);
+        final String rememberPassword = PrefsUtil.getString(getApplicationContext(), KEY_REMEMBER_PASSWORD, null);
+        if (!TextUtils.isEmpty(rememberUsername) && !TextUtils.isEmpty(rememberPassword)) {
+            etUsername.setText(rememberUsername);
+            etPassword.setText(rememberPassword);
+            cbRememberMe.setChecked(true);
+        }
+    }
+
+    /**
+     * 保存RememberMe到SharedPreferences
+     *
+     * @param isSaveNow 如果true，则不立即保存，比如登陆时点击RememberMe后，不立即保存用户名/密码，而是登陆成功后再保存
+     */
+    private void saveRememberMe(boolean isSaveNow) {
+        if (!cbRememberMe.isChecked()) {
+            PrefsUtil.putString(getApplicationContext(), KEY_REMEMBER_USERNAME, null);
+            PrefsUtil.putString(getApplicationContext(), KEY_REMEMBER_PASSWORD, null);
+        } else if (isSaveNow) {
+            PrefsUtil.putString(getApplicationContext(), KEY_REMEMBER_USERNAME, etUsername.getText().toString());
+            PrefsUtil.putString(getApplicationContext(), KEY_REMEMBER_PASSWORD, etPassword.getText().toString());
         }
     }
 
     private void updateUiWithUser(LoggedInUserView model) {
-        String welcome = getString(R.string.welcome) + model.getDisplayName();
+        final String welcome = "Welcome! " + model.getUserName();
         // TODO : initiate successful logged in experience
         Toast.makeText(getApplicationContext(), welcome, Toast.LENGTH_LONG).show();
     }

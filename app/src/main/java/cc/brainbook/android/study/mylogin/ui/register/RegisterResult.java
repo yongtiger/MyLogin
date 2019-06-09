@@ -1,28 +1,26 @@
-package cc.brainbook.android.study.mylogin.ui.login;
+package cc.brainbook.android.study.mylogin.ui.register;
 
 import android.support.annotation.Nullable;
-
-import cc.brainbook.android.study.mylogin.ui.login.view.LoggedInUserView;
 
 /**
  * Authentication result : success (user details) or error message.
  */
-class LoginResult {
+class RegisterResult {
     @Nullable
-    private LoggedInUserView success;
+    private boolean success;
     @Nullable
     private Integer error;
 
-    LoginResult(@Nullable Integer error) {
+    RegisterResult(@Nullable Integer error) {
         this.error = error;
     }
 
-    LoginResult(@Nullable LoggedInUserView success) {
+    RegisterResult(boolean success) {
         this.success = success;
     }
 
     @Nullable
-    LoggedInUserView getSuccess() {
+    boolean getSuccess() {
         return success;
     }
 

@@ -1,25 +1,40 @@
 <resources>
     <string name="app_name">My Login</string>
-    <!-- Strings related to login -->
-    <string name="prompt_email">Email</string>
-    <string name="prompt_password">Password</string>
-    <string name="action_sign_in">Sign in or register</string>
-    <string name="action_sign_in_short">Sign in</string>
-    <string name="welcome">"Welcome !"</string>
-    <string name="invalid_username">Not a valid username</string>
-    <string name="invalid_password">Password must be >5 characters</string>
-    <string name="login_failed">"Login failed"</string>
 
-    <!--RegisterActivity-->
+    <string name="username_or_email_or_mobile">Username / Email / Mobile</string>
     <string name="username">Username</string>
     <string name="password">Password</string>
-    <string name="sign_in">Sign In</string>
+    <string name="repeat_password">Repeat password</string>
+    <string name="find_password">Forgot password?</string>
+    <string name="email">Email</string>
+    <string name="mobile">Mobile</string>
+    <string name="optional_email">Email (optional)</string>
+    <string name="optional_mobile">Mobile (optional)</string>
     <string name="register">Register</string>
-    <string name="full_name">Full Name</string>
-    <string name="confirm_password">Confirm Password</string>
-    <string name="already_having_account">Already Having an Account?</string>
-    <string name="log_in">Log In</string>
-    <string name="not_having_account">Not Having an Account?</string>
-    <string name="sign_up">Sign Up</string>
+    <string name="login">Login</string>
+    <string name="sign_up">Sign up</string>
+    <string name="sign_in">Sign in</string>
     <string name="logout">Logout</string>
+
+    <string name="remember_me">Remember me</string>
+    <string name="not_having_account">Not having an account?</string>
+    <string name="already_having_account">Already having an account?</string>
+    <string name="invalid_username">Not a valid username</string>
+    <string name="invalid_password">Must contain digits, lower and upper alpha characters, and length must be at least 6</string>
+    <string name="invalid_repeat_password">Dosen\'t match the password</string>
+    <string name="invalid_email">Not a valid email</string>
+    <string name="invalid_mobile">Not a valid mobile</string>
+
+    <string name="register_exception_invalid_parameters">"Register failed! Invalid parameters"</string>
+    <string name="register_exception_user_exists">"Register failed! User exists"</string>
+    <string name="register_exception_email_exists">"Register failed! Email exists"</string>
+    <string name="register_exception_mobile_exists">"Register failed! Mobile exists"</string>
+    <string name="register_exception_unknown">"Register failed!"</string>
+    <string name="login_exception_invalid_parameters">"Login failed! Invalid parameters"</string>
+    <string name="login_exception_invalid_username">"Login failed! Invalid username"</string>
+    <string name="login_exception_invalid_password">"Login failed! Invalid password"</string>
+    <string name="login_exception_unknown">"Login failed!"</string>
+    <string name="logout_exception_token_is_invalid_or_expired">"Logout failed! Token is invalid or expired"</string>
+    <string name="logout_exception_unknown">"Logout failed!"</string>
+
 </resources>
