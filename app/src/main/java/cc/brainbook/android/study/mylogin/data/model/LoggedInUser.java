@@ -8,8 +8,6 @@ public class LoggedInUser {
     private String username;
     private String token;
     private long tokenExpiredAt;
-    private String email;
-    private String mobile;
     private long createdAt;
     private long updatedAt;
 
@@ -17,16 +15,12 @@ public class LoggedInUser {
                         String username,
                         String token,
                         long tokenExpiredAt,
-                        String email,
-                        String mobile,
                         long createdAt,
                         long updatedAt) {
         this.userId = userId;
         this.username = username;
         this.token = token;
         this.tokenExpiredAt = tokenExpiredAt;
-        this.email = email;
-        this.mobile = mobile;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
@@ -62,22 +56,6 @@ public class LoggedInUser {
         this.tokenExpiredAt = tokenExpiredAt;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getMobile() {
-        return mobile;
-    }
-
-    public void setMobile(String mobile) {
-        this.mobile = mobile;
-    }
-
     public long getCreatedAt() {
         return createdAt;
     }
@@ -101,8 +79,6 @@ public class LoggedInUser {
                 ", username='" + username + '\'' +
                 ", token='" + token + '\'' +
                 ", tokenExpiredAt='" + tokenExpiredAt + '\'' +
-                ", email='" + email + '\'' +
-                ", mobile='" + mobile + '\'' +
                 ", createdAt='" + createdAt + '\'' +
                 ", updatedAt='" + updatedAt + '\'' +
                 '}';

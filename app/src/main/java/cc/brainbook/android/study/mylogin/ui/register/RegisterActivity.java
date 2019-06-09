@@ -36,10 +36,6 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     private ImageView ivClearRepeatPassword;
     private ImageView ivPasswordVisibility;
     private ImageView ivRepeatPasswordVisibility;
-    private EditText etEmail;
-    private ImageView ivClearEmail;
-    private EditText etMobile;
-    private ImageView ivClearMobile;
     private Button btnRegister;
     private Button btnLogin;
     private ProgressBar pbLoading;
@@ -83,16 +79,6 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                 } else {
                     etRepeatPassword.setError(getString(registerFormState.getRepeatPasswordError()));
                 }
-                if (registerFormState.getEmailError() == null) {
-                    etEmail.setError(null);
-                } else {
-                    etEmail.setError(getString(registerFormState.getEmailError()));
-                }
-                if (registerFormState.getMobileError() == null) {
-                    etMobile.setError(null);
-                } else {
-                    etMobile.setError(getString(registerFormState.getMobileError()));
-                }
             }
         });
 
@@ -111,12 +97,6 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                             break;
                         case R.string.register_exception_user_exists:
                             etUsername.requestFocus();
-                            break;
-                        case R.string.register_exception_email_exists:
-                            etEmail.requestFocus();
-                            break;
-                        case R.string.register_exception_mobile_exists:
-                            etMobile.requestFocus();
                             break;
                         default:
                     }
@@ -196,20 +176,10 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                 ///注意：因为初始化了，所以不会产生NullPointerException
                 registerViewModel.setRepeatPasswordVisibility(!registerViewModel.getRepeatPasswordVisibility().getValue());
                 break;
-            case R.id.iv_clear_email:
-                ///[EditText清除输入框]
-                etEmail.setText("");
-                break;
-            case R.id.iv_clear_mobile:
-                ///[EditText清除输入框]
-                etMobile.setText("");
-                break;
             case R.id.btn_register:
                 pbLoading.setVisibility(View.VISIBLE);
                 registerViewModel.register(etUsername.getText().toString(),
-                        etPassword.getText().toString(),
-                        etEmail.getText().toString(),
-                        etMobile.getText().toString());
+                        etPassword.getText().toString());
                 break;
             case R.id.btn_login:
                 final Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
@@ -230,10 +200,6 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         etRepeatPassword = findViewById(R.id.et_repeat_password);
         ivClearRepeatPassword = findViewById(R.id.iv_clear_repeat_password);
         ivRepeatPasswordVisibility = findViewById(R.id.iv_repeat_password_visibility);
-        etEmail = findViewById(R.id.et_email);
-        ivClearEmail = findViewById(R.id.iv_clear_email);
-        etMobile = findViewById(R.id.et_mobile);
-        ivClearMobile = findViewById(R.id.iv_clear_mobile);
 
         btnRegister = findViewById(R.id.btn_register);
         btnLogin = findViewById(R.id.btn_login);
@@ -247,8 +213,6 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         ivPasswordVisibility.setOnClickListener(this);
         ivClearRepeatPassword.setOnClickListener(this);
         ivRepeatPasswordVisibility.setOnClickListener(this);
-        ivClearEmail.setOnClickListener(this);
-        ivClearMobile.setOnClickListener(this);
 
         btnRegister.setOnClickListener(this);
         btnLogin.setOnClickListener(this);
@@ -265,9 +229,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                 ///[EditText错误提示]
                 registerViewModel.registerDataChanged(etUsername.getText().toString(),
                         etPassword.getText().toString(),
-                        etRepeatPassword.getText().toString(),
-                        etEmail.getText().toString(),
-                        etMobile.getText().toString());
+                        etRepeatPassword.getText().toString());
 
                 ///[EditText清除输入框]
                 if (!TextUtils.isEmpty(s) && ivClearUsername.getVisibility() == View.GONE) {
@@ -289,9 +251,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                 ///[EditText错误提示]
                 registerViewModel.registerDataChanged(etUsername.getText().toString(),
                         etPassword.getText().toString(),
-                        etRepeatPassword.getText().toString(),
-                        etEmail.getText().toString(),
-                        etMobile.getText().toString());
+                        etRepeatPassword.getText().toString());
 
                 ///[EditText清除输入框]
                 if (!TextUtils.isEmpty(s) && ivClearPassword.getVisibility() == View.GONE) {
@@ -309,9 +269,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                     if (registerViewModel.getRegisterFormState().getValue() != null
                             && registerViewModel.getRegisterFormState().getValue().isDataValid()) {
                         registerViewModel.register(etUsername.getText().toString(),
-                                etPassword.getText().toString(),
-                                etEmail.getText().toString(),
-                                etMobile.getText().toString());
+                                etPassword.getText().toString());
                     }
 
                 }
@@ -330,9 +288,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                 ///[EditText错误提示]
                 registerViewModel.registerDataChanged(etUsername.getText().toString(),
                         etPassword.getText().toString(),
-                        etRepeatPassword.getText().toString(),
-                        etEmail.getText().toString(),
-                        etMobile.getText().toString());
+                        etRepeatPassword.getText().toString());
 
                 ///[EditText清除输入框]
                 if (!TextUtils.isEmpty(s) && ivClearRepeatPassword.getVisibility() == View.GONE) {
@@ -342,56 +298,8 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                 }
             }
         });
-        etEmail.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {}
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                ///[EditText错误提示]
-                registerViewModel.registerDataChanged(etUsername.getText().toString(),
-                        etPassword.getText().toString(),
-                        etRepeatPassword.getText().toString(),
-                        etEmail.getText().toString(),
-                        etMobile.getText().toString());
-
-                ///[EditText清除输入框]
-                if (!TextUtils.isEmpty(s) && ivClearEmail.getVisibility() == View.GONE) {
-                    ivClearEmail.setVisibility(View.VISIBLE);
-                } else if (TextUtils.isEmpty(s)) {
-                    ivClearEmail.setVisibility(View.GONE);
-                }
-            }
-        });
-        etMobile.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {}
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                ///[EditText错误提示]
-                registerViewModel.registerDataChanged(etUsername.getText().toString(),
-                        etPassword.getText().toString(),
-                        etRepeatPassword.getText().toString(),
-                        etEmail.getText().toString(),
-                        etMobile.getText().toString());
-
-                ///[EditText清除输入框]
-                if (!TextUtils.isEmpty(s) && ivClearMobile.getVisibility() == View.GONE) {
-                    ivClearMobile.setVisibility(View.VISIBLE);
-                } else if (TextUtils.isEmpty(s)) {
-                    ivClearMobile.setVisibility(View.GONE);
-                }
-            }
-        });
-
-        etMobile.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        etRepeatPassword.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
@@ -399,9 +307,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                     if (registerViewModel.getRegisterFormState().getValue() != null
                             && registerViewModel.getRegisterFormState().getValue().isDataValid()) {
                         registerViewModel.register(etUsername.getText().toString(),
-                                etPassword.getText().toString(),
-                                etEmail.getText().toString(),
-                                etMobile.getText().toString());
+                                etPassword.getText().toString());
                     }
 
                 }

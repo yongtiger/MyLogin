@@ -12,22 +12,14 @@ class RegisterFormState {
     private Integer passwordError;
     @Nullable
     private Integer repeatPasswordError;
-    @Nullable
-    private Integer emailError;
-    @Nullable
-    private Integer mobileError;
     private boolean isDataValid;
 
     RegisterFormState(@Nullable Integer usernameError,
                       @Nullable Integer passwordError,
-                      @Nullable Integer repeatPasswordError,
-                      @Nullable Integer emailError,
-                      @Nullable Integer mobileError) {
+                      @Nullable Integer repeatPasswordError) {
         this.usernameError = usernameError;
         this.passwordError = passwordError;
         this.repeatPasswordError = repeatPasswordError;
-        this.emailError = emailError;
-        this.mobileError = mobileError;
         this.isDataValid = false;
     }
 
@@ -35,8 +27,6 @@ class RegisterFormState {
         this.usernameError = null;
         this.passwordError = null;
         this.repeatPasswordError = null;
-        this.emailError = null;
-        this.mobileError = null;
         this.isDataValid = isDataValid;
     }
 
@@ -53,16 +43,6 @@ class RegisterFormState {
     @Nullable
     Integer getRepeatPasswordError() {
         return repeatPasswordError;
-    }
-
-    @Nullable
-    Integer getEmailError() {
-        return emailError;
-    }
-
-    @Nullable
-    Integer getMobileError() {
-        return mobileError;
     }
 
     boolean isDataValid() {

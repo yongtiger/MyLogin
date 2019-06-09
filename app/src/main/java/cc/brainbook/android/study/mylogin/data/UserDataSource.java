@@ -40,7 +40,7 @@ public class UserDataSource {
     private static final String KEY_USERNAME = "username";
     private static final String KEY_PASSWORD = "password";
 
-    public void register(String username, String password, String email, String mobile, RegisterCallback registerCallback) {
+    public void register(String username, String password, RegisterCallback registerCallback) {
         ///https://stackoverflow.com/questions/34179922/okhttp-post-body-as-json
         final JSONObject jsonObject = new JSONObject();
         try {
@@ -95,12 +95,6 @@ public class UserDataSource {
                                         break;
                                     case 1:
                                         registerCallback.onError(new RegisterException(RegisterException.EXCEPTION_USER_EXISTS, jsonObject.getString(KEY_MESSAGE)));
-                                        break;
-                                    case 2:
-                                        registerCallback.onError(new RegisterException(RegisterException.EXCEPTION_EMAIL_EXISTS, jsonObject.getString(KEY_MESSAGE)));
-                                        break;
-                                    case 3:
-                                        registerCallback.onError(new RegisterException(RegisterException.EXCEPTION_MOBILE_EXISTS, jsonObject.getString(KEY_MESSAGE)));
                                         break;
                                     default:
                                         registerCallback.onError(new RegisterException(RegisterException.EXCEPTION_UNKNOWN));

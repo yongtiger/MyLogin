@@ -44,9 +44,9 @@ public class UserRepository {
         return mUser != null && System.currentTimeMillis() < mUser.getTokenExpiredAt() * 1000;
     }
 
-    public void register(String username, String password, String email, String mobile, RegisterCallback registerCallback) {
+    public void register(String username, String password, RegisterCallback registerCallback) {
         // handle login
-        mDataSource.register(username, password, email, mobile, new RegisterCallback(){
+        mDataSource.register(username, password, new RegisterCallback(){
             @Override
             public void onSuccess() {
                 registerCallback.onSuccess();

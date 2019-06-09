@@ -156,6 +156,9 @@
         android:drawablePadding="14dp"
         android:textSize="14sp"
 
+        android:imeActionLabel="@string/sign_up"
+        android:imeOptions="actionDone"
+
         android:hint="@string/repeat_password"
         android:inputType="textPassword"
         android:selectAllOnFocus="true"
@@ -204,105 +207,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/et_repeat_password" />
 
-    <EditText
-        android:id="@+id/et_email"
-        android:layout_width="0dp"
-        android:layout_height="55dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_weight="1"
-
-        android:background="@null"
-        android:drawableStart="@drawable/ic_mail"
-        android:drawableLeft="@drawable/ic_mail"
-        android:drawablePadding="14dp"
-
-        android:hint="@string/optional_email"
-        android:inputType="textEmailAddress"
-        android:selectAllOnFocus="true"
-        android:textSize="14sp"
-        app:layout_constraintTop_toBottomOf="@+id/et_repeat_password"
-        app:layout_constraintEnd_toStartOf="@+id/iv_clear_email"
-        app:layout_constraintStart_toStartOf="parent" />
-    <!--输入框左侧图标：drawableLeft、drawablePadding-->
-    <!--分割线：background="@null"-->
-
-    <!--///[EditText清除输入框]-->
-    <ImageView
-        android:id="@+id/iv_clear_email"
-        android:layout_width="24dp"
-        android:layout_height="55dp"
-        android:scaleType="centerInside"
-        android:src="@drawable/ic_clear"
-        android:clickable="true"
-        android:focusable="true"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="@+id/et_email"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/et_email" />
-
-    <!--分割线-->
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:background="#eee"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/et_email" />
-
-    <EditText
-        android:id="@+id/et_mobile"
-        android:layout_width="0dp"
-        android:layout_height="55dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_weight="1"
-
-        android:background="@null"
-        android:drawableStart="@drawable/ic_phone"
-        android:drawableLeft="@drawable/ic_phone"
-        android:drawablePadding="14dp"
-
-        android:imeActionLabel="@string/sign_up"
-        android:imeOptions="actionDone"
-
-        android:hint="@string/optional_mobile"
-        android:inputType="textPhonetic"
-        android:selectAllOnFocus="true"
-        android:textSize="14sp"
-        app:layout_constraintTop_toBottomOf="@+id/et_email"
-        app:layout_constraintEnd_toStartOf="@+id/iv_clear_mobile"
-        app:layout_constraintStart_toStartOf="parent" />
-    <!--输入框左侧图标：drawableLeft、drawablePadding-->
-    <!--分割线：background="@null"-->
-
-    <!--///[EditText清除输入框]-->
-    <ImageView
-        android:id="@+id/iv_clear_mobile"
-        android:layout_width="24dp"
-        android:layout_height="55dp"
-        android:scaleType="centerInside"
-        android:src="@drawable/ic_clear"
-        android:clickable="true"
-        android:focusable="true"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="@+id/et_mobile"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/et_mobile" />
-
-    <!--分割线-->
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:background="#eee"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/et_mobile" />
-
     <Button
         android:id="@+id/btn_register"
         android:layout_width="match_parent"
@@ -316,7 +220,7 @@
         android:textColor="@android:color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/et_mobile" />
+        app:layout_constraintTop_toBottomOf="@+id/et_repeat_password" />
 
     <TextView
         android:id="@+id/already_having_account"

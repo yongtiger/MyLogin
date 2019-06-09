@@ -10,8 +10,6 @@ public class RegisterException extends RuntimeException {
     public static final int EXCEPTION_UNKNOWN = -2;
     public static final int EXCEPTION_INVALID_PARAMETERS = -1;
     public static final int EXCEPTION_USER_EXISTS = 1;
-    public static final int EXCEPTION_EMAIL_EXISTS = 2;
-    public static final int EXCEPTION_MOBILE_EXISTS = 3;
 
     private int code;
 
@@ -49,9 +47,7 @@ public class RegisterException extends RuntimeException {
     @IntDef({EXCEPTION_IO_EXCEPTION,
             EXCEPTION_UNKNOWN,
             EXCEPTION_INVALID_PARAMETERS,
-            EXCEPTION_USER_EXISTS,
-            EXCEPTION_EMAIL_EXISTS,
-            EXCEPTION_MOBILE_EXISTS
+            EXCEPTION_USER_EXISTS
     })
     @Retention(RetentionPolicy.SOURCE)
     public @interface ExceptionType {}

@@ -3,8 +3,6 @@ package cc.brainbook.android.study.mylogin.ui.register;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
-import android.text.TextUtils;
-import android.util.Patterns;
 
 import java.util.regex.Pattern;
 
@@ -54,9 +52,9 @@ public class RegisterViewModel extends ViewModel {
         repeatPasswordVisibility.setValue(isVisible);
     }
 
-    public void register(String username, String password, String email, String mobile) {
+    public void register(String username, String password) {
         // can be launched in a separate asynchronous job
-        registerRepository.register(username, password, email, mobile, new RegisterCallback() {
+        registerRepository.register(username, password, new RegisterCallback() {
             @Override
             public void onSuccess() {
                 ///[返回结果及错误处理]返回结果
@@ -74,12 +72,6 @@ public class RegisterViewModel extends ViewModel {
                     case 1:
                         error = R.string.register_exception_user_exists;
                         break;
-                    case 2:
-                        error = R.string.register_exception_email_exists;
-                        break;
-                    case 3:
-                        error = R.string.register_exception_mobile_exists;
-                        break;
                     default:
                         error = R.string.register_exception_unknown;
                 }
@@ -89,23 +81,19 @@ public class RegisterViewModel extends ViewModel {
         });
     }
 
-    public void registerDataChanged(String username, String password, String repeatPassword, String email, String mobile) {
+    public void registerDataChanged(String username, String password, String repeatPassword) {
         ///[EditText错误提示]
         ///[FIX#只显示username或password其中一个错误提示！应该同时都显示]
         boolean isUserNameValid = isUserNameValid(username),
                 isPasswordValid = isPasswordValid(password),
-                isRepeatPasswordValid = isRepeatPasswordValid(password, repeatPassword),
-                isEmailValid = isEmailValid(email),
-                isMobileValid = isMobileValid(mobile);
-        if (isUserNameValid && isPasswordValid && isRepeatPasswordValid && isEmailValid && isMobileValid){
+                isRepeatPasswordValid = isRepeatPasswordValid(password, repeatPassword);
+        if (isUserNameValid && isPasswordValid && isRepeatPasswordValid){
             registerFormState.setValue(new RegisterFormState(true));
         } else {
             registerFormState.setValue(new RegisterFormState(
                     isUserNameValid ? null : R.string.invalid_username,
                     isPasswordValid ? null : R.string.invalid_password,
-                    isRepeatPasswordValid ? null : R.string.invalid_repeat_password,
-                    isEmailValid ? null : R.string.invalid_email,
-                    isMobileValid ? null : R.string.invalid_mobile));
+                    isRepeatPasswordValid ? null : R.string.invalid_repeat_password));
         }
     }
 
@@ -122,22 +110,6 @@ public class RegisterViewModel extends ViewModel {
     // A placeholder repeat password validation check
     private boolean isRepeatPasswordValid(String password, String repeatPassword) {
         return password != null && password.equals(repeatPassword);
-    }
-
-    // A placeholder email validation check
-    private boolean isEmailValid(String email) {
-        if (TextUtils.isEmpty(email)) {
-            return true;    ///允许不填写
-        }
-        return Patterns.EMAIL_ADDRESS.matcher(email).matches();
-    }
-
-    // A placeholder username validation check
-    private boolean isMobileValid(String mobile) {
-        if (TextUtils.isEmpty(mobile)) {
-            return true;    ///允许不填写
-        }
-        return Patterns.PHONE.matcher(mobile).matches();
     }
 
 }

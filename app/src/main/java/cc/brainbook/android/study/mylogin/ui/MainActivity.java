@@ -19,8 +19,6 @@ public class MainActivity extends AppCompatActivity {
     private static final int REQUEST_CODE_LOGIN = 1;
 
     private TextView tvUsername;
-    private TextView tvEmail;
-    private TextView tvMobile;
 
     private Button btnLogin;
     private Button btnLogout;
@@ -31,8 +29,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         tvUsername = findViewById(R.id.tv_username);
-        tvEmail = findViewById(R.id.tv_email);
-        tvMobile = findViewById(R.id.tv_mobile);
 
         btnLogin = findViewById(R.id.btn_login);
         btnLogout = findViewById(R.id.btn_logout);
@@ -110,20 +106,12 @@ public class MainActivity extends AppCompatActivity {
         if (loginRepository.isLoggedIn()) {
             tvUsername.setText(loginRepository.getLoggedInUser().getUsername());
             tvUsername.setVisibility(View.VISIBLE);
-            tvEmail.setText(loginRepository.getLoggedInUser().getEmail());
-            tvEmail.setVisibility(View.VISIBLE);
-            tvMobile.setText(loginRepository.getLoggedInUser().getMobile());
-            tvMobile.setVisibility(View.VISIBLE);
 
             btnLogin.setVisibility(View.GONE);
             btnLogout.setVisibility(View.VISIBLE);
         } else {
             tvUsername.setText("");
             tvUsername.setVisibility(View.GONE);
-            tvEmail.setText("");
-            tvEmail.setVisibility(View.GONE);
-            tvMobile.setText("");
-            tvMobile.setVisibility(View.GONE);
 
             btnLogin.setVisibility(View.VISIBLE);
             btnLogout.setVisibility(View.GONE);
