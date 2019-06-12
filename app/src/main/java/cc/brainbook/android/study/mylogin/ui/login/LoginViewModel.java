@@ -3,6 +3,7 @@ package cc.brainbook.android.study.mylogin.ui.login;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
+import android.text.TextUtils;
 import android.util.Patterns;
 
 import java.util.regex.Pattern;
@@ -83,26 +84,20 @@ public class LoginViewModel extends ViewModel {
     public void loginDataChanged(String username, String password) {
         ///[EditText错误提示]
         ///[FIX#只显示username或password其中一个错误提示！应该同时都显示]
-        boolean isUserNameValid = isUserNameValid(username),
-                isPasswordValid = isPasswordValid(password);
-        if (isUserNameValid && isPasswordValid){
-            loginFormState.setValue(new LoginFormState(true));
-        } else {
-            loginFormState.setValue(new LoginFormState(
-                    isUserNameValid ? null : R.string.invalid_username,
-                    isPasswordValid ? null : R.string.invalid_password));
-        }
+        loginFormState.setValue(new LoginFormState(
+                isUsernameValid(username) ? null : R.string.invalid_username,
+                isPasswordValid(password) ? null : R.string.invalid_password));
     }
 
     // A placeholder username validation check
-    private boolean isUserNameValid(String username) {
-        return username != null && (Pattern.matches(REGEXP_USERNAME, username)
+    private boolean isUsernameValid(String username) {
+        return !TextUtils.isEmpty(username) && (Pattern.matches(REGEXP_USERNAME, username)
                 || Patterns.EMAIL_ADDRESS.matcher(username).matches()
                 || Patterns.PHONE.matcher(username).matches());
     }
 
     // A placeholder password validation check
     private boolean isPasswordValid(String password) {
-        return password != null && Pattern.matches(REGEXP_PASSWORD, password);
+        return !TextUtils.isEmpty(password) && Pattern.matches(REGEXP_PASSWORD, password);
     }
 }

@@ -93,7 +93,6 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                     ///[Request focus#根据返回错误来请求表单焦点]
                     switch (loginResult.getError()) {
                         case R.string.register_exception_invalid_parameters:
-                            etUsername.requestFocus();
                             break;
                         case R.string.register_exception_user_exists:
                             etUsername.requestFocus();
@@ -178,8 +177,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                 break;
             case R.id.btn_register:
                 pbLoading.setVisibility(View.VISIBLE);
-                registerViewModel.register(etUsername.getText().toString(),
-                        etPassword.getText().toString());
+                actionRegister();
                 break;
             case R.id.btn_login:
                 final Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
@@ -265,13 +263,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    ///[FIX#IME_ACTION_DONE没检验form表单状态]
-                    if (registerViewModel.getRegisterFormState().getValue() != null
-                            && registerViewModel.getRegisterFormState().getValue().isDataValid()) {
-                        registerViewModel.register(etUsername.getText().toString(),
-                                etPassword.getText().toString());
-                    }
-
+                    actionRegister();
                 }
                 return false;
             }
@@ -303,18 +295,22 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    ///[FIX#IME_ACTION_DONE没检验form表单状态]
-                    if (registerViewModel.getRegisterFormState().getValue() != null
-                            && registerViewModel.getRegisterFormState().getValue().isDataValid()) {
-                        registerViewModel.register(etUsername.getText().toString(),
-                                etPassword.getText().toString());
-                    }
+                    actionRegister();
 
                 }
                 return false;
             }
         });
 
+    }
+
+    private void actionRegister() {
+        ///[FIX#IME_ACTION_DONE没检验form表单状态]
+        if (registerViewModel.getRegisterFormState().getValue() != null
+                && registerViewModel.getRegisterFormState().getValue().isDataValid()) {
+            registerViewModel.register(etUsername.getText().toString(),
+                    etPassword.getText().toString());
+        }
     }
 
     private void updateUi() {

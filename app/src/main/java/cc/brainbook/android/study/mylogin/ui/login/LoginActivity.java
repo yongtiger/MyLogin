@@ -25,6 +25,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import cc.brainbook.android.study.mylogin.R;
+import cc.brainbook.android.study.mylogin.ui.findpassword.FindPasswordActivity;
 import cc.brainbook.android.study.mylogin.ui.login.view.LoggedInUserView;
 import cc.brainbook.android.study.mylogin.ui.register.RegisterActivity;
 import cc.brainbook.android.study.mylogin.util.PrefsUtil;
@@ -40,6 +41,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private EditText etPassword;
     private ImageView ivClearPassword;
     private ImageView ivPasswordVisibility;
+    private Button btnFindPassword;
     private CheckBox cbRememberMe;
     private Button btnLogin;
     private Button btnRegister;
@@ -93,7 +95,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     ///[Request focus#根据返回错误来请求表单焦点]
                     switch (loginResult.getError()) {
                         case R.string.login_exception_invalid_parameters:
-                            etUsername.requestFocus();
                             break;
                         case R.string.login_exception_invalid_username:
                             etUsername.requestFocus();
@@ -160,14 +161,17 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 ///注意：因为初始化了，所以不会产生NullPointerException
                 loginViewModel.setPasswordVisibility(!loginViewModel.getPasswordVisibility().getValue());
                 break;
+            case R.id.btn_find_password:
+                ///[FindPassword]
+                startActivity(new Intent(LoginActivity.this, FindPasswordActivity.class));
+                break;
             case R.id.cb_remember_me:
-                ///[RememberM]如果RememberMe未勾选，则保存SharedPreferences的用户名/密码为null
+                ///[RememberMe]如果RememberMe未勾选，则保存SharedPreferences的用户名/密码为null
                 saveRememberMe(false);
                 break;
             case R.id.btn_login:
                 pbLoading.setVisibility(View.VISIBLE);
-                loginViewModel.login(etUsername.getText().toString(),
-                        etPassword.getText().toString());
+                actionLogin();
                 break;
             case R.id.btn_register:
                 startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
@@ -182,6 +186,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         ivClearPassword = findViewById(R.id.iv_clear_password);
         ivPasswordVisibility = findViewById(R.id.iv_password_visibility);
 
+        btnFindPassword = findViewById(R.id.btn_find_password);
         cbRememberMe = findViewById(R.id.cb_remember_me);
 
         btnLogin = findViewById(R.id.btn_login);
@@ -195,6 +200,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         ivClearPassword.setOnClickListener(this);
         ivPasswordVisibility.setOnClickListener(this);
 
+        btnFindPassword.setOnClickListener(this);
         cbRememberMe.setOnClickListener(this);
 
         btnLogin.setOnClickListener(this);
@@ -247,17 +253,20 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    ///[FIX#IME_ACTION_DONE没检验form表单状态]
-                    if (loginViewModel.getLoginFormState().getValue() != null
-                            && loginViewModel.getLoginFormState().getValue().isDataValid()) {
-                        loginViewModel.login(etUsername.getText().toString(),
-                                etPassword.getText().toString());
-                    }
-
+                    actionLogin();
                 }
                 return false;
             }
         });
+    }
+
+    private void actionLogin() {
+        ///[FIX#IME_ACTION_DONE没检验form表单状态]
+        if (loginViewModel.getLoginFormState().getValue() != null
+                && loginViewModel.getLoginFormState().getValue().isDataValid()) {
+            loginViewModel.login(etUsername.getText().toString(),
+                    etPassword.getText().toString());
+        }
     }
 
     /**

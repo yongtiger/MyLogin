@@ -5,7 +5,7 @@
     <string name="username">Username</string>
     <string name="password">Password</string>
     <string name="repeat_password">Repeat password</string>
-    <string name="find_password">Forgot password?</string>
+    <string name="forgot_password">Forgot password?</string>
     <string name="email">Email</string>
     <string name="mobile">Mobile</string>
     <string name="optional_email">Email (optional)</string>
@@ -37,4 +37,22 @@
     <string name="logout_exception_token_is_invalid_or_expired">"Logout failed! Token is invalid or expired"</string>
     <string name="logout_exception_unknown">"Logout failed!"</string>
 
+    <string name="find_password_title_step_one">Step 1: Input Username</string>
+    <string name="find_password_title_step_two">Step 2: Input Email or Mobile</string>
+    <string name="find_password_title_step_three">Step 3: Request/Send Verification Code</string>
+    <string name="find_password_next">Next</string>
+    <string name="find_password_cannot_find_password">Cannot find password</string>
+    <string name="find_password_input_email">Input email</string>
+    <string name="find_password_input_mobile">Input mobile</string>
+    <string name="find_password_request">Request Verification Code</string>
+    <string name="find_password_send">Send Verification Code</string>
+
+    <string name="find_password_exception_invalid_parameters">"Find password failed! Invalid parameters"</string>
+    <string name="find_password_exception_invalid_cannot_find_password">"Find password failed! Cannot find password"</string>
+    <string name="find_password_exception_unknown">"Find password failed!"</string>
+    <string name="find_password_exception_invalid_username">"Find password failed! Invalid username"</string>
+    <string name="find_password_exception_invalid_user_id">"Find password failed! Invalid user id"</string>
+    <string name="find_password_exception_no_match_email">"Find password failed! Not match email"</string>
+    <string name="find_password_exception_no_match_mobile">"Find password failed! Not match mobile"</string>
+    <string name="find_password_exception_no_match_email_or_mobile">"Find password failed! Not match email or mobile"</string>
 </resources>

@@ -1,14 +1,32 @@
 package cc.brainbook.android.study.mylogin.config;
 
 public class Config {
-//    public static final String REGISTER_URL = "http://192.168.1.108/_study/_login/MyLogin/member/register.php?start_debug=1&debug_stop=1&use_remote=1&debug_host=192.168.1.108";
-    public static final String REGISTER_URL = "http://192.168.1.108/_study/_login/MyLogin/member/register.php";
+    public static final String HTTP_DOMAIN = "http://192.168.1.104";
+    public static final String DEBUG_HOST = "192.168.1.104";
 
-    //    public static final String LOGIN_URL = "http://192.168.1.108/_study/_login/MyLogin/member/login.php?start_debug=1&debug_stop=1&use_remote=1&debug_host=192.168.1.108";
-        public static final String LOGIN_URL = "http://192.168.1.108/_study/_login/MyLogin/member/login.php";
+//    public static final String REGISTER_URL = HTTP_DOMAIN + "/_study/_login/MyLogin/member/register.php?start_debug=1&debug_stop=1&use_remote=1&debug_host=" + DEBUG_HOST;
+    public static final String REGISTER_URL = HTTP_DOMAIN + "/_study/_login/MyLogin/member/register.php";
 
-//    public static final String LOGOUT_URL = "http://192.168.1.108/_study/_login/MyLogin/member/logout.php?start_debug=1&debug_stop=1&use_remote=1&debug_host=192.168.1.108";
-    public static final String LOGOUT_URL = "http://192.168.1.108/_study/_login/MyLogin/member/logout.php";
+//        public static final String LOGIN_URL = HTTP_DOMAIN + "/_study/_login/MyLogin/member/login.php?start_debug=1&debug_stop=1&use_remote=1&debug_host=" + DEBUG_HOST;
+        public static final String LOGIN_URL = HTTP_DOMAIN + "/_study/_login/MyLogin/member/login.php";
+
+//    public static final String LOGOUT_URL = HTTP_DOMAIN + "/_study/_login/MyLogin/member/logout.php?start_debug=1&debug_stop=1&use_remote=1&debug_host=" + DEBUG_HOST;
+    public static final String LOGOUT_URL = HTTP_DOMAIN + "/_study/_login/MyLogin/member/logout.php";
+
+//        public static final String FIND_PASSWORD_FIND_URL = HTTP_DOMAIN + "/_study/_login/MyLogin/member/find_password_find.php?start_debug=1&debug_stop=1&use_remote=1&debug_host=" + DEBUG_HOST;
+    public static final String FIND_PASSWORD_FIND_URL = HTTP_DOMAIN + "/_study/_login/MyLogin/member/find_password_find.php";
+
+//    public static final String FIND_PASSWORD_CHECK_URL = HTTP_DOMAIN + "/_study/_login/MyLogin/member/find_password_check.php?start_debug=1&debug_stop=1&use_remote=1&debug_host=" + DEBUG_HOST;
+    public static final String FIND_PASSWORD_CHECK_URL = HTTP_DOMAIN + "/_study/_login/MyLogin/member/find_password_check.php";
+
+    public static final String FIND_PASSWORD_REQUEST_URL = HTTP_DOMAIN + "/_study/_login/MyLogin/member/find_password_request_url.php?start_debug=1&debug_stop=1&use_remote=1&debug_host=" + DEBUG_HOST;
+//    public static final String FIND_PASSWORD_REQUEST_URL = HTTP_DOMAIN + "/_study/_login/MyLogin/member/find_password_request_url.php";
+
+    public static final String FIND_PASSWORD_SEND_URL = HTTP_DOMAIN + "/_study/_login/MyLogin/member/find_password_send.php?start_debug=1&debug_stop=1&use_remote=1&debug_host=" + DEBUG_HOST;
+//    public static final String FIND_PASSWORD_SEND_URL = HTTP_DOMAIN + "/_study/_login/MyLogin/member/find_password_send.php";
+
+    public static final String FIND_PASSWORD_RESET_URL = HTTP_DOMAIN + "/_study/_login/MyLogin/member/find_password_reset.php?start_debug=1&debug_stop=1&use_remote=1&debug_host=" + DEBUG_HOST;
+//    public static final String FIND_PASSWORD_RESET_URL = HTTP_DOMAIN + "/_study/_login/MyLogin/member/find_password_reset.php";
 
 //    public static final int CONNECT_TIMEOUT = 10;
     public static final int CONNECT_TIMEOUT = 300;  ///test

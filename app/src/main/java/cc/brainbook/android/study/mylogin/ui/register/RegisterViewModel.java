@@ -3,6 +3,7 @@ package cc.brainbook.android.study.mylogin.ui.register;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
+import android.text.TextUtils;
 
 import java.util.regex.Pattern;
 
@@ -84,32 +85,25 @@ public class RegisterViewModel extends ViewModel {
     public void registerDataChanged(String username, String password, String repeatPassword) {
         ///[EditText错误提示]
         ///[FIX#只显示username或password其中一个错误提示！应该同时都显示]
-        boolean isUserNameValid = isUserNameValid(username),
-                isPasswordValid = isPasswordValid(password),
-                isRepeatPasswordValid = isRepeatPasswordValid(password, repeatPassword);
-        if (isUserNameValid && isPasswordValid && isRepeatPasswordValid){
-            registerFormState.setValue(new RegisterFormState(true));
-        } else {
-            registerFormState.setValue(new RegisterFormState(
-                    isUserNameValid ? null : R.string.invalid_username,
-                    isPasswordValid ? null : R.string.invalid_password,
-                    isRepeatPasswordValid ? null : R.string.invalid_repeat_password));
-        }
+        registerFormState.setValue(new RegisterFormState(
+                isUsernameValid(username) ? null : R.string.invalid_username,
+                isPasswordValid(password) ? null : R.string.invalid_password,
+                isRepeatPasswordValid(password, repeatPassword) ? null : R.string.invalid_repeat_password));
     }
 
     // A placeholder username validation check
-    private boolean isUserNameValid(String username) {
-        return username != null && Pattern.matches(REGEXP_USERNAME, username);
+    private boolean isUsernameValid(String username) {
+        return !TextUtils.isEmpty(username) && Pattern.matches(REGEXP_USERNAME, username);
     }
 
     // A placeholder password validation check
     private boolean isPasswordValid(String password) {
-        return password != null && Pattern.matches(REGEXP_PASSWORD, password);
+        return !TextUtils.isEmpty(password) && Pattern.matches(REGEXP_PASSWORD, password);
     }
 
     // A placeholder repeat password validation check
     private boolean isRepeatPasswordValid(String password, String repeatPassword) {
-        return password != null && password.equals(repeatPassword);
+        return !TextUtils.isEmpty(password) && password.equals(repeatPassword);
     }
 
 }

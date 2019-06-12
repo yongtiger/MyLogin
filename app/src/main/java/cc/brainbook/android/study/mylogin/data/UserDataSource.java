@@ -197,7 +197,9 @@ public class UserDataSource {
                     @Override
                     public void onFailure(Call call, IOException e) {
                         ///[返回结果及错误处理]错误处理
-                        logoutCallback.onError(new LogoutException(LogoutException.EXCEPTION_IO_EXCEPTION, e.getCause()));
+                        //////?????注意：也返回logout成功，以便清除本地user
+//                        logoutCallback.onError(new LogoutException(LogoutException.EXCEPTION_IO_EXCEPTION, e.getCause()));
+                        logoutCallback.onSuccess();
                     }
 
                     @Override
@@ -213,7 +215,7 @@ public class UserDataSource {
                                 ///[返回结果及错误处理]
                                 switch (jsonObject.getInt(KEY_STATUS)) {
                                     case -1:
-                                        ///注意：如果没有登录，也返回正常状态0
+                                        //////?????注意：如果没有登录，也返回正常状态0
 //                                        logoutCallback.onError(new LogoutException(LogoutException.EXCEPTION_TOKEN_IS_INVALID_OR_EXPIRED, jsonObject.getString(KEY_MESSAGE)));
                                         logoutCallback.onSuccess();
                                         break;
@@ -221,7 +223,9 @@ public class UserDataSource {
                                         logoutCallback.onSuccess();
                                         break;
                                     default:
-                                        logoutCallback.onError(new LogoutException(LogoutException.EXCEPTION_UNKNOWN));
+                                        //////?????注意：也返回logout成功，以便清除本地user
+//                                        logoutCallback.onError(new LogoutException(LogoutException.EXCEPTION_UNKNOWN));
+                                        logoutCallback.onSuccess();
                                 }
                             }
                         } catch (JSONException e) {
