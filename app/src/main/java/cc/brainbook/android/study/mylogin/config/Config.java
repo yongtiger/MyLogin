@@ -13,23 +13,8 @@ public class Config {
 //    public static final String LOGOUT_URL = HTTP_DOMAIN + "/_study/_login/MyLogin/member/logout.php?start_debug=1&debug_stop=1&use_remote=1&debug_host=" + DEBUG_HOST;
     public static final String LOGOUT_URL = HTTP_DOMAIN + "/_study/_login/MyLogin/member/logout.php";
 
-//        public static final String FIND_PASSWORD_FIND_URL = HTTP_DOMAIN + "/_study/_login/MyLogin/member/find_password_find.php?start_debug=1&debug_stop=1&use_remote=1&debug_host=" + DEBUG_HOST;
-    public static final String FIND_PASSWORD_FIND_URL = HTTP_DOMAIN + "/_study/_login/MyLogin/member/find_password_find.php";
-
-//    public static final String FIND_PASSWORD_CHECK_URL = HTTP_DOMAIN + "/_study/_login/MyLogin/member/find_password_check.php?start_debug=1&debug_stop=1&use_remote=1&debug_host=" + DEBUG_HOST;
-    public static final String FIND_PASSWORD_CHECK_URL = HTTP_DOMAIN + "/_study/_login/MyLogin/member/find_password_check.php";
-
-    public static final String FIND_PASSWORD_REQUEST_URL = HTTP_DOMAIN + "/_study/_login/MyLogin/member/find_password_request_url.php?start_debug=1&debug_stop=1&use_remote=1&debug_host=" + DEBUG_HOST;
-//    public static final String FIND_PASSWORD_REQUEST_URL = HTTP_DOMAIN + "/_study/_login/MyLogin/member/find_password_request_url.php";
-
-    public static final String FIND_PASSWORD_SEND_URL = HTTP_DOMAIN + "/_study/_login/MyLogin/member/find_password_send.php?start_debug=1&debug_stop=1&use_remote=1&debug_host=" + DEBUG_HOST;
-//    public static final String FIND_PASSWORD_SEND_URL = HTTP_DOMAIN + "/_study/_login/MyLogin/member/find_password_send.php";
-
-    public static final String FIND_PASSWORD_RESET_URL = HTTP_DOMAIN + "/_study/_login/MyLogin/member/find_password_reset.php?start_debug=1&debug_stop=1&use_remote=1&debug_host=" + DEBUG_HOST;
-//    public static final String FIND_PASSWORD_RESET_URL = HTTP_DOMAIN + "/_study/_login/MyLogin/member/find_password_reset.php";
-
 //    public static final int CONNECT_TIMEOUT = 10;
-    public static final int CONNECT_TIMEOUT = 300;  ///test
+    public static final int CONNECT_TIMEOUT = 60;  ///test
 
     public static final String REGEXP_USERNAME = "^[a-zA-Z0-9._-]{6,15}$";
 
@@ -44,6 +29,27 @@ public class Config {
 //    "$                 # end-of-string
 //    public static final String REGEXP_PASSWORD = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{6,}$";
     public static final String REGEXP_PASSWORD = "^(?=\\S+$).{6,}$";   ///test
+
+
+    /* ---------------- reset password ---------------- */
+
+    //        public static final String RESET_PASSWORD_FIND_USER_URL = HTTP_DOMAIN + "/_study/_login/MyLogin/member/reset_password/find_user.php?start_debug=1&debug_stop=1&use_remote=1&debug_host=" + DEBUG_HOST;
+    public static final String RESET_PASSWORD_FIND_USER_URL = HTTP_DOMAIN + "/_study/_login/MyLogin/member/reset_password/find_user.php";
+
+    //    public static final String RESET_PASSWORD_CHECK_SEND_MODE_URL = HTTP_DOMAIN + "/_study/_login/MyLogin/member/reset_password/check_send_mode.php?start_debug=1&debug_stop=1&use_remote=1&debug_host=" + DEBUG_HOST;
+    public static final String RESET_PASSWORD_CHECK_SEND_MODE_URL = HTTP_DOMAIN + "/_study/_login/MyLogin/member/reset_password/check_send_mode.php";
+
+    //    public static final String RESET_PASSWORD_SEND_VERIFICATION_CODE_URL = HTTP_DOMAIN + "/_study/_login/MyLogin/member/reset_password/send_verification_code.php?start_debug=1&debug_stop=1&use_remote=1&debug_host=" + DEBUG_HOST;
+    public static final String RESET_PASSWORD_SEND_VERIFICATION_CODE_URL = HTTP_DOMAIN + "/_study/_login/MyLogin/member/reset_password/send_verification_code.php";
+
+    //    public static final String RESET_PASSWORD_VERIFY_CODE_URL = HTTP_DOMAIN + "/_study/_login/MyLogin/member/reset_password/verify_code.php?start_debug=1&debug_stop=1&use_remote=1&debug_host=" + DEBUG_HOST;
+    public static final String RESET_PASSWORD_VERIFY_CODE_URL = HTTP_DOMAIN + "/_study/_login/MyLogin/member/reset_password/verify_code.php";
+
+    public static final String RESET_PASSWORD_RESET_PASSWORD_URL = HTTP_DOMAIN + "/_study/_login/MyLogin/member/reset_password/reset_password.php?start_debug=1&debug_stop=1&use_remote=1&debug_host=" + DEBUG_HOST;
+//    public static final String RESET_PASSWORD_RESET_PASSWORD_URL = HTTP_DOMAIN + "/_study/_login/MyLogin/member/reset_password/reset_password.php";
+
+    public static final String REGEXP_VERIFICATION_CODE = "^\\d{4}$";
+
 
     private Config() {}
 }

@@ -1,0 +1,35 @@
+package cc.brainbook.android.study.mylogin.resetpassword.ui;
+
+import android.support.annotation.Nullable;
+
+/**
+ * Data validation state.
+ */
+class FindPasswordStep2FormState {
+    @Nullable
+    private Integer emailError;
+    @Nullable
+    private Integer mobileError;
+
+    private boolean isAllEmpty;
+
+    FindPasswordStep2FormState(@Nullable Integer emailError, @Nullable Integer mobileError, boolean isAllEmpty) {
+        this.emailError = emailError;
+        this.mobileError = mobileError;
+        this.isAllEmpty = isAllEmpty;
+    }
+
+    @Nullable
+    Integer getEmailError() {
+        return emailError;
+    }
+
+    @Nullable
+    Integer getMobileError() {
+        return mobileError;
+    }
+
+    boolean isDataValid() {
+        return !isAllEmpty && (emailError == null && mobileError == null);
+    }
+}
