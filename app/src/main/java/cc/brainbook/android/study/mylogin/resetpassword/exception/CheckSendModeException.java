@@ -10,7 +10,7 @@ public class CheckSendModeException extends RuntimeException {
     public static final int EXCEPTION_UNKNOWN = -2;
     public static final int EXCEPTION_INVALID_PARAMETERS = -1;
     public static final int EXCEPTION_INVALID_USER_ID = 1;
-    public static final int EXCEPTION_CANNOT_FIND_PASSWORD = 2;    ///nor email or mobile
+    public static final int EXCEPTION_CANNOT_RESET_PASSWORD = 2;    ///nor email or mobile
     public static final int EXCEPTION_NO_MATCH_EMAIL = 3;
     public static final int EXCEPTION_NO_MATCH_MOBILE = 4;
     public static final int EXCEPTION_NO_MATCH_EMAIL_OR_MOBILE = 5;
@@ -52,7 +52,7 @@ public class CheckSendModeException extends RuntimeException {
             EXCEPTION_UNKNOWN,
             EXCEPTION_INVALID_PARAMETERS,
             EXCEPTION_INVALID_USER_ID,
-            EXCEPTION_CANNOT_FIND_PASSWORD,
+            EXCEPTION_CANNOT_RESET_PASSWORD,
             EXCEPTION_NO_MATCH_EMAIL,
             EXCEPTION_NO_MATCH_MOBILE,
             EXCEPTION_NO_MATCH_EMAIL_OR_MOBILE

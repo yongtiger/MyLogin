@@ -37,7 +37,7 @@ public class ResetPasswordRepository {
         mResetPasswordDataSource.findUser(username, new FindUserCallback(){
             @Override
             public void onSuccess(ResetPasswordUser resetPasswordUser) {
-                setFindPasswordUser(resetPasswordUser);
+                setResetPasswordUser(resetPasswordUser);
                 findCallback.onSuccess(resetPasswordUser);
             }
 
@@ -104,11 +104,11 @@ public class ResetPasswordRepository {
         });
     }
 
-    public ResetPasswordUser getFindPasswordUser() {
+    public ResetPasswordUser getResetPasswordUser() {
         return mResetPasswordUser;
     }
 
-    private void setFindPasswordUser(ResetPasswordUser resetPasswordUser) {
+    private void setResetPasswordUser(ResetPasswordUser resetPasswordUser) {
         mResetPasswordUser = resetPasswordUser;
         // If mUser credentials will be cached in local storage, it is recommended it be encrypted
         // @see https://developer.android.com/training/articles/keystore

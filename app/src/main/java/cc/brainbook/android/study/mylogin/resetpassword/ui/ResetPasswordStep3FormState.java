@@ -5,12 +5,12 @@ import android.support.annotation.Nullable;
 /**
  * Data validation state.
  */
-class FindPasswordStep3FormState {
+class ResetPasswordStep3FormState {
     @Nullable
     private Integer verificationCodeError;
     private boolean isSessionIDValid;
 
-    FindPasswordStep3FormState(@Nullable Integer verificationCodeError, boolean isSessionIDValid) {
+    ResetPasswordStep3FormState(@Nullable Integer verificationCodeError, boolean isSessionIDValid) {
         this.verificationCodeError = verificationCodeError;
         this.isSessionIDValid = isSessionIDValid;
     }

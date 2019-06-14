@@ -10,7 +10,7 @@ public class FindUserException extends RuntimeException {
     public static final int EXCEPTION_UNKNOWN = -2;
     public static final int EXCEPTION_INVALID_PARAMETERS = -1;
     public static final int EXCEPTION_INVALID_USERNAME = 1;
-    public static final int EXCEPTION_CANNOT_FIND_PASSWORD = 2;    ///nor email or mobile
+    public static final int EXCEPTION_CANNOT_RESET_PASSWORD = 2;    ///nor email or mobile
 
     private int code;
 
@@ -49,7 +49,7 @@ public class FindUserException extends RuntimeException {
             EXCEPTION_UNKNOWN,
             EXCEPTION_INVALID_PARAMETERS,
             EXCEPTION_INVALID_USERNAME,
-            EXCEPTION_CANNOT_FIND_PASSWORD
+            EXCEPTION_CANNOT_RESET_PASSWORD
     })
     @Retention(RetentionPolicy.SOURCE)
     public @interface ExceptionType {}

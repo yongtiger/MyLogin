@@ -25,7 +25,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import cc.brainbook.android.study.mylogin.R;
-import cc.brainbook.android.study.mylogin.resetpassword.ui.FindPasswordActivity;
+import cc.brainbook.android.study.mylogin.resetpassword.ui.ResetPasswordActivity;
 import cc.brainbook.android.study.mylogin.userauthentication.ui.login.view.LoggedInUserView;
 import cc.brainbook.android.study.mylogin.userauthentication.ui.register.RegisterActivity;
 import cc.brainbook.android.study.mylogin.util.PrefsUtil;
@@ -41,7 +41,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private EditText etPassword;
     private ImageView ivClearPassword;
     private ImageView ivPasswordVisibility;
-    private Button btnFindPassword;
+    private Button btnResetPassword;
     private CheckBox cbRememberMe;
     private Button btnLogin;
     private Button btnRegister;
@@ -164,8 +164,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 loginViewModel.setPasswordVisibility(!loginViewModel.getPasswordVisibility().getValue());
                 break;
             case R.id.btn_reset:
-                ///[FindPassword]
-                startActivity(new Intent(LoginActivity.this, FindPasswordActivity.class));
+                ///[ResetPassword]
+                startActivity(new Intent(LoginActivity.this, ResetPasswordActivity.class));
                 break;
             case R.id.cb_remember_me:
                 ///[RememberMe]如果RememberMe未勾选，则保存SharedPreferences的用户名/密码为null
@@ -188,7 +188,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         ivClearPassword = findViewById(R.id.iv_clear_password);
         ivPasswordVisibility = findViewById(R.id.iv_password_visibility);
 
-        btnFindPassword = findViewById(R.id.btn_reset);
+        btnResetPassword = findViewById(R.id.btn_reset);
         cbRememberMe = findViewById(R.id.cb_remember_me);
 
         btnLogin = findViewById(R.id.btn_login);
@@ -202,7 +202,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         ivClearPassword.setOnClickListener(this);
         ivPasswordVisibility.setOnClickListener(this);
 
-        btnFindPassword.setOnClickListener(this);
+        btnResetPassword.setOnClickListener(this);
         cbRememberMe.setOnClickListener(this);
 
         btnLogin.setOnClickListener(this);

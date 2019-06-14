@@ -38,7 +38,7 @@ import static cc.brainbook.android.study.mylogin.config.Config.RESET_PASSWORD_VE
 public class ResetPasswordDataSource {
     private static final String KEY_STATUS = "status";
     private static final String KEY_MESSAGE = "message";
-    private static final String KEY_FIND_PASSWORD_USER = "findPasswordUser";
+    private static final String KEY_RESET_PASSWORD_USER = "resetPasswordUser";
     private static final String KEY_USER_ID = "userId";
     private static final String KEY_USERNAME = "username";
     private static final String KEY_PASSWORD = "password";
@@ -98,14 +98,14 @@ public class ResetPasswordDataSource {
                                         findUserCallback.onError(new FindUserException(FindUserException.EXCEPTION_INVALID_PARAMETERS, jsonObject.getString(KEY_MESSAGE)));
                                         break;
                                     case 0:
-                                        final ResetPasswordUser resetPasswordUser =  new Gson().fromJson(jsonObject.getString(KEY_FIND_PASSWORD_USER), ResetPasswordUser.class);
+                                        final ResetPasswordUser resetPasswordUser =  new Gson().fromJson(jsonObject.getString(KEY_RESET_PASSWORD_USER), ResetPasswordUser.class);
                                         findUserCallback.onSuccess(resetPasswordUser);
                                         break;
                                     case 1:
                                         findUserCallback.onError(new FindUserException(FindUserException.EXCEPTION_INVALID_USERNAME, jsonObject.getString(KEY_MESSAGE)));
                                         break;
                                     case 2:
-                                        findUserCallback.onError(new FindUserException(FindUserException.EXCEPTION_CANNOT_FIND_PASSWORD, jsonObject.getString(KEY_MESSAGE)));
+                                        findUserCallback.onError(new FindUserException(FindUserException.EXCEPTION_CANNOT_RESET_PASSWORD, jsonObject.getString(KEY_MESSAGE)));
                                         break;
                                     default:
                                         findUserCallback.onError(new FindUserException(FindUserException.EXCEPTION_UNKNOWN));
@@ -177,7 +177,7 @@ public class ResetPasswordDataSource {
                                         checkSendModeCallback.onError(new CheckSendModeException(CheckSendModeException.EXCEPTION_INVALID_USER_ID, jsonObject.getString(KEY_MESSAGE)));
                                         break;
                                     case 2:
-                                        checkSendModeCallback.onError(new CheckSendModeException(CheckSendModeException.EXCEPTION_CANNOT_FIND_PASSWORD, jsonObject.getString(KEY_MESSAGE)));
+                                        checkSendModeCallback.onError(new CheckSendModeException(CheckSendModeException.EXCEPTION_CANNOT_RESET_PASSWORD, jsonObject.getString(KEY_MESSAGE)));
                                         break;
                                     case 3:
                                         checkSendModeCallback.onError(new CheckSendModeException(CheckSendModeException.EXCEPTION_NO_MATCH_EMAIL, jsonObject.getString(KEY_MESSAGE)));
@@ -256,7 +256,7 @@ public class ResetPasswordDataSource {
                                         sendVerificationCodeCallback.onError(new SendVerificationCodeException(SendVerificationCodeException.EXCEPTION_INVALID_USER_ID, jsonObject.getString(KEY_MESSAGE)));
                                         break;
                                     case 2:
-                                        sendVerificationCodeCallback.onError(new SendVerificationCodeException(SendVerificationCodeException.EXCEPTION_CANNOT_FIND_PASSWORD, jsonObject.getString(KEY_MESSAGE)));
+                                        sendVerificationCodeCallback.onError(new SendVerificationCodeException(SendVerificationCodeException.EXCEPTION_CANNOT_RESET_PASSWORD, jsonObject.getString(KEY_MESSAGE)));
                                         break;
                                     case 3:
                                         sendVerificationCodeCallback.onError(new SendVerificationCodeException(SendVerificationCodeException.EXCEPTION_FAILED_TO_SEND_EMAIL, jsonObject.getString(KEY_MESSAGE)));

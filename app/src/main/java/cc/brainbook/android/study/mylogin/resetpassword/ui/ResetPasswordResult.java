@@ -4,15 +4,15 @@ import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 
 /**
- * Find password result : success or error message.
+ * Reset password result : success or error message.
  */
-class FindPasswordResult {
+class ResetPasswordResult {
     @Nullable @StringRes
     private Integer success;
     @Nullable @StringRes
     private Integer error;
 
-    FindPasswordResult(@Nullable @StringRes Integer success, @Nullable @StringRes Integer error) {
+    ResetPasswordResult(@Nullable @StringRes Integer success, @Nullable @StringRes Integer error) {
         this.success = success;
         this.error = error;
     }

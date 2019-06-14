@@ -45,8 +45,8 @@ public class Config {
     //    public static final String RESET_PASSWORD_VERIFY_CODE_URL = HTTP_DOMAIN + "/_study/_login/MyLogin/member/reset_password/verify_code.php?start_debug=1&debug_stop=1&use_remote=1&debug_host=" + DEBUG_HOST;
     public static final String RESET_PASSWORD_VERIFY_CODE_URL = HTTP_DOMAIN + "/_study/_login/MyLogin/member/reset_password/verify_code.php";
 
-    public static final String RESET_PASSWORD_RESET_PASSWORD_URL = HTTP_DOMAIN + "/_study/_login/MyLogin/member/reset_password/reset_password.php?start_debug=1&debug_stop=1&use_remote=1&debug_host=" + DEBUG_HOST;
-//    public static final String RESET_PASSWORD_RESET_PASSWORD_URL = HTTP_DOMAIN + "/_study/_login/MyLogin/member/reset_password/reset_password.php";
+//    public static final String RESET_PASSWORD_RESET_PASSWORD_URL = HTTP_DOMAIN + "/_study/_login/MyLogin/member/reset_password/reset_password.php?start_debug=1&debug_stop=1&use_remote=1&debug_host=" + DEBUG_HOST;
+    public static final String RESET_PASSWORD_RESET_PASSWORD_URL = HTTP_DOMAIN + "/_study/_login/MyLogin/member/reset_password/reset_password.php";
 
     public static final String REGEXP_VERIFICATION_CODE = "^\\d{4}$";
 

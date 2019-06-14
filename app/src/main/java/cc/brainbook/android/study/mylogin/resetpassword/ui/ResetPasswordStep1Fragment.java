@@ -24,7 +24,7 @@ import java.util.Objects;
 
 import cc.brainbook.android.study.mylogin.R;
 
-public class FindPasswordStep1Fragment extends Fragment implements View.OnClickListener {
+public class ResetPasswordStep1Fragment extends Fragment implements View.OnClickListener {
 
     private EditText etUsername;
     private ImageView ivClearUsername;
@@ -32,19 +32,19 @@ public class FindPasswordStep1Fragment extends Fragment implements View.OnClickL
     private Button btnNext;
     private ProgressBar pbLoading;
 
-    private FindPasswordViewModel findPasswordViewModel;
+    private ResetPasswordViewModel resetPasswordViewModel;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
-    public FindPasswordStep1Fragment() {}
+    public ResetPasswordStep1Fragment() {}
 
     /**
      * Create a new instance of fragment.
      */
-    public static FindPasswordStep1Fragment newInstance() {
-        return new FindPasswordStep1Fragment();
+    public static ResetPasswordStep1Fragment newInstance() {
+        return new ResetPasswordStep1Fragment();
     }
 
     @Override
@@ -55,37 +55,37 @@ public class FindPasswordStep1Fragment extends Fragment implements View.OnClickL
         // Re-created activities receive the same MyViewModel instance created by the first activity.
         // Note: A ViewModel must never reference a view, Lifecycle, or any class that may hold a reference to the activity context.
         ///https://developer.android.com/topic/libraries/architecture/viewmodel
-        findPasswordViewModel = ViewModelProviders.of(Objects.requireNonNull(getActivity()), new FindPasswordViewModelFactory())
-                .get(FindPasswordViewModel.class);
+        resetPasswordViewModel = ViewModelProviders.of(Objects.requireNonNull(getActivity()), new ResetPasswordViewModelFactory())
+                .get(ResetPasswordViewModel.class);
 
-        findPasswordViewModel.getFindPasswordStep1FormState().observe(this, new Observer<FindPasswordStep1FormState>() {
+        resetPasswordViewModel.getResetPasswordStep1FormState().observe(this, new Observer<ResetPasswordStep1FormState>() {
             @Override
-            public void onChanged(@Nullable FindPasswordStep1FormState findPasswordStep1FormState) {
-                if (findPasswordStep1FormState == null) {
+            public void onChanged(@Nullable ResetPasswordStep1FormState resetPasswordStep1FormState) {
+                if (resetPasswordStep1FormState == null) {
                     return;
                 }
-                btnNext.setEnabled(findPasswordStep1FormState.isDataValid());
+                btnNext.setEnabled(resetPasswordStep1FormState.isDataValid());
 
                 ///[EditText错误提示]
-                if (findPasswordStep1FormState.getUsernameError() == null) {
+                if (resetPasswordStep1FormState.getUsernameError() == null) {
                     etUsername.setError(null);
                 } else {
-                    etUsername.setError(getString(findPasswordStep1FormState.getUsernameError()));
+                    etUsername.setError(getString(resetPasswordStep1FormState.getUsernameError()));
                 }
             }
         });
 
-        findPasswordViewModel.resetFindPasswordResult();
-        findPasswordViewModel.getFindPasswordResult().observe(this, new Observer<FindPasswordResult>() {
+        resetPasswordViewModel.setResetPasswordResult();
+        resetPasswordViewModel.getResetPasswordResult().observe(this, new Observer<ResetPasswordResult>() {
             @Override
-            public void onChanged(@Nullable FindPasswordResult findPasswordResult) {
-                if (findPasswordResult == null) {
+            public void onChanged(@Nullable ResetPasswordResult resetPasswordResult) {
+                if (resetPasswordResult == null) {
                     return;
                 }
                 pbLoading.setVisibility(View.GONE);
-                if (findPasswordResult.getError() != null) {
+                if (resetPasswordResult.getError() != null) {
                     ///[Request focus#根据返回错误来请求表单焦点]
-                    switch (findPasswordResult.getError()) {
+                    switch (resetPasswordResult.getError()) {
                         case R.string.error_network_error:
                             break;
                         case R.string.error_unknown:
@@ -102,13 +102,13 @@ public class FindPasswordStep1Fragment extends Fragment implements View.OnClickL
 
                     ///Display failed message
                     if (getActivity() != null) {
-                        ((FindPasswordActivity)getActivity()).showFailedMessage(findPasswordResult.getError());
+                        ((ResetPasswordActivity)getActivity()).showFailedMessage(resetPasswordResult.getError());
                     }
                 } else {
                     if (getActivity() != null) {
-                        if (findPasswordResult.getSuccess() != null)
-                            ((FindPasswordActivity) getActivity()).updateUi(findPasswordResult.getSuccess());
-                        ((FindPasswordActivity)getActivity()).showFindPasswordStep2Fragment();
+                        if (resetPasswordResult.getSuccess() != null)
+                            ((ResetPasswordActivity) getActivity()).updateUi(resetPasswordResult.getSuccess());
+                        ((ResetPasswordActivity)getActivity()).showResetPasswordStep2Fragment();
                     }
                 }
             }
@@ -163,7 +163,7 @@ public class FindPasswordStep1Fragment extends Fragment implements View.OnClickL
             @Override
             public void afterTextChanged(Editable s) {
                 ///[EditText错误提示]
-                findPasswordViewModel.findPasswordStep1DataChanged(etUsername.getText().toString());
+                resetPasswordViewModel.resetPasswordStep1DataChanged(etUsername.getText().toString());
 
                 ///[EditText清除输入框]
                 if (!TextUtils.isEmpty(s) && ivClearUsername.getVisibility() == View.GONE) {
@@ -186,9 +186,9 @@ public class FindPasswordStep1Fragment extends Fragment implements View.OnClickL
     }
 
     private void actionNext() {
-        if (findPasswordViewModel.getFindPasswordStep1FormState().getValue() != null
-                && findPasswordViewModel.getFindPasswordStep1FormState().getValue().isDataValid()) {
-            findPasswordViewModel.findUser(etUsername.getText().toString());
+        if (resetPasswordViewModel.getResetPasswordStep1FormState().getValue() != null
+                && resetPasswordViewModel.getResetPasswordStep1FormState().getValue().isDataValid()) {
+            resetPasswordViewModel.findUser(etUsername.getText().toString());
         }
     }
 }

@@ -5,13 +5,13 @@ import android.support.annotation.Nullable;
 /**
  * Data validation state.
  */
-class FindPasswordStep4FormState {
+class ResetPasswordStep4FormState {
     @Nullable
     private Integer passwordError;
     @Nullable
     private Integer repeatPasswordError;
 
-    FindPasswordStep4FormState(@Nullable Integer passwordError, @Nullable Integer repeatPasswordError) {
+    ResetPasswordStep4FormState(@Nullable Integer passwordError, @Nullable Integer repeatPasswordError) {
         this.passwordError = passwordError;
         this.repeatPasswordError = repeatPasswordError;
     }

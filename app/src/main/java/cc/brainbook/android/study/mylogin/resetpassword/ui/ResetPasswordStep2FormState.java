@@ -5,7 +5,7 @@ import android.support.annotation.Nullable;
 /**
  * Data validation state.
  */
-class FindPasswordStep2FormState {
+class ResetPasswordStep2FormState {
     @Nullable
     private Integer emailError;
     @Nullable
@@ -13,7 +13,7 @@ class FindPasswordStep2FormState {
 
     private boolean isAllEmpty;
 
-    FindPasswordStep2FormState(@Nullable Integer emailError, @Nullable Integer mobileError, boolean isAllEmpty) {
+    ResetPasswordStep2FormState(@Nullable Integer emailError, @Nullable Integer mobileError, boolean isAllEmpty) {
         this.emailError = emailError;
         this.mobileError = mobileError;
         this.isAllEmpty = isAllEmpty;

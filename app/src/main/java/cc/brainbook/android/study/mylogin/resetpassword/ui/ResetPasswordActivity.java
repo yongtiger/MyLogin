@@ -7,7 +7,7 @@ import android.widget.Toast;
 
 import cc.brainbook.android.study.mylogin.R;
 
-public class FindPasswordActivity extends AppCompatActivity {
+public class ResetPasswordActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,50 +25,50 @@ public class FindPasswordActivity extends AppCompatActivity {
         // http://developer.android.com/guide/components/fragments.html
         //
         if (savedInstanceState == null) {
-            showFindPasswordStep1Fragment();
+            showResetPasswordStep1Fragment();
         }
     }
 
-    public void showFindPasswordStep1Fragment() {
-        final FindPasswordStep1Fragment findPasswordStep1Fragment = FindPasswordStep1Fragment.newInstance();
+    public void showResetPasswordStep1Fragment() {
+        final ResetPasswordStep1Fragment resetPasswordStep1Fragment = ResetPasswordStep1Fragment.newInstance();
 
         // Execute a transaction, replacing any existing fragment
         // with this one inside the frame.
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.container, findPasswordStep1Fragment)
+                .replace(R.id.container, resetPasswordStep1Fragment)
                 .setTransition(android.app.FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                 .commit();
     }
 
-    public void showFindPasswordStep2Fragment() {
-        final FindPasswordStep2Fragment findPasswordStep2Fragment = FindPasswordStep2Fragment.newInstance();
+    public void showResetPasswordStep2Fragment() {
+        final ResetPasswordStep2Fragment resetPasswordStep2Fragment = ResetPasswordStep2Fragment.newInstance();
 
         // Execute a transaction, replacing any existing fragment
         // with this one inside the frame.
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.container, findPasswordStep2Fragment)
+                .replace(R.id.container, resetPasswordStep2Fragment)
                 .setTransition(android.app.FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                 .commit();
     }
 
-    public void showFindPasswordStep3Fragment() {
-        final FindPasswordStep3Fragment findPasswordStep3Fragment = FindPasswordStep3Fragment.newInstance();
+    public void showResetPasswordStep3Fragment() {
+        final ResetPasswordStep3Fragment resetPasswordStep3Fragment = ResetPasswordStep3Fragment.newInstance();
 
         // Execute a transaction, replacing any existing fragment
         // with this one inside the frame.
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.container, findPasswordStep3Fragment)
+                .replace(R.id.container, resetPasswordStep3Fragment)
                 .setTransition(android.app.FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                 .commit();
     }
 
-    public void showFindPasswordStep4Fragment() {
-        final FindPasswordStep4Fragment findPasswordStep4Fragment = FindPasswordStep4Fragment.newInstance();
+    public void showResetPasswordStep4Fragment() {
+        final ResetPasswordStep4Fragment resetPasswordStep4Fragment = ResetPasswordStep4Fragment.newInstance();
 
         // Execute a transaction, replacing any existing fragment
         // with this one inside the frame.
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.container, findPasswordStep4Fragment)
+                .replace(R.id.container, resetPasswordStep4Fragment)
                 .setTransition(android.app.FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                 .commit();
     }

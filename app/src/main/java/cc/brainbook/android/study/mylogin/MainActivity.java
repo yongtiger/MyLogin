@@ -1,4 +1,4 @@
-package cc.brainbook.android.study.mylogin.userauthentication.ui;
+package cc.brainbook.android.study.mylogin;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -9,7 +9,6 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import cc.brainbook.android.study.mylogin.R;
 import cc.brainbook.android.study.mylogin.userauthentication.data.UserRepository;
 import cc.brainbook.android.study.mylogin.userauthentication.exception.LogoutException;
 import cc.brainbook.android.study.mylogin.userauthentication.interfaces.LogoutCallback;
@@ -42,13 +41,13 @@ public class MainActivity extends AppCompatActivity {
         btnLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final UserRepository loginRepository = UserRepository.getInstance();
-                loginRepository.logout(new LogoutCallback() {
+                final UserRepository userRepository = UserRepository.getInstance();
+                userRepository.logout(new LogoutCallback() {
                     @Override
                     public void onSuccess() {
                         ///[返回结果及错误处理]返回结果
                         ///注意：要先获得user！否则会被随后执行的UserRepository#setLoggedInUser(null)清空
-                        final String username = loginRepository.getLoggedInUser().getUsername();
+                        final String username = userRepository.getLoggedInUser().getUsername();
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
@@ -65,6 +64,12 @@ public class MainActivity extends AppCompatActivity {
                         ///[返回结果及错误处理]错误处理
                         int error;
                         switch (e.getCode()) {
+                            case -3:
+                                error = R.string.error_network_error;
+                                break;
+                            case -2:
+                                error = R.string.error_unknown;
+                                break;
                             case -1:
                                 error = R.string.logout_error_token_is_invalid_or_expired;
                                 break;

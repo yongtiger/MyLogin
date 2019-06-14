@@ -26,48 +26,48 @@ import static cc.brainbook.android.study.mylogin.config.Config.REGEXP_PASSWORD;
 import static cc.brainbook.android.study.mylogin.config.Config.REGEXP_USERNAME;
 import static cc.brainbook.android.study.mylogin.config.Config.REGEXP_VERIFICATION_CODE;
 
-public class FindPasswordViewModel extends ViewModel {
-    private MutableLiveData<FindPasswordStep1FormState> findPasswordStep1FormState = new MutableLiveData<>();
-    private MutableLiveData<FindPasswordStep2FormState> findPasswordStep2FormState = new MutableLiveData<>();
-    private MutableLiveData<FindPasswordStep3FormState> findPasswordStep3FormState = new MutableLiveData<>();
-    private MutableLiveData<FindPasswordStep4FormState> findPasswordStep4FormState = new MutableLiveData<>();
+public class ResetPasswordViewModel extends ViewModel {
+    private MutableLiveData<ResetPasswordStep1FormState> resetPasswordStep1FormState = new MutableLiveData<>();
+    private MutableLiveData<ResetPasswordStep2FormState> resetPasswordStep2FormState = new MutableLiveData<>();
+    private MutableLiveData<ResetPasswordStep3FormState> resetPasswordStep3FormState = new MutableLiveData<>();
+    private MutableLiveData<ResetPasswordStep4FormState> resetPasswordStep4FormState = new MutableLiveData<>();
 
-    private MutableLiveData<FindPasswordResult> findPasswordResult;
+    private MutableLiveData<ResetPasswordResult> resetPasswordResult;
 
     private ResetPasswordRepository resetPasswordRepository; ///ViewModel should not be doing any data loading tasks. Use Repository instead.
 
-    FindPasswordViewModel(ResetPasswordRepository resetPasswordRepository) {
+    ResetPasswordViewModel(ResetPasswordRepository resetPasswordRepository) {
         this.resetPasswordRepository = resetPasswordRepository;
     }
 
-    LiveData<FindPasswordStep1FormState> getFindPasswordStep1FormState() {
-        return findPasswordStep1FormState;
+    LiveData<ResetPasswordStep1FormState> getResetPasswordStep1FormState() {
+        return resetPasswordStep1FormState;
     }
-    LiveData<FindPasswordStep2FormState> getFindPasswordStep2FormState() {
-        return findPasswordStep2FormState;
+    LiveData<ResetPasswordStep2FormState> getResetPasswordStep2FormState() {
+        return resetPasswordStep2FormState;
     }
-    LiveData<FindPasswordStep3FormState> getFindPasswordStep3FormState() {
-        return findPasswordStep3FormState;
+    LiveData<ResetPasswordStep3FormState> getResetPasswordStep3FormState() {
+        return resetPasswordStep3FormState;
     }
-    LiveData<FindPasswordStep4FormState> getFindPasswordStep4FormState() {
-        return findPasswordStep4FormState;
+    LiveData<ResetPasswordStep4FormState> getResetPasswordStep4FormState() {
+        return resetPasswordStep4FormState;
     }
 
-    LiveData<FindPasswordResult> getFindPasswordResult() {
-        return findPasswordResult;
+    LiveData<ResetPasswordResult> getResetPasswordResult() {
+        return resetPasswordResult;
     }
-    public void resetFindPasswordResult() {
-        findPasswordResult = new MutableLiveData<>();
+    public void setResetPasswordResult() {
+        resetPasswordResult = new MutableLiveData<>();
     }
 
     public String getUserId() {
-        return resetPasswordRepository.getFindPasswordUser().getUserId();
+        return resetPasswordRepository.getResetPasswordUser().getUserId();
     }
     public String getEmail() {
-        return resetPasswordRepository.getFindPasswordUser().getEmail();
+        return resetPasswordRepository.getResetPasswordUser().getEmail();
     }
     public String getMobile() {
-        return resetPasswordRepository.getFindPasswordUser().getMobile();
+        return resetPasswordRepository.getResetPasswordUser().getMobile();
     }
 
     ///[SendMode传递参数给下个fragment]
@@ -110,7 +110,7 @@ public class FindPasswordViewModel extends ViewModel {
             @Override
             public void onSuccess(ResetPasswordUser resetPasswordUser) {
                 ///[返回结果及错误处理]返回结果
-                findPasswordResult.postValue(new FindPasswordResult(null, null));   ///use live data's postValue(..) method from background thread.
+                resetPasswordResult.postValue(new ResetPasswordResult(null, null));   ///use live data's postValue(..) method from background thread.
             }
 
             @Override
@@ -137,7 +137,7 @@ public class FindPasswordViewModel extends ViewModel {
                         error = R.string.error_unknown;
                 }
                 ///use live data's postValue(..) method from background thread.
-                findPasswordResult.postValue(new FindPasswordResult(null, error));
+                resetPasswordResult.postValue(new ResetPasswordResult(null, error));
             }
         });
     }
@@ -151,7 +151,7 @@ public class FindPasswordViewModel extends ViewModel {
                 setSendMode(sendMode);
 
                 ///[返回结果及错误处理]返回结果
-                findPasswordResult.postValue(new FindPasswordResult(null, null));   ///use live data's postValue(..) method from background thread.
+                resetPasswordResult.postValue(new ResetPasswordResult(null, null));   ///use live data's postValue(..) method from background thread.
             }
 
             @Override
@@ -187,7 +187,7 @@ public class FindPasswordViewModel extends ViewModel {
                         error = R.string.error_unknown;
                 }
                 ///use live data's postValue(..) method from background thread.
-                findPasswordResult.postValue(new FindPasswordResult(null, error));
+                resetPasswordResult.postValue(new ResetPasswordResult(null, error));
             }
         });
     }
@@ -201,7 +201,7 @@ public class FindPasswordViewModel extends ViewModel {
                 setSessionId(sessionId);
 
                 ///[返回结果及错误处理]返回结果
-                findPasswordResult.postValue(new FindPasswordSendVerificationCodeResult(null, null));   ///use live data's postValue(..) method from background thread.
+                resetPasswordResult.postValue(new ResetPasswordSendVerificationCodeResult(null, null));   ///use live data's postValue(..) method from background thread.
             }
 
             @Override
@@ -237,7 +237,7 @@ public class FindPasswordViewModel extends ViewModel {
                         error = R.string.error_unknown;
                 }
                 ///use live data's postValue(..) method from background thread.
-                findPasswordResult.postValue(new FindPasswordSendVerificationCodeResult(null, error));
+                resetPasswordResult.postValue(new ResetPasswordSendVerificationCodeResult(null, error));
             }
         });
     }
@@ -248,7 +248,7 @@ public class FindPasswordViewModel extends ViewModel {
             @Override
             public void onSuccess() {
                 ///[返回结果及错误处理]返回结果
-                findPasswordResult.postValue(new FindPasswordResult(null, null));   ///use live data's postValue(..) method from background thread.
+                resetPasswordResult.postValue(new ResetPasswordResult(null, null));   ///use live data's postValue(..) method from background thread.
             }
 
             @Override
@@ -275,7 +275,7 @@ public class FindPasswordViewModel extends ViewModel {
                         error = R.string.error_unknown;
                 }
                 ///use live data's postValue(..) method from background thread.
-                findPasswordResult.postValue(new FindPasswordResult(null, error));
+                resetPasswordResult.postValue(new ResetPasswordResult(null, error));
             }
         });
     }
@@ -286,7 +286,7 @@ public class FindPasswordViewModel extends ViewModel {
             @Override
             public void onSuccess() {
                 ///[返回结果及错误处理]返回结果
-                findPasswordResult.postValue(new FindPasswordResult(R.string.result_success_successfully_reset_password, null));   ///use live data's postValue(..) method from background thread.
+                resetPasswordResult.postValue(new ResetPasswordResult(R.string.result_success_successfully_reset_password, null));   ///use live data's postValue(..) method from background thread.
             }
 
             @Override
@@ -310,13 +310,13 @@ public class FindPasswordViewModel extends ViewModel {
                         error = R.string.error_unknown;
                 }
                 ///use live data's postValue(..) method from background thread.
-                findPasswordResult.postValue(new FindPasswordResult(null, error));
+                resetPasswordResult.postValue(new ResetPasswordResult(null, error));
             }
         });
     }
 
-    public void findPasswordStep1DataChanged(String username) {
-        findPasswordStep1FormState.setValue(new FindPasswordStep1FormState(isUsernameValid(username) ? null : R.string.error_invalid_username));
+    public void resetPasswordStep1DataChanged(String username) {
+        resetPasswordStep1FormState.setValue(new ResetPasswordStep1FormState(isUsernameValid(username) ? null : R.string.error_invalid_username));
     }
 
     // A placeholder username validation
@@ -324,9 +324,9 @@ public class FindPasswordViewModel extends ViewModel {
         return !TextUtils.isEmpty(username) && Pattern.matches(REGEXP_USERNAME, username);
     }
 
-    public void findPasswordStep2DataChanged(String email, String mobile) {
+    public void resetPasswordStep2DataChanged(String email, String mobile) {
         final boolean isAllEmpty = TextUtils.isEmpty(email) && TextUtils.isEmpty(mobile);
-        findPasswordStep2FormState.setValue(new FindPasswordStep2FormState(
+        resetPasswordStep2FormState.setValue(new ResetPasswordStep2FormState(
                 isEmailValid(email) ? null : R.string.error_invalid_email,
                 isMobileValid(mobile) ? null : R.string.error_invalid_mobile,
                 isAllEmpty));
@@ -343,8 +343,8 @@ public class FindPasswordViewModel extends ViewModel {
     }
 
 
-    public void findPasswordStep3DataChanged(String verificationCode) {
-        findPasswordStep3FormState.setValue(new FindPasswordStep3FormState(
+    public void resetPasswordStep3DataChanged(String verificationCode) {
+        resetPasswordStep3FormState.setValue(new ResetPasswordStep3FormState(
                 isVerificationCodeValid(verificationCode) ? null : R.string.error_invalid_verification_code,
                 !TextUtils.isEmpty(getSessionId()))); ///[SessionId]
     }
@@ -354,8 +354,8 @@ public class FindPasswordViewModel extends ViewModel {
         return !TextUtils.isEmpty(verificationCode) && Pattern.matches(REGEXP_VERIFICATION_CODE, verificationCode);
     }
 
-    public void findPasswordStep4DataChanged(String password, String repeatPassword) {
-        findPasswordStep4FormState.setValue(new FindPasswordStep4FormState(
+    public void resetPasswordStep4DataChanged(String password, String repeatPassword) {
+        resetPasswordStep4FormState.setValue(new ResetPasswordStep4FormState(
                 isPasswordValid(password) ? null : R.string.error_invalid_password,
                 isRepeatPasswordValid(password, repeatPassword) ? null : R.string.error_invalid_repeat_password));
     }
