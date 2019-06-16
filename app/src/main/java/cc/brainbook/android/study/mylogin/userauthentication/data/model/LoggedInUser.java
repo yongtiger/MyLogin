@@ -6,6 +6,8 @@ package cc.brainbook.android.study.mylogin.userauthentication.data.model;
 public class LoggedInUser {
     private String userId;
     private String username;
+    private String email;
+    private String mobile;
     private String token;
     private long tokenExpiredAt;
     private long createdAt;
@@ -13,12 +15,16 @@ public class LoggedInUser {
 
     public LoggedInUser(String userId,
                         String username,
+                        String email,
+                        String mobile,
                         String token,
                         long tokenExpiredAt,
                         long createdAt,
                         long updatedAt) {
         this.userId = userId;
         this.username = username;
+        this.email = email;
+        this.mobile = mobile;
         this.token = token;
         this.tokenExpiredAt = tokenExpiredAt;
         this.createdAt = createdAt;
@@ -38,6 +44,22 @@ public class LoggedInUser {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getMobile() {
+        return mobile;
+    }
+
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
     }
 
     public String getToken() {
@@ -77,6 +99,8 @@ public class LoggedInUser {
         return "LoggedInUser{" +
                 "userId='" + userId + '\'' +
                 ", username='" + username + '\'' +
+                ", email='" + email + '\'' +
+                ", mobile='" + mobile + '\'' +
                 ", token='" + token + '\'' +
                 ", tokenExpiredAt='" + tokenExpiredAt + '\'' +
                 ", createdAt='" + createdAt + '\'' +

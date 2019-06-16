@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:stv="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".useraccount.UserAccountFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorDivider"
+        android:orientation="vertical"
+        android:paddingTop="20dp">
+
+        <com.allen.library.SuperTextView
+            android:id="@+id/stv_username"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:layout_marginTop="20dp"
+            stv:sBackgroundDrawableRes="@color/colorWhite"
+            stv:sDividerLineType="both"
+            stv:sLeftTextString="@string/username"
+            stv:sRightTextColor="@color/colorGray"
+            stv:sRightIconRes="@drawable/arrow_right_red" />
+
+        <com.allen.library.SuperTextView
+            android:id="@+id/stv_password"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:layout_marginTop="20dp"
+            stv:sBackgroundDrawableRes="@color/colorWhite"
+            stv:sDividerLineType="both"
+            stv:sLeftTextString="@string/password"
+            stv:sRightIconRes="@drawable/arrow_right_red" />
+
+        <com.allen.library.SuperTextView
+            android:id="@+id/stv_email"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:layout_marginTop="20dp"
+            stv:sBackgroundDrawableRes="@color/colorWhite"
+            stv:sDividerLineType="both"
+            stv:sLeftTextString="@string/email"
+            stv:sRightTextColor="@color/colorGray"
+            stv:sRightIconRes="@drawable/arrow_right_red" />
+
+        <com.allen.library.SuperTextView
+            android:id="@+id/stv_mobile"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            stv:sBackgroundDrawableRes="@color/colorWhite"
+            stv:sDividerLineType="both"
+            stv:sLeftTextString="@string/mobile"
+            stv:sRightTextColor="@color/colorGray"
+            stv:sRightIconRes="@drawable/arrow_right_red" />
+
+    </LinearLayout>
+
+</ScrollView>

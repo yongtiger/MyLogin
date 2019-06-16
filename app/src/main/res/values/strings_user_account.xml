@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="tv_title_modify_username">Modify Username</string>
+    <string name="tv_title_modify_password">Modify Password</string>
+    <string name="tv_title_modify_email">Modify Email</string>
+    <string name="tv_title_modify_mobile">Modify Mobile</string>
+    <string name="btn_save">Save</string>
+
+    <string name="result_success_successfully_saved">Successfully saved</string>
+
+    <string name="result_error_failed_to_modify_username">Failed to modify username</string>
+    <string name="result_error_failed_to_modify_password">Failed to modify password</string>
+    <string name="result_error_failed_to_modify_email">Failed to modify email</string>
+    <string name="result_error_failed_to_modify_mobile">Failed to modify mobile</string>
+
+</resources>

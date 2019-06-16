@@ -1,6 +1,14 @@
 package cc.brainbook.android.study.mylogin.userauthentication.data;
 
 import cc.brainbook.android.study.mylogin.application.MyApplication;
+import cc.brainbook.android.study.mylogin.useraccount.exception.ModifyEmailException;
+import cc.brainbook.android.study.mylogin.useraccount.exception.ModifyMobileException;
+import cc.brainbook.android.study.mylogin.useraccount.exception.ModifyPasswordException;
+import cc.brainbook.android.study.mylogin.useraccount.exception.ModifyUsernameException;
+import cc.brainbook.android.study.mylogin.useraccount.interfaces.ModifyEmailCallback;
+import cc.brainbook.android.study.mylogin.useraccount.interfaces.ModifyMobileCallback;
+import cc.brainbook.android.study.mylogin.useraccount.interfaces.ModifyPasswordCallback;
+import cc.brainbook.android.study.mylogin.useraccount.interfaces.ModifyUsernameCallback;
 import cc.brainbook.android.study.mylogin.userauthentication.exception.LoginException;
 import cc.brainbook.android.study.mylogin.userauthentication.exception.LogoutException;
 import cc.brainbook.android.study.mylogin.userauthentication.exception.RegisterException;
@@ -40,8 +48,22 @@ public class UserRepository {
         return sInstance;
     }
 
+    public LoggedInUser getLoggedInUser() {
+        return mUser;
+    }
+
+    private void setLoggedInUser(LoggedInUser user) {
+        mUser = user;
+        // If mUser credentials will be cached in local storage, it is recommended it be encrypted
+        // @see https://developer.android.com/training/articles/keystore
+
+        ///[local storage (SharedPreferences)]Save user
+        ///Note: If user is null, clear the user in SharedPreferences
+        PrefsUtil.putToJson(MyApplication.getContext(), KEY_USER, user);
+    }
+
     public boolean isLoggedIn() {
-        return mUser != null && System.currentTimeMillis() < mUser.getTokenExpiredAt() * 1000;
+        return getLoggedInUser() != null && System.currentTimeMillis() < getLoggedInUser().getTokenExpiredAt() * 1000;
     }
 
     public void register(String username, String password, RegisterCallback registerCallback) {
@@ -76,7 +98,7 @@ public class UserRepository {
     }
 
     public void logout(LogoutCallback logoutCallback) {
-        mDataSource.logout(mUser, new LogoutCallback() {
+        mDataSource.logout(getLoggedInUser(), new LogoutCallback() {
             @Override
             public void onSuccess() {
                 logoutCallback.onSuccess();
@@ -92,18 +114,67 @@ public class UserRepository {
         });
     }
 
-    public LoggedInUser getLoggedInUser() {
-        return mUser;
+
+    public void modifyUsername(String username, ModifyUsernameCallback modifyUsernameCallback) {
+        mDataSource.modifyUsername(getLoggedInUser(), username, new ModifyUsernameCallback(){
+            @Override
+            public void onSuccess() {
+                getLoggedInUser().setUsername(username);
+                setLoggedInUser(getLoggedInUser());
+                modifyUsernameCallback.onSuccess();
+            }
+
+            @Override
+            public void onError(ModifyUsernameException e) {
+                modifyUsernameCallback.onError(e);
+            }
+        });
     }
 
-    private void setLoggedInUser(LoggedInUser user) {
-        mUser = user;
-        // If mUser credentials will be cached in local storage, it is recommended it be encrypted
-        // @see https://developer.android.com/training/articles/keystore
+    public void modifyPassword(String password, ModifyPasswordCallback modifyPasswordCallback) {
+        mDataSource.modifyPassword(getLoggedInUser(), password, new ModifyPasswordCallback(){
+            @Override
+            public void onSuccess() {
+                modifyPasswordCallback.onSuccess();
+            }
 
-        ///[local storage (SharedPreferences)]Save user
-        ///Note: If user is null, clear the user in SharedPreferences
-        PrefsUtil.putToJson(MyApplication.getContext(), KEY_USER, user);
+            @Override
+            public void onError(ModifyPasswordException e) {
+                modifyPasswordCallback.onError(e);
+            }
+        });
+    }
+
+    public void modifyEmail(String email, ModifyEmailCallback modifyEmailCallback) {
+        mDataSource.modifyEmail(getLoggedInUser(), email, new ModifyEmailCallback(){
+            @Override
+            public void onSuccess() {
+                getLoggedInUser().setEmail(email);
+                setLoggedInUser(getLoggedInUser());
+                modifyEmailCallback.onSuccess();
+            }
+
+            @Override
+            public void onError(ModifyEmailException e) {
+                modifyEmailCallback.onError(e);
+            }
+        });
+    }
+
+    public void modifyMobile(String mobile, ModifyMobileCallback modifyMobileCallback) {
+        mDataSource.modifyMobile(getLoggedInUser(), mobile, new ModifyMobileCallback(){
+            @Override
+            public void onSuccess() {
+                getLoggedInUser().setMobile(mobile);
+                setLoggedInUser(getLoggedInUser());
+                modifyMobileCallback.onSuccess();
+            }
+
+            @Override
+            public void onError(ModifyMobileException e) {
+                modifyMobileCallback.onError(e);
+            }
+        });
     }
 
 }

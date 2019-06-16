@@ -163,7 +163,7 @@ public class ResetPasswordStep2Fragment extends Fragment implements View.OnClick
         }
     }
 
-    private void initView(View rootView) {
+    private void initView(@NonNull View rootView) {
         tvCannotResetPassword = rootView.findViewById(R.id.tv_cannot_reset_password);
         tvInputEmail = rootView.findViewById(R.id.tv_input_email);
         tvInputMobile = rootView.findViewById(R.id.tv_input_mobile);

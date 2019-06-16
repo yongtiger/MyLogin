@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">My Login</string>
 
+    <string name="user_account">User account</string>
+    <string name="user_profile">User profile</string>
+
     <string name="username_or_email_or_mobile">Username / Email / Mobile</string>
     <string name="username">Username</string>
     <string name="password">Password</string>
@@ -30,6 +33,7 @@
     <string name="error_invalid_email">Not a valid email</string>
     <string name="error_invalid_mobile">Not a valid mobile</string>
     <string name="error_invalid_verification_code">"Invalid verification code"</string>
+    <string name="error_token_is_invalid_or_expired">"Token is invalid or expired"</string>
 
     <string name="register_error_user_exists">"Register failed! User exists"</string>
     <string name="register_error_email_exists">"Register failed! Email exists"</string>
@@ -37,7 +41,5 @@
 
     <string name="login_error_invalid_username">"Login failed! Invalid username"</string>
     <string name="login_error_invalid_password">"Login failed! Invalid password"</string>
-
-    <string name="logout_error_token_is_invalid_or_expired">"Logout failed! Token is invalid or expired"</string>
 
 </resources>

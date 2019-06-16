@@ -1,4 +1,5 @@
-package cc.brainbook.android.study.mylogin.resetpassword.ui;
+package cc.brainbook.android.study.mylogin.useraccount;
+
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
@@ -24,27 +25,29 @@ import java.util.Objects;
 
 import cc.brainbook.android.study.mylogin.R;
 
-public class ResetPasswordStep1Fragment extends Fragment implements View.OnClickListener {
+public class UserAccountUsernameFragment extends Fragment implements View.OnClickListener {
 
     private EditText etUsername;
     private ImageView ivClearUsername;
 
-    private Button btnNext;
+    private Button btnSave;
     private ProgressBar pbLoading;
 
-    private ResetPasswordViewModel resetPasswordViewModel;
+    private UserAccountViewModel userAccountViewModel;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
-    public ResetPasswordStep1Fragment() {}
+    public UserAccountUsernameFragment() {
+        // Required empty public constructor
+    }
 
     /**
      * Create a new instance of fragment.
      */
-    public static ResetPasswordStep1Fragment newInstance() {
-        return new ResetPasswordStep1Fragment();
+    public static UserAccountUsernameFragment newInstance() {
+        return new UserAccountUsernameFragment();
     }
 
     @Override
@@ -55,37 +58,39 @@ public class ResetPasswordStep1Fragment extends Fragment implements View.OnClick
         // Re-created activities receive the same MyViewModel instance created by the first activity.
         // Note: A ViewModel must never reference a view, Lifecycle, or any class that may hold a reference to the activity context.
         ///https://developer.android.com/topic/libraries/architecture/viewmodel
-        resetPasswordViewModel = ViewModelProviders.of(Objects.requireNonNull(getActivity()), new ResetPasswordViewModelFactory())
-                .get(ResetPasswordViewModel.class);
+        userAccountViewModel = ViewModelProviders.of(Objects.requireNonNull(getActivity()), new UserAccountViewModelFactory())
+                .get(UserAccountViewModel.class);
 
-        resetPasswordViewModel.getResetPasswordStep1FormState().observe(this, new Observer<ResetPasswordStep1FormState>() {
+        userAccountViewModel.getUserAccountUsernameFormState().observe(this, new Observer<UserAccountUsernameFormState>() {
             @Override
-            public void onChanged(@Nullable ResetPasswordStep1FormState resetPasswordStep1FormState) {
-                if (resetPasswordStep1FormState == null) {
+            public void onChanged(@Nullable UserAccountUsernameFormState userAccountUsernameFormState) {
+                if (userAccountUsernameFormState == null) {
                     return;
                 }
-                btnNext.setEnabled(resetPasswordStep1FormState.isDataValid());
+                btnSave.setEnabled(userAccountUsernameFormState.isDataValid());
 
                 ///[EditText错误提示]
-                if (resetPasswordStep1FormState.getUsernameError() == null) {
+                if (userAccountUsernameFormState.getUsernameError() == null) {
                     etUsername.setError(null);
                 } else {
-                    etUsername.setError(getString(resetPasswordStep1FormState.getUsernameError()));
+                    etUsername.setError(getString(userAccountUsernameFormState.getUsernameError()));
                 }
             }
         });
 
-        resetPasswordViewModel.setResetPasswordResult();
-        resetPasswordViewModel.getResetPasswordResult().observe(this, new Observer<ResetPasswordResult>() {
+        userAccountViewModel.setUserAccountResult();
+        userAccountViewModel.getUserAccountResult().observe(this, new Observer<UserAccountResult>() {
             @Override
-            public void onChanged(@Nullable ResetPasswordResult resetPasswordResult) {
-                if (resetPasswordResult == null) {
+            public void onChanged(@Nullable UserAccountResult userAccountResult) {
+                if (userAccountResult == null) {
                     return;
                 }
                 pbLoading.setVisibility(View.GONE);
-                if (resetPasswordResult.getError() != null) {
+                if (userAccountResult.getError() != null) {
                     ///[Request focus#根据返回错误来请求表单焦点]
-                    switch (resetPasswordResult.getError()) {
+                    switch (userAccountResult.getError()) {
+                        case R.string.error_token_is_invalid_or_expired:
+                            break;
                         case R.string.error_network_error:
                             break;
                         case R.string.error_unknown:
@@ -95,20 +100,21 @@ public class ResetPasswordStep1Fragment extends Fragment implements View.OnClick
                         case R.string.error_invalid_username:
                             etUsername.requestFocus();
                             break;
-                        case R.string.result_error_cannot_reset_password:
-                            break;
                         default:    ///R.string.error_unknown
                     }
 
                     ///Display failed message
                     if (getActivity() != null) {
-                        ((ResetPasswordActivity)getActivity()).showFailedMessage(resetPasswordResult.getError());
+                        ((UserAccountActivity)getActivity()).showFailedMessage(userAccountResult.getError());
                     }
                 } else {
                     if (getActivity() != null) {
-                        if (resetPasswordResult.getSuccess() != null)
-                            ((ResetPasswordActivity) getActivity()).updateUi(resetPasswordResult.getSuccess());
-                        ((ResetPasswordActivity)getActivity()).showResetPasswordStep2Fragment();
+                        if (userAccountResult.getSuccess() != null)
+                            ((UserAccountActivity) getActivity()).updateUi(userAccountResult.getSuccess());
+                        ///[关闭其它fragment后回退显示UserAccountFragment]
+                        if (getFragmentManager() != null) {
+                            getFragmentManager().popBackStack();
+                        }
                     }
                 }
             }
@@ -118,7 +124,7 @@ public class ResetPasswordStep1Fragment extends Fragment implements View.OnClick
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        final View rootView = inflater.inflate(R.layout.fragment_reset_password_step_1, container, false);
+        final View rootView = inflater.inflate(R.layout.fragment_user_account_username, container, false);
 
         initView(rootView);
         initListener();
@@ -133,9 +139,9 @@ public class ResetPasswordStep1Fragment extends Fragment implements View.OnClick
                 ///[EditText清除输入框]
                 etUsername.setText("");
                 break;
-            case R.id.btn_next:
+            case R.id.btn_save:
                 pbLoading.setVisibility(View.VISIBLE);
-                actionNext();
+                actionSave();
                 break;
         }
     }
@@ -144,14 +150,14 @@ public class ResetPasswordStep1Fragment extends Fragment implements View.OnClick
         etUsername = rootView.findViewById(R.id.et_username);
         ivClearUsername = rootView.findViewById(R.id.iv_clear_username);
 
-        btnNext = rootView.findViewById(R.id.btn_next);
+        btnSave = rootView.findViewById(R.id.btn_save);
         pbLoading = rootView.findViewById(R.id.pb_loading);
     }
 
     private void initListener() {
         etUsername.setOnClickListener(this);
         ivClearUsername.setOnClickListener(this);
-        btnNext.setOnClickListener(this);
+        btnSave.setOnClickListener(this);
 
         etUsername.addTextChangedListener(new TextWatcher() {
             @Override
@@ -163,7 +169,7 @@ public class ResetPasswordStep1Fragment extends Fragment implements View.OnClick
             @Override
             public void afterTextChanged(Editable s) {
                 ///[EditText错误提示]
-                resetPasswordViewModel.resetPasswordStep1DataChanged(etUsername.getText().toString());
+                userAccountViewModel.userAccountUsernameDataChanged(etUsername.getText().toString());
 
                 ///[EditText清除输入框]
                 if (!TextUtils.isEmpty(s) && ivClearUsername.getVisibility() == View.GONE) {
@@ -178,17 +184,17 @@ public class ResetPasswordStep1Fragment extends Fragment implements View.OnClick
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    actionNext();
+                    actionSave();
                 }
                 return false;
             }
         });
     }
 
-    private void actionNext() {
-        if (resetPasswordViewModel.getResetPasswordStep1FormState().getValue() != null
-                && resetPasswordViewModel.getResetPasswordStep1FormState().getValue().isDataValid()) {
-            resetPasswordViewModel.findUser(etUsername.getText().toString());
+    private void actionSave() {
+        if (userAccountViewModel.getUserAccountUsernameFormState().getValue() != null
+                && userAccountViewModel.getUserAccountUsernameFormState().getValue().isDataValid()) {
+            userAccountViewModel.modifyUsername(etUsername.getText().toString());
         }
     }
 }

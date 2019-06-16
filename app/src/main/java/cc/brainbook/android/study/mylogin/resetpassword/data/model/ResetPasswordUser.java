@@ -47,7 +47,7 @@ public class ResetPasswordUser {
 
     @Override
     public String toString() {
-        return "ResetPasswordUser{" +
+        return "UserAccountUser{" +
                 "userId='" + userId + '\'' +
                 ", username='" + username + '\'' +
                 ", email='" + email + '\'' +

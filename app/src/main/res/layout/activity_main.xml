@@ -1,70 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:stv="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin"
     tools:context=".MainActivity">
 
-    <TextView
-        android:id="@+id/tv_username"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        android:layout_marginTop="20dp"
-        android:visibility="gone"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:paddingTop="20dp"
+        android:orientation="vertical"
+        android:background="@color/colorDivider">
 
-    <TextView
-        android:id="@+id/tv_email"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        android:visibility="gone"
-        app:layout_constraintTop_toBottomOf="@+id/tv_username" />
+        <LinearLayout
+            android:id="@+id/ll_logged_out"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="visible">
 
-    <TextView
-        android:id="@+id/tv_mobile"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        android:visibility="gone"
-        app:layout_constraintTop_toBottomOf="@+id/tv_email" />
+            <Button
+                android:id="@+id/btn_login"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:background="@color/design_default_color_primary_dark"
+                android:text="@string/login"
+                android:textColor="@android:color/white" />
 
-    <Button
-        android:id="@+id/btn_logout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="32dp"
-        android:layout_marginEnd="8dp"
-        android:visibility="gone"
-        android:background="@color/colorAccent"
-        android:enabled="true"
-        android:text="@string/logout"
-        android:textColor="@android:color/white"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_mobile" />
+        </LinearLayout>
 
-    <Button
-        android:id="@+id/btn_login"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="32dp"
-        android:layout_marginEnd="8dp"
-        android:visibility="visible"
-        android:background="@color/design_default_color_primary_dark"
-        android:enabled="true"
-        android:text="@string/login"
-        android:textColor="@android:color/white"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_mobile" />
+        <LinearLayout
+            android:id="@+id/ll_logged_in"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone">
 
-</android.support.constraint.ConstraintLayout>
+            <com.allen.library.SuperTextView
+                android:id="@+id/stv_user_account"
+                android:layout_width="match_parent"
+                android:layout_height="55dp"
+                android:layout_marginTop="20dp"
+                stv:sBackgroundDrawableRes="@color/colorWhite"
+                stv:sDividerLineType="both"
+                stv:sLeftTextString="@string/user_account"
+                stv:sRightTextString=""
+                stv:sRightIconRes="@drawable/arrow_right_red" />
+
+            <com.allen.library.SuperTextView
+                android:id="@+id/stv_user_profile"
+                android:layout_width="match_parent"
+                android:layout_height="55dp"
+                android:layout_marginTop="20dp"
+                stv:sBackgroundDrawableRes="@color/colorWhite"
+                stv:sDividerLineType="both"
+                stv:sLeftTextString="@string/user_profile"
+                stv:sRightIconRes="@drawable/arrow_right_red" />
+
+            <Button
+                android:id="@+id/btn_logout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="32dp"
+                android:layout_marginEnd="8dp"
+                android:background="@color/colorAccent"
+                android:text="@string/logout"
+                android:textColor="@android:color/white" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</ScrollView>

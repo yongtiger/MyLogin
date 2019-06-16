@@ -167,7 +167,7 @@ public class ResetPasswordStep3Fragment extends Fragment implements View.OnClick
         }
     }
 
-    private void initView(View rootView) {
+    private void initView(@NonNull View rootView) {
         etVerificationCode = rootView.findViewById(R.id.et_verification_code);
         btnSendVerificationCode = rootView.findViewById(R.id.btn_send_verification_code);
         btnNext = rootView.findViewById(R.id.btn_next);

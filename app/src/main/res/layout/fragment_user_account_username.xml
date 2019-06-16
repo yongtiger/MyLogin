@@ -7,7 +7,7 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/tv_title_step_1"
+        android:id="@+id/tv_title_modify_username"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -17,7 +17,7 @@
         android:layout_marginTop="20dp"
         android:background="@null"
         android:gravity="center"
-        android:text="@string/tv_title_step_1"
+        android:text="@string/tv_title_modify_username"
         android:textAllCaps="true"
         android:textSize="26sp"
         android:textStyle="bold"
@@ -45,7 +45,7 @@
         android:inputType="text"
         android:selectAllOnFocus="true"
         android:textSize="14sp"
-        app:layout_constraintTop_toBottomOf="@+id/tv_title_step_1"
+        app:layout_constraintTop_toBottomOf="@+id/tv_title_modify_username"
         app:layout_constraintEnd_toStartOf="@+id/iv_clear_username"
         app:layout_constraintStart_toStartOf="parent" />
     <!--输入框左侧图标：drawableLeft、drawablePadding-->
@@ -76,7 +76,7 @@
         app:layout_constraintTop_toBottomOf="@+id/et_username" />
 
     <Button
-        android:id="@+id/btn_next"
+        android:id="@+id/btn_save"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -84,7 +84,7 @@
         android:layout_marginEnd="8dp"
         android:background="@color/design_default_color_primary_dark"
         android:enabled="false"
-        android:text="@string/btn_next"
+        android:text="@string/btn_save"
         android:textColor="@android:color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
