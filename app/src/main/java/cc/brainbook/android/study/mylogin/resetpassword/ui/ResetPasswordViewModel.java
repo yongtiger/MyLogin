@@ -21,6 +21,7 @@ import cc.brainbook.android.study.mylogin.resetpassword.interfaces.FindUserCallb
 import cc.brainbook.android.study.mylogin.resetpassword.interfaces.ResetPasswordCallback;
 import cc.brainbook.android.study.mylogin.resetpassword.interfaces.SendVerificationCodeCallback;
 import cc.brainbook.android.study.mylogin.resetpassword.interfaces.VerifyCodeCallback;
+import cc.brainbook.android.study.mylogin.result.Result;
 
 import static cc.brainbook.android.study.mylogin.config.Config.REGEXP_PASSWORD;
 import static cc.brainbook.android.study.mylogin.config.Config.REGEXP_USERNAME;
@@ -32,7 +33,7 @@ public class ResetPasswordViewModel extends ViewModel {
     private MutableLiveData<ResetPasswordStep3FormState> resetPasswordStep3FormState = new MutableLiveData<>();
     private MutableLiveData<ResetPasswordStep4FormState> resetPasswordStep4FormState = new MutableLiveData<>();
 
-    private MutableLiveData<ResetPasswordResult> resetPasswordResult;
+    private MutableLiveData<Result> result;
 
     private ResetPasswordRepository resetPasswordRepository; ///ViewModel should not be doing any data loading tasks. Use Repository instead.
 
@@ -53,11 +54,11 @@ public class ResetPasswordViewModel extends ViewModel {
         return resetPasswordStep4FormState;
     }
 
-    LiveData<ResetPasswordResult> getResetPasswordResult() {
-        return resetPasswordResult;
+    LiveData<Result> getResult() {
+        return result;
     }
-    public void setResetPasswordResult() {
-        resetPasswordResult = new MutableLiveData<>();
+    public void setResult() {
+        result = new MutableLiveData<>();
     }
 
     public String getUserId() {
@@ -110,7 +111,7 @@ public class ResetPasswordViewModel extends ViewModel {
             @Override
             public void onSuccess(ResetPasswordUser resetPasswordUser) {
                 ///[返回结果及错误处理]返回结果
-                resetPasswordResult.postValue(new ResetPasswordResult(null, null));   ///use live data's postValue(..) method from background thread.
+                result.postValue(new Result(null, null));   ///use live data's postValue(..) method from background thread.
             }
 
             @Override
@@ -137,7 +138,7 @@ public class ResetPasswordViewModel extends ViewModel {
                         error = R.string.error_unknown;
                 }
                 ///use live data's postValue(..) method from background thread.
-                resetPasswordResult.postValue(new ResetPasswordResult(null, error));
+                result.postValue(new Result(null, error));
             }
         });
     }
@@ -151,7 +152,7 @@ public class ResetPasswordViewModel extends ViewModel {
                 setSendMode(sendMode);
 
                 ///[返回结果及错误处理]返回结果
-                resetPasswordResult.postValue(new ResetPasswordResult(null, null));   ///use live data's postValue(..) method from background thread.
+                result.postValue(new Result(null, null));   ///use live data's postValue(..) method from background thread.
             }
 
             @Override
@@ -187,7 +188,7 @@ public class ResetPasswordViewModel extends ViewModel {
                         error = R.string.error_unknown;
                 }
                 ///use live data's postValue(..) method from background thread.
-                resetPasswordResult.postValue(new ResetPasswordResult(null, error));
+                result.postValue(new Result(null, error));
             }
         });
     }
@@ -201,7 +202,7 @@ public class ResetPasswordViewModel extends ViewModel {
                 setSessionId(sessionId);
 
                 ///[返回结果及错误处理]返回结果
-                resetPasswordResult.postValue(new ResetPasswordSendVerificationCodeResult(null, null));   ///use live data's postValue(..) method from background thread.
+                result.postValue(new ResetPasswordSendVerificationCodeResult(null, null));   ///use live data's postValue(..) method from background thread.
             }
 
             @Override
@@ -237,7 +238,7 @@ public class ResetPasswordViewModel extends ViewModel {
                         error = R.string.error_unknown;
                 }
                 ///use live data's postValue(..) method from background thread.
-                resetPasswordResult.postValue(new ResetPasswordSendVerificationCodeResult(null, error));
+                result.postValue(new ResetPasswordSendVerificationCodeResult(null, error));
             }
         });
     }
@@ -248,7 +249,7 @@ public class ResetPasswordViewModel extends ViewModel {
             @Override
             public void onSuccess() {
                 ///[返回结果及错误处理]返回结果
-                resetPasswordResult.postValue(new ResetPasswordResult(null, null));   ///use live data's postValue(..) method from background thread.
+                result.postValue(new Result(null, null));   ///use live data's postValue(..) method from background thread.
             }
 
             @Override
@@ -275,7 +276,7 @@ public class ResetPasswordViewModel extends ViewModel {
                         error = R.string.error_unknown;
                 }
                 ///use live data's postValue(..) method from background thread.
-                resetPasswordResult.postValue(new ResetPasswordResult(null, error));
+                result.postValue(new Result(null, error));
             }
         });
     }
@@ -286,7 +287,7 @@ public class ResetPasswordViewModel extends ViewModel {
             @Override
             public void onSuccess() {
                 ///[返回结果及错误处理]返回结果
-                resetPasswordResult.postValue(new ResetPasswordResult(R.string.result_success_successfully_reset_password, null));   ///use live data's postValue(..) method from background thread.
+                result.postValue(new Result(R.string.result_success_reset_password, null));   ///use live data's postValue(..) method from background thread.
             }
 
             @Override
@@ -310,7 +311,7 @@ public class ResetPasswordViewModel extends ViewModel {
                         error = R.string.error_unknown;
                 }
                 ///use live data's postValue(..) method from background thread.
-                resetPasswordResult.postValue(new ResetPasswordResult(null, error));
+                result.postValue(new Result(null, error));
             }
         });
     }

@@ -11,11 +11,11 @@ import android.widget.Toast;
 
 import com.allen.library.SuperTextView;
 
-import cc.brainbook.android.study.mylogin.useraccount.UserAccountActivity;
-import cc.brainbook.android.study.mylogin.userauthentication.data.UserRepository;
-import cc.brainbook.android.study.mylogin.userauthentication.exception.LogoutException;
-import cc.brainbook.android.study.mylogin.userauthentication.interfaces.LogoutCallback;
-import cc.brainbook.android.study.mylogin.userauthentication.ui.login.LoginActivity;
+import cc.brainbook.android.study.mylogin.useraccount.modify.ModifyActivity;
+import cc.brainbook.android.study.mylogin.useraccount.data.UserRepository;
+import cc.brainbook.android.study.mylogin.useraccount.authentication.exception.LogoutException;
+import cc.brainbook.android.study.mylogin.useraccount.authentication.interfaces.LogoutCallback;
+import cc.brainbook.android.study.mylogin.useraccount.authentication.ui.login.LoginActivity;
 
 public class MainActivity extends AppCompatActivity {
     private static final int REQUEST_CODE_LOGIN = 1;
@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClickListener(SuperTextView superTextView) {
                 ///
-                startActivity(new Intent(MainActivity.this, UserAccountActivity.class));
+                startActivity(new Intent(MainActivity.this, ModifyActivity.class));
             }
         });
         stvUserProfile.setOnSuperTextViewClickListener(new SuperTextView.OnSuperTextViewClickListener() {

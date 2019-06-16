@@ -90,7 +90,6 @@ public class ResetPasswordDataSource {
                                 jsonObject = new JSONObject(response.body().string());
                             }
 
-                            //Check if user got logged in successfully
                             if (jsonObject != null) {
                                 ///[返回结果及错误处理]
                                 switch (jsonObject.getInt(KEY_STATUS)) {
@@ -162,7 +161,6 @@ public class ResetPasswordDataSource {
                                 jsonObject = new JSONObject(response.body().string());
                             }
 
-                            //Check if user got logged in successfully
                             if (jsonObject != null) {
                                 ///[返回结果及错误处理]
                                 switch (jsonObject.getInt(KEY_STATUS)) {
@@ -242,7 +240,6 @@ public class ResetPasswordDataSource {
                                 jsonObject = new JSONObject(response.body().string());
                             }
 
-                            //Check if user got logged in successfully
                             if (jsonObject != null) {
                                 ///[返回结果及错误处理]
                                 switch (jsonObject.getInt(KEY_STATUS)) {
@@ -321,7 +318,6 @@ public class ResetPasswordDataSource {
                                 jsonObject = new JSONObject(response.body().string());
                             }
 
-                            //Check if user got logged in successfully
                             if (jsonObject != null) {
                                 ///[返回结果及错误处理]
                                 switch (jsonObject.getInt(KEY_STATUS)) {
@@ -388,7 +384,6 @@ public class ResetPasswordDataSource {
                                 jsonObject = new JSONObject(response.body().string());
                             }
 
-                            //Check if user got logged in successfully
                             if (jsonObject != null) {
                                 ///[返回结果及错误处理]
                                 switch (jsonObject.getInt(KEY_STATUS)) {

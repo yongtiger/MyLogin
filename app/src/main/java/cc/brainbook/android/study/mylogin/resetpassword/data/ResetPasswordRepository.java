@@ -33,17 +33,17 @@ public class ResetPasswordRepository {
         return sInstance;
     }
 
-    public void findUser(String username, FindUserCallback findCallback) {
+    public void findUser(String username, FindUserCallback findUserCallback) {
         mResetPasswordDataSource.findUser(username, new FindUserCallback(){
             @Override
             public void onSuccess(ResetPasswordUser resetPasswordUser) {
                 setResetPasswordUser(resetPasswordUser);
-                findCallback.onSuccess(resetPasswordUser);
+                findUserCallback.onSuccess(resetPasswordUser);
             }
 
             @Override
             public void onError(FindUserException e) {
-                findCallback.onError(e);
+                findUserCallback.onError(e);
             }
         });
     }

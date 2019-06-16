@@ -35,10 +35,12 @@
     <string name="error_invalid_verification_code">"Invalid verification code"</string>
     <string name="error_token_is_invalid_or_expired">"Token is invalid or expired"</string>
 
+    <string name="result_success_register">Successfully register</string>
     <string name="register_error_user_exists">"Register failed! User exists"</string>
     <string name="register_error_email_exists">"Register failed! Email exists"</string>
     <string name="register_error_mobile_exists">"Register failed! Mobile exists"</string>
 
+    <string name="result_success_login">Successfully login</string>
     <string name="login_error_invalid_username">"Login failed! Invalid username"</string>
     <string name="login_error_invalid_password">"Login failed! Invalid password"</string>
 

@@ -1,34 +1,36 @@
-package cc.brainbook.android.study.mylogin.resetpassword.ui;
+package cc.brainbook.android.study.mylogin.useraccount.authentication.ui.register;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
-import android.os.Bundle;
-import android.support.annotation.NonNull;
+import android.content.Intent;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
+import android.support.annotation.StringRes;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-
-import java.util.Objects;
+import android.widget.Toast;
 
 import cc.brainbook.android.study.mylogin.R;
 import cc.brainbook.android.study.mylogin.result.Result;
+import cc.brainbook.android.study.mylogin.useraccount.authentication.ui.login.LoginActivity;
 
-public class ResetPasswordStep4Fragment extends Fragment implements View.OnClickListener {
+public class RegisterActivity extends AppCompatActivity implements View.OnClickListener {
+    private RegisterViewModel registerViewModel;
 
+    private EditText etUsername;
+    private ImageView ivClearUsername;
     private EditText etPassword;
     private ImageView ivClearPassword;
     private ImageView ivPasswordVisibility;
@@ -36,63 +38,54 @@ public class ResetPasswordStep4Fragment extends Fragment implements View.OnClick
     private ImageView ivClearRepeatPassword;
     private ImageView ivRepeatPasswordVisibility;
 
-    private Button btnReset;
+    private Button btnRegister;
+    private Button btnLogin;
+
     private ProgressBar pbLoading;
-
-    private ResetPasswordViewModel resetPasswordViewModel;
-
-    /**
-     * Mandatory empty constructor for the fragment manager to instantiate the
-     * fragment (e.g. upon screen orientation changes).
-     */
-    public ResetPasswordStep4Fragment() {}
-
-    /**
-     * Create a new instance of fragment.
-     */
-    public static ResetPasswordStep4Fragment newInstance() {
-        return new ResetPasswordStep4Fragment();
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_register);
+
+        initView();
+        initListener();
 
         // Create a ViewModel the first time the system calls an activity's onCreate() method.
         // Re-created activities receive the same MyViewModel instance created by the first activity.
         // Note: A ViewModel must never reference a view, Lifecycle, or any class that may hold a reference to the activity context.
         ///https://developer.android.com/topic/libraries/architecture/viewmodel
-        resetPasswordViewModel = ViewModelProviders.of(Objects.requireNonNull(getActivity()), new ResetPasswordViewModelFactory())
-                .get(ResetPasswordViewModel.class);
+        registerViewModel = ViewModelProviders.of(this, new RegisterViewModelFactory(false, false))  ///[EditText显示/隐藏Password]初始化
+                .get(RegisterViewModel.class);
 
-        ///初始化
-        resetPasswordViewModel.setPasswordVisibility(false);
-        resetPasswordViewModel.setRepeatPasswordVisibility(false);
-
-        resetPasswordViewModel.getResetPasswordStep4FormState().observe(this, new Observer<ResetPasswordStep4FormState>() {
+        registerViewModel.getRegisterFormState().observe(this, new Observer<RegisterFormState>() {
             @Override
-            public void onChanged(@Nullable ResetPasswordStep4FormState resetPasswordStep4FormState) {
-                if (resetPasswordStep4FormState == null) {
+            public void onChanged(@Nullable RegisterFormState registerFormState) {
+                if (registerFormState == null) {
                     return;
                 }
-                btnReset.setEnabled(resetPasswordStep4FormState.isDataValid());
+                btnRegister.setEnabled(registerFormState.isDataValid());
 
                 ///[EditText错误提示]
-                if (resetPasswordStep4FormState.getPasswordError() == null) {
+                if (registerFormState.getUsernameError() == null) {
+                    etUsername.setError(null);
+                } else {
+                    etUsername.setError(getString(registerFormState.getUsernameError()));
+                }
+                if (registerFormState.getPasswordError() == null) {
                     etPassword.setError(null);
                 } else {
-                    etPassword.setError(getString(resetPasswordStep4FormState.getPasswordError()));
+                    etPassword.setError(getString(registerFormState.getPasswordError()));
                 }
-                if (resetPasswordStep4FormState.getRepeatPasswordError() == null) {
+                if (registerFormState.getRepeatPasswordError() == null) {
                     etRepeatPassword.setError(null);
                 } else {
-                    etRepeatPassword.setError(getString(resetPasswordStep4FormState.getRepeatPasswordError()));
+                    etRepeatPassword.setError(getString(registerFormState.getRepeatPasswordError()));
                 }
             }
         });
 
-        resetPasswordViewModel.setResult();
-        resetPasswordViewModel.getResult().observe(this, new Observer<Result>() {
+        registerViewModel.getResult().observe(this, new Observer<Result>() {
             @Override
             public void onChanged(@Nullable Result result) {
                 if (result == null) {
@@ -104,32 +97,26 @@ public class ResetPasswordStep4Fragment extends Fragment implements View.OnClick
                     switch (result.getError()) {
                         case R.string.error_network_error:
                             break;
-                        case R.string.error_unknown:
-                            break;
                         case R.string.error_invalid_parameters:
                             break;
-                        case R.string.result_error_invalid_user_id:
-                            break;
-                        case R.string.result_error_failed_to_reset_password:
+                        case R.string.register_error_user_exists:
+                            etUsername.requestFocus();
                             break;
                         default:    ///R.string.error_unknown
                     }
-
-                    ///Display failed message
-                    if (getActivity() != null) {
-                        ((ResetPasswordActivity)getActivity()).showFailedMessage(result.getError());
-                    }
+                    ///Display register failed
+                    showRegisterFailed(result.getError());
                 } else {
-                    if (getActivity() != null) {
-                        if (result.getSuccess() != null)
-                            ((ResetPasswordActivity) getActivity()).updateUi(result.getSuccess());
-                        getActivity().finish();
-                    }
+                    if (result.getSuccess() != null)
+                        updateUi(result.getSuccess());
+
+                    //Complete and destroy register activity once successful
+                    finish();
                 }
             }
         });
 
-        resetPasswordViewModel.getPasswordVisibility().observe(this, new Observer<Boolean>() {
+        registerViewModel.getPasswordVisibility().observe(this, new Observer<Boolean>() {
             @Override
             public void onChanged(@Nullable Boolean aBoolean) {
                 if (aBoolean == null) {
@@ -148,7 +135,7 @@ public class ResetPasswordStep4Fragment extends Fragment implements View.OnClick
             }
         });
 
-        resetPasswordViewModel.getRepeatPasswordVisibility().observe(this, new Observer<Boolean>() {
+        registerViewModel.getRepeatPasswordVisibility().observe(this, new Observer<Boolean>() {
             @Override
             public void onChanged(@Nullable Boolean aBoolean) {
                 if (aBoolean == null) {
@@ -169,19 +156,12 @@ public class ResetPasswordStep4Fragment extends Fragment implements View.OnClick
     }
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        final View rootView = inflater.inflate(R.layout.fragment_reset_password_step_4, container, false);
-
-        initView(rootView);
-        initListener();
-
-        return rootView;
-    }
-
-    @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.iv_clear_username:
+                ///[EditText清除输入框]
+                etUsername.setText("");
+                break;
             case R.id.iv_clear_password:
                 ///[EditText清除输入框]
                 etPassword.setText("");
@@ -189,7 +169,7 @@ public class ResetPasswordStep4Fragment extends Fragment implements View.OnClick
             case R.id.iv_password_visibility:
                 ///[EditText显示/隐藏Password]
                 ///注意：因为初始化了，所以不会产生NullPointerException
-                resetPasswordViewModel.setPasswordVisibility(!resetPasswordViewModel.getPasswordVisibility().getValue());
+                registerViewModel.setPasswordVisibility(!registerViewModel.getPasswordVisibility().getValue());
                 break;
             case R.id.iv_clear_repeat_password:
                 ///[EditText清除输入框]
@@ -198,35 +178,70 @@ public class ResetPasswordStep4Fragment extends Fragment implements View.OnClick
             case R.id.iv_repeat_password_visibility:
                 ///[EditText显示/隐藏Password]
                 ///注意：因为初始化了，所以不会产生NullPointerException
-                resetPasswordViewModel.setRepeatPasswordVisibility(!resetPasswordViewModel.getRepeatPasswordVisibility().getValue());
+                registerViewModel.setRepeatPasswordVisibility(!registerViewModel.getRepeatPasswordVisibility().getValue());
                 break;
-            case R.id.btn_reset:
+            case R.id.btn_register:
                 pbLoading.setVisibility(View.VISIBLE);
-                actionReset();
+                actionRegister();
+                break;
+            case R.id.btn_login:
+                final Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);    ///避免重复打开LoginActivity（也可以设置LoginActivity为singleTop或singleTask）
+                startActivity(intent);
+                ///Destroy register activity
+                finish();
                 break;
         }
     }
 
-    private void initView(@NonNull View rootView) {
-        etPassword = rootView.findViewById(R.id.et_password);
-        ivClearPassword = rootView.findViewById(R.id.iv_clear_password);
-        ivPasswordVisibility = rootView.findViewById(R.id.iv_password_visibility);
-        etRepeatPassword = rootView.findViewById(R.id.et_repeat_password);
-        ivClearRepeatPassword = rootView.findViewById(R.id.iv_clear_repeat_password);
-        ivRepeatPasswordVisibility = rootView.findViewById(R.id.iv_repeat_password_visibility);
+    private void initView() {
+        etUsername = findViewById(R.id.et_username);
+        ivClearUsername = findViewById(R.id.iv_clear_username);
+        etPassword = findViewById(R.id.et_password);
+        ivClearPassword = findViewById(R.id.iv_clear_password);
+        ivPasswordVisibility = findViewById(R.id.iv_password_visibility);
+        etRepeatPassword = findViewById(R.id.et_repeat_password);
+        ivClearRepeatPassword = findViewById(R.id.iv_clear_repeat_password);
+        ivRepeatPasswordVisibility = findViewById(R.id.iv_repeat_password_visibility);
 
-        btnReset = rootView.findViewById(R.id.btn_reset);
-        pbLoading = rootView.findViewById(R.id.pb_loading);
+        btnRegister = findViewById(R.id.btn_register);
+        btnLogin = findViewById(R.id.btn_login);
+
+        pbLoading = findViewById(R.id.pb_loading);
     }
 
     private void initListener() {
+        ivClearUsername.setOnClickListener(this);
         ivClearPassword.setOnClickListener(this);
         ivPasswordVisibility.setOnClickListener(this);
         ivClearRepeatPassword.setOnClickListener(this);
         ivRepeatPasswordVisibility.setOnClickListener(this);
 
-        btnReset.setOnClickListener(this);
+        btnRegister.setOnClickListener(this);
+        btnLogin.setOnClickListener(this);
 
+        etUsername.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                ///[EditText错误提示]
+                registerViewModel.registerDataChanged(etUsername.getText().toString(),
+                        etPassword.getText().toString(),
+                        etRepeatPassword.getText().toString());
+
+                ///[EditText清除输入框]
+                if (!TextUtils.isEmpty(s) && ivClearUsername.getVisibility() == View.GONE) {
+                    ivClearUsername.setVisibility(View.VISIBLE);
+                } else if (TextUtils.isEmpty(s)) {
+                    ivClearUsername.setVisibility(View.GONE);
+                }
+            }
+        });
         etPassword.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
@@ -237,7 +252,8 @@ public class ResetPasswordStep4Fragment extends Fragment implements View.OnClick
             @Override
             public void afterTextChanged(Editable s) {
                 ///[EditText错误提示]
-                resetPasswordViewModel.resetPasswordStep4DataChanged(etPassword.getText().toString(),
+                registerViewModel.registerDataChanged(etUsername.getText().toString(),
+                        etPassword.getText().toString(),
                         etRepeatPassword.getText().toString());
 
                 ///[EditText清除输入框]
@@ -252,7 +268,7 @@ public class ResetPasswordStep4Fragment extends Fragment implements View.OnClick
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    actionReset();
+                    actionRegister();
                 }
                 return false;
             }
@@ -267,7 +283,8 @@ public class ResetPasswordStep4Fragment extends Fragment implements View.OnClick
             @Override
             public void afterTextChanged(Editable s) {
                 ///[EditText错误提示]
-                resetPasswordViewModel.resetPasswordStep4DataChanged(etPassword.getText().toString(),
+                registerViewModel.registerDataChanged(etUsername.getText().toString(),
+                        etPassword.getText().toString(),
                         etRepeatPassword.getText().toString());
 
                 ///[EditText清除输入框]
@@ -283,18 +300,27 @@ public class ResetPasswordStep4Fragment extends Fragment implements View.OnClick
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    actionReset();
+                    actionRegister();
                 }
                 return false;
             }
         });
     }
 
-    private void actionReset() {
+    private void actionRegister() {
         ///[FIX#IME_ACTION_DONE没检验form表单状态]
-        if (resetPasswordViewModel.getResetPasswordStep4FormState().getValue() != null
-                && resetPasswordViewModel.getResetPasswordStep4FormState().getValue().isDataValid()) {
-            resetPasswordViewModel.resetPassword(etPassword.getText().toString());
+        if (registerViewModel.getRegisterFormState().getValue() != null
+                && registerViewModel.getRegisterFormState().getValue().isDataValid()) {
+            registerViewModel.register(etUsername.getText().toString(),
+                    etPassword.getText().toString());
         }
+    }
+
+    public void updateUi(@StringRes Integer successString) {
+        Toast.makeText(getApplicationContext(), successString, Toast.LENGTH_LONG).show();
+    }
+
+    private void showRegisterFailed(@StringRes Integer errorString) {
+        Toast.makeText(getApplicationContext(), errorString, Toast.LENGTH_SHORT).show();
     }
 }

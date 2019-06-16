@@ -23,6 +23,7 @@ import android.widget.TextView;
 import java.util.Objects;
 
 import cc.brainbook.android.study.mylogin.R;
+import cc.brainbook.android.study.mylogin.result.Result;
 
 public class ResetPasswordStep2Fragment extends Fragment implements View.OnClickListener {
 
@@ -86,17 +87,17 @@ public class ResetPasswordStep2Fragment extends Fragment implements View.OnClick
             }
         });
 
-        resetPasswordViewModel.setResetPasswordResult();
-        resetPasswordViewModel.getResetPasswordResult().observe(this, new Observer<ResetPasswordResult>() {
+        resetPasswordViewModel.setResult();
+        resetPasswordViewModel.getResult().observe(this, new Observer<Result>() {
             @Override
-            public void onChanged(@Nullable ResetPasswordResult resetPasswordResult) {
-                if (resetPasswordResult == null) {
+            public void onChanged(@Nullable Result result) {
+                if (result == null) {
                     return;
                 }
                 pbLoading.setVisibility(View.GONE);
-                if (resetPasswordResult.getError() != null) {
+                if (result.getError() != null) {
                     ///[Request focus#根据返回错误来请求表单焦点]
-                    switch (resetPasswordResult.getError()) {
+                    switch (result.getError()) {
                         case R.string.error_network_error:
                             break;
                         case R.string.error_unknown:
@@ -121,12 +122,12 @@ public class ResetPasswordStep2Fragment extends Fragment implements View.OnClick
 
                     ///Display failed message
                     if (getActivity() != null) {
-                        ((ResetPasswordActivity)getActivity()).showFailedMessage(resetPasswordResult.getError());
+                        ((ResetPasswordActivity)getActivity()).showFailedMessage(result.getError());
                     }
                 } else {
                     if (getActivity() != null) {
-                        if (resetPasswordResult.getSuccess() != null)
-                            ((ResetPasswordActivity) getActivity()).updateUi(resetPasswordResult.getSuccess());
+                        if (result.getSuccess() != null)
+                            ((ResetPasswordActivity) getActivity()).updateUi(result.getSuccess());
                         ((ResetPasswordActivity)getActivity()).showResetPasswordStep3Fragment();
                     }
                 }

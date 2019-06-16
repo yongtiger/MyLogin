@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".userauthentication.ui.register.RegisterActivity">
+    tools:context=".useraccount.authentication.ui.register.RegisterActivity">
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
