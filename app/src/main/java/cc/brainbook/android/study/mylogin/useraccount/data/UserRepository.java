@@ -97,7 +97,27 @@ public class UserRepository {
         });
     }
 
+    ///[oAuth]
+    public void oAuthLogin(String network, String openId, LoginCallback loginCallback) {
+        // handle login
+        mDataSource.oAuthLogin(network, openId, new LoginCallback(){
+            @Override
+            public void onSuccess(LoggedInUser loggedInUser) {
+                setLoggedInUser(loggedInUser);
+                loginCallback.onSuccess(loggedInUser);
+            }
+
+            @Override
+            public void onError(LoginException e) {
+                loginCallback.onError(e);
+            }
+        });
+    }
+
     public void logout(LogoutCallback logoutCallback) {
+        ///[oAuth]
+//        oAuthLogout();    //////?????
+
         mDataSource.logout(getLoggedInUser(), new LogoutCallback() {
             @Override
             public void onSuccess() {

@@ -48,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(MainActivity.this, ModifyActivity.class));
             }
         });
+        //////???????[UserProfile]
         stvUserProfile.setOnSuperTextViewClickListener(new SuperTextView.OnSuperTextViewClickListener() {
             @Override
             public void onClickListener(SuperTextView superTextView) {

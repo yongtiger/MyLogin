@@ -44,6 +44,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private Button btnResetPassword;
     private CheckBox cbRememberMe;
     private Button btnLogin;
+    private Button btnOauthLogin;///[oAuth]test
     private Button btnRegister;
     private ProgressBar pbLoading;
 
@@ -178,6 +179,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             case R.id.btn_register:
                 startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
                 break;
+            case R.id.btn_oauth_login:    ///[oAuth]test
+                pbLoading.setVisibility(View.VISIBLE);
+                actionOAuthLogin("1","1");
+                break;
         }
     }
 
@@ -192,6 +197,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         cbRememberMe = findViewById(R.id.cb_remember_me);
 
         btnLogin = findViewById(R.id.btn_login);
+        btnOauthLogin = findViewById(R.id.btn_oauth_login);///[oAuth]test
         btnRegister = findViewById(R.id.btn_register);
 
         pbLoading = findViewById(R.id.pb_loading);
@@ -206,6 +212,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         cbRememberMe.setOnClickListener(this);
 
         btnLogin.setOnClickListener(this);
+        btnOauthLogin.setOnClickListener(this);///[oAuth]test
         btnRegister.setOnClickListener(this);
 
         etUsername.addTextChangedListener(new TextWatcher() {
@@ -269,6 +276,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             loginViewModel.login(etUsername.getText().toString(),
                     etPassword.getText().toString());
         }
+    }
+
+    ///[oAuth]
+    private void actionOAuthLogin(String network, String openId) {
+        loginViewModel.oAuthLogin(network, openId);
     }
 
     /**

@@ -87,6 +87,39 @@ public class LoginViewModel extends ViewModel {
         });
     }
 
+    ///[oAuth]
+    public void oAuthLogin(String network, String openId) {
+        // can be launched in a separate asynchronous job
+        loginRepository.oAuthLogin(network, openId, new LoginCallback() {
+            @Override
+            public void onSuccess(LoggedInUser loggedInUser) {
+                ///[返回结果及错误处理]返回结果
+                loginResult.postValue(new Result(R.string.result_success_login, null));   ///use live data's postValue(..) method from background thread.
+            }
+
+            @Override
+            public void onError(LoginException e) {
+                ///[返回结果及错误处理]错误处理
+                int error;
+                switch (e.getCode()) {
+                    case -3:
+                        error = R.string.error_network_error;
+                        break;
+                    case -2:
+                        error = R.string.error_unknown;
+                        break;
+                    case -1:
+                        error = R.string.error_invalid_parameters;
+                        break;
+                    default:
+                        error = R.string.error_unknown;
+                }
+                ///use live data's postValue(..) method from background thread.
+                loginResult.postValue(new Result(null, error));
+            }
+        });
+    }
+
     public void loginDataChanged(String username, String password) {
         ///[EditText错误提示]
         ///[FIX#只显示username或password其中一个错误提示！应该同时都显示]
