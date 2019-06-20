@@ -66,7 +66,7 @@ public class UserRepository {
         return getLoggedInUser() != null && System.currentTimeMillis() < getLoggedInUser().getTokenExpiredAt() * 1000;
     }
 
-    public void register(String username, String password, RegisterCallback registerCallback) {
+    public void register(String username, String password, final RegisterCallback registerCallback) {
         // handle login
         mDataSource.register(username, password, new RegisterCallback(){
             @Override
@@ -81,7 +81,7 @@ public class UserRepository {
         });
     }
 
-    public void login(String username, String password, LoginCallback loginCallback) {
+    public void login(String username, String password, final LoginCallback loginCallback) {
         // handle login
         mDataSource.login(username, password, new LoginCallback(){
             @Override
@@ -98,7 +98,7 @@ public class UserRepository {
     }
 
     ///[oAuth]
-    public void oAuthLogin(String network, String openId, LoginCallback loginCallback) {
+    public void oAuthLogin(String network, String openId, final LoginCallback loginCallback) {
         // handle login
         mDataSource.oAuthLogin(network, openId, new LoginCallback(){
             @Override
@@ -114,7 +114,7 @@ public class UserRepository {
         });
     }
 
-    public void logout(LogoutCallback logoutCallback) {
+    public void logout(final LogoutCallback logoutCallback) {
         ///[oAuth]
 //        oAuthLogout();    //////?????
 
@@ -137,7 +137,7 @@ public class UserRepository {
     }
 
 
-    public void modifyUsername(String username, ModifyUsernameCallback modifyUsernameCallback) {
+    public void modifyUsername(final String username, final ModifyUsernameCallback modifyUsernameCallback) {
         mDataSource.modifyUsername(getLoggedInUser(), username, new ModifyUsernameCallback(){
             @Override
             public void onSuccess() {
@@ -153,7 +153,7 @@ public class UserRepository {
         });
     }
 
-    public void modifyPassword(String password, ModifyPasswordCallback modifyPasswordCallback) {
+    public void modifyPassword(String password, final ModifyPasswordCallback modifyPasswordCallback) {
         mDataSource.modifyPassword(getLoggedInUser(), password, new ModifyPasswordCallback(){
             @Override
             public void onSuccess() {
@@ -167,7 +167,7 @@ public class UserRepository {
         });
     }
 
-    public void modifyEmail(String email, ModifyEmailCallback modifyEmailCallback) {
+    public void modifyEmail(final String email, final ModifyEmailCallback modifyEmailCallback) {
         mDataSource.modifyEmail(getLoggedInUser(), email, new ModifyEmailCallback(){
             @Override
             public void onSuccess() {
@@ -183,7 +183,7 @@ public class UserRepository {
         });
     }
 
-    public void modifyMobile(String mobile, ModifyMobileCallback modifyMobileCallback) {
+    public void modifyMobile(final String mobile, final ModifyMobileCallback modifyMobileCallback) {
         mDataSource.modifyMobile(getLoggedInUser(), mobile, new ModifyMobileCallback(){
             @Override
             public void onSuccess() {

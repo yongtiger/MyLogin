@@ -33,7 +33,7 @@ public class ResetPasswordRepository {
         return sInstance;
     }
 
-    public void findUser(String username, FindUserCallback findUserCallback) {
+    public void findUser(String username, final FindUserCallback findUserCallback) {
         mResetPasswordDataSource.findUser(username, new FindUserCallback(){
             @Override
             public void onSuccess(ResetPasswordUser resetPasswordUser) {
@@ -48,7 +48,7 @@ public class ResetPasswordRepository {
         });
     }
 
-    public void checkSendMode(String userId, String email, String mobile, CheckSendModeCallback checkSendModeCallback) {
+    public void checkSendMode(String userId, String email, String mobile, final CheckSendModeCallback checkSendModeCallback) {
         mResetPasswordDataSource.checkSendMode(userId, email, mobile, new CheckSendModeCallback(){
             @Override
             public void onSuccess(int sendMode) {
@@ -62,7 +62,7 @@ public class ResetPasswordRepository {
         });
     }
 
-    public void sendVerificationCode(String userId, int sendMode, SendVerificationCodeCallback verificationCodeCallback) {
+    public void sendVerificationCode(String userId, int sendMode, final SendVerificationCodeCallback verificationCodeCallback) {
         mResetPasswordDataSource.sendVerificationCode(userId, sendMode, new SendVerificationCodeCallback(){
             @Override
             public void onSuccess(String sessionId) {
@@ -76,7 +76,7 @@ public class ResetPasswordRepository {
         });
     }
 
-    public void verifyCode(String sessionId, String verificationCode, VerifyCodeCallback verifyCodeCallback) {
+    public void verifyCode(String sessionId, String verificationCode, final VerifyCodeCallback verifyCodeCallback) {
         mResetPasswordDataSource.verifyCode(sessionId, verificationCode, new VerifyCodeCallback(){
             @Override
             public void onSuccess() {
@@ -90,7 +90,7 @@ public class ResetPasswordRepository {
         });
     }
 
-    public void resetPassword(String userId, String password, ResetPasswordCallback resetPasswordCallback) {
+    public void resetPassword(String userId, String password, final ResetPasswordCallback resetPasswordCallback) {
         mResetPasswordDataSource.resetPassword(userId, password, new ResetPasswordCallback(){
             @Override
             public void onSuccess() {

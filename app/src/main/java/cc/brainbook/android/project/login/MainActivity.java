@@ -87,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onError(LogoutException e) {
                         ///[返回结果及错误处理]错误处理
-                        int error;
+                        final int error;
                         switch (e.getCode()) {
                             case -4:
                                 error = R.string.error_token_is_invalid_or_expired;

@@ -348,31 +348,31 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         EasyLogin.initialize();
         easyLogin = EasyLogin.getInstance();
 
-        // TWITTER
+        ///[oAuth#Twitter]
         // Initialization needs to happen before setContentView() if using the LoginButton!
-        String twitterKey = BuildConfig.TWITTER_CONSUMER_KEY;
-        String twitterSecret = BuildConfig.TWITTER_CONSUMER_SECRET;
+        String twitterKey = getString(R.string.twitter_consumer_key);
+        String twitterSecret = getString(R.string.twitter_consumer_secret);
         easyLogin.addSocialNetwork(new TwitterNetwork(this, twitterKey, twitterSecret));
     }
 
     private void initOauth() {
         tvConnectedStatus = (TextView) findViewById(R.id.connected_status);
 
-        // Google Sign In
+        ///[oAuth#Google Sign In]
         easyLogin.addSocialNetwork(new GooglePlusNetwork(this));
         googlePlusNetwork = (GooglePlusNetwork) easyLogin.getSocialNetwork(SocialNetwork.Network.GOOGLE_PLUS);
         googlePlusNetwork.setListener(this);
         sibGoogleSignIn = (SignInButton) findViewById(R.id.sib_google_sign_in);
         googlePlusNetwork.setSignInButton(sibGoogleSignIn);
 
-        // FACEBOOK
+        ///[oAuth#Facebook]
         List<String> fbScope = Arrays.asList("public_profile", "email");
         easyLogin.addSocialNetwork(new FacebookNetwork(this, fbScope));
         FacebookNetwork facebook = (FacebookNetwork) easyLogin.getSocialNetwork(SocialNetwork.Network.FACEBOOK);
         LoginButton loginButton = (LoginButton) findViewById(R.id.lb_facebook_login);
         facebook.requestLogin(loginButton, this);
 
-        // TWITTER
+        ///[oAuth#Twitter]
         TwitterNetwork twitter = (TwitterNetwork) easyLogin.getSocialNetwork(SocialNetwork.Network.TWITTER);
         twitter.setAdditionalEmailRequest(true);
         TwitterLoginButton twitterButton = (TwitterLoginButton) findViewById(R.id.tlb_twitter_login);

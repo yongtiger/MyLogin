@@ -57,7 +57,7 @@ public class UserDataSource {
     private static final String KEY_NETWORK = "network";
     private static final String KEY_OPEN_ID = "openId";
 
-    public void register(String username, String password, RegisterCallback registerCallback) {
+    public void register(String username, String password, final RegisterCallback registerCallback) {
         ///https://stackoverflow.com/questions/34179922/okhttp-post-body-as-json
         final JSONObject jsonObject = new JSONObject();
         try {
@@ -129,7 +129,7 @@ public class UserDataSource {
                 });
     }
 
-    public void login(String username, String password, LoginCallback loginCallback) {
+    public void login(String username, String password, final LoginCallback loginCallback) {
         ///https://stackoverflow.com/questions/34179922/okhttp-post-body-as-json
         final JSONObject jsonObject = new JSONObject();
         try {
@@ -206,7 +206,7 @@ public class UserDataSource {
     }
 
     ///[OAuth]
-    public void oAuthLogin(String network, String openId, LoginCallback loginCallback) {
+    public void oAuthLogin(String network, String openId, final LoginCallback loginCallback) {
         ///https://stackoverflow.com/questions/34179922/okhttp-post-body-as-json
         final JSONObject jsonObject = new JSONObject();
         try {
@@ -276,7 +276,7 @@ public class UserDataSource {
                 });
     }
 
-    public void logout(LoggedInUser loggedInUser, LogoutCallback logoutCallback) {
+    public void logout(LoggedInUser loggedInUser, final LogoutCallback logoutCallback) {
         // 创建一个Request
         final Request request = new Request.Builder()
                 .url(LOGOUT_URL)
@@ -332,7 +332,7 @@ public class UserDataSource {
     }
 
 
-    public void modifyUsername(LoggedInUser loggedInUser, String username, ModifyUsernameCallback modifyUsernameCallback) {
+    public void modifyUsername(LoggedInUser loggedInUser, String username, final ModifyUsernameCallback modifyUsernameCallback) {
         ///https://stackoverflow.com/questions/34179922/okhttp-post-body-as-json
         final JSONObject jsonObject = new JSONObject();
         try {
@@ -407,7 +407,7 @@ public class UserDataSource {
                 });
     }
 
-    public void modifyPassword(LoggedInUser loggedInUser, String password, ModifyPasswordCallback modifyPasswordCallback) {
+    public void modifyPassword(LoggedInUser loggedInUser, String password, final ModifyPasswordCallback modifyPasswordCallback) {
         ///https://stackoverflow.com/questions/34179922/okhttp-post-body-as-json
         final JSONObject jsonObject = new JSONObject();
         try {
@@ -482,7 +482,7 @@ public class UserDataSource {
                 });
     }
 
-    public void modifyEmail(LoggedInUser loggedInUser, String email, ModifyEmailCallback modifyEmailCallback) {
+    public void modifyEmail(LoggedInUser loggedInUser, String email, final ModifyEmailCallback modifyEmailCallback) {
         ///https://stackoverflow.com/questions/34179922/okhttp-post-body-as-json
         final JSONObject jsonObject = new JSONObject();
         try {
@@ -557,7 +557,7 @@ public class UserDataSource {
                 });
     }
 
-    public void modifyMobile(LoggedInUser loggedInUser, String mobile, ModifyMobileCallback modifyMobileCallback) {
+    public void modifyMobile(LoggedInUser loggedInUser, String mobile, final ModifyMobileCallback modifyMobileCallback) {
         ///https://stackoverflow.com/questions/34179922/okhttp-post-body-as-json
         final JSONObject jsonObject = new JSONObject();
         try {

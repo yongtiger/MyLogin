@@ -5,5 +5,8 @@
 
     <!--///[oAuth#Facebook]-->
     <string name="facebook_app_id">TO BE CHANGED</string>
+    <!--///[oAuth#Twitter]-->
+    <string name="twitter_consumer_key">TO BE CHANGED</string>
+    <string name="twitter_consumer_secret">TO BE CHANGED</string>
 
 </resources>

@@ -48,7 +48,7 @@ public class ResetPasswordDataSource {
     private static final String KEY_SESSION_ID = "sessionId";
     private static final String KEY_VERIFICATION_CODE = "verificationCode";
 
-    public void findUser(String username, FindUserCallback findUserCallback) {
+    public void findUser(String username, final FindUserCallback findUserCallback) {
         ///https://stackoverflow.com/questions/34179922/okhttp-post-body-as-json
         final JSONObject jsonObject = new JSONObject();
         try {
@@ -117,7 +117,7 @@ public class ResetPasswordDataSource {
                 });
     }
 
-    public void checkSendMode(String userId, String email, String mobile, CheckSendModeCallback checkSendModeCallback) {
+    public void checkSendMode(String userId, String email, String mobile, final CheckSendModeCallback checkSendModeCallback) {
         ///https://stackoverflow.com/questions/34179922/okhttp-post-body-as-json
         final JSONObject jsonObject = new JSONObject();
         try {
@@ -197,7 +197,7 @@ public class ResetPasswordDataSource {
                 });
     }
 
-    public void sendVerificationCode(String userId, int sendMode, SendVerificationCodeCallback sendVerificationCodeCallback) {
+    public void sendVerificationCode(String userId, int sendMode, final SendVerificationCodeCallback sendVerificationCodeCallback) {
         ///https://stackoverflow.com/questions/34179922/okhttp-post-body-as-json
         final JSONObject jsonObject = new JSONObject();
         try {
@@ -275,7 +275,7 @@ public class ResetPasswordDataSource {
                 });
     }
 
-    public void verifyCode(String sessionId, String verificationCode, VerifyCodeCallback verifyCodeCallback) {
+    public void verifyCode(String sessionId, String verificationCode, final VerifyCodeCallback verifyCodeCallback) {
         ///https://stackoverflow.com/questions/34179922/okhttp-post-body-as-json
         final JSONObject jsonObject = new JSONObject();
         try {
@@ -341,7 +341,7 @@ public class ResetPasswordDataSource {
                 });
     }
 
-    public void resetPassword(String userId, String password, ResetPasswordCallback resetPasswordCallback) {
+    public void resetPassword(String userId, String password, final ResetPasswordCallback resetPasswordCallback) {
         ///https://stackoverflow.com/questions/34179922/okhttp-post-body-as-json
         final JSONObject jsonObject = new JSONObject();
         try {
