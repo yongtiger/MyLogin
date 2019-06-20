@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="logout_all_networks">Logout All Networks</string>
+
+    <!--///[oAuth#Facebook]-->
+    <string name="facebook_app_id">TO BE CHANGED</string>
+
+</resources>

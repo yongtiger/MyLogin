@@ -13,6 +13,7 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -24,13 +25,28 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.login.widget.LoginButton;
+import com.google.android.gms.common.SignInButton;
+import com.twitter.sdk.android.core.identity.TwitterLoginButton;
+
+import java.util.Arrays;
+import java.util.List;
+
+import cc.brainbook.android.project.login.BuildConfig;
 import cc.brainbook.android.project.login.R;
+import cc.brainbook.android.project.login.oauth.AccessToken;
+import cc.brainbook.android.project.login.oauth.EasyLogin;
+import cc.brainbook.android.project.login.oauth.listener.OnLoginCompleteListener;
+import cc.brainbook.android.project.login.oauth.networks.FacebookNetwork;
+import cc.brainbook.android.project.login.oauth.networks.GooglePlusNetwork;
+import cc.brainbook.android.project.login.oauth.networks.SocialNetwork;
+import cc.brainbook.android.project.login.oauth.networks.TwitterNetwork;
 import cc.brainbook.android.project.login.resetpassword.ui.ResetPasswordActivity;
 import cc.brainbook.android.project.login.result.Result;
 import cc.brainbook.android.project.login.useraccount.authentication.ui.register.RegisterActivity;
 import cc.brainbook.android.project.login.util.PrefsUtil;
 
-public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
+public class LoginActivity extends AppCompatActivity implements View.OnClickListener, OnLoginCompleteListener {
     private static final String KEY_REMEMBER_USERNAME = "remember_username";
     private static final String KEY_REMEMBER_PASSWORD = "remember_password";
 
@@ -44,13 +60,25 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private Button btnResetPassword;
     private CheckBox cbRememberMe;
     private Button btnLogin;
-    private Button btnOauthLogin;///[oAuth]test
     private Button btnRegister;
     private ProgressBar pbLoading;
+
+    ///[oAuth]
+    private EasyLogin easyLogin;
+    private TextView tvConnectedStatus;
+    private Button btnLogoutAllNetworks;
+    private GooglePlusNetwork googlePlusNetwork;
+    private SignInButton sibGoogleSignIn;
+    private LoginButton lbFacebookLogin;
+    private TwitterLoginButton tlbTwitterLogin;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        ///[oAuth]
+        initOauthBeforeSetContentView();
+
         setContentView(R.layout.activity_login);
 
         initView();
@@ -146,6 +174,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         ///[RememberMe#记住用户名密码自动登陆]
         initRememberMe();
+
+        ///[oAuth]
+        initOauth();
     }
 
     @Override
@@ -179,10 +210,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             case R.id.btn_register:
                 startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
                 break;
-            case R.id.btn_oauth_login:    ///[oAuth]test
-                pbLoading.setVisibility(View.VISIBLE);
-                actionOAuthLogin("1","1");
-                break;
         }
     }
 
@@ -197,10 +224,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         cbRememberMe = findViewById(R.id.cb_remember_me);
 
         btnLogin = findViewById(R.id.btn_login);
-        btnOauthLogin = findViewById(R.id.btn_oauth_login);///[oAuth]test
         btnRegister = findViewById(R.id.btn_register);
 
         pbLoading = findViewById(R.id.pb_loading);
+
     }
 
     private void initListener() {
@@ -212,7 +239,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         cbRememberMe.setOnClickListener(this);
 
         btnLogin.setOnClickListener(this);
-        btnOauthLogin.setOnClickListener(this);///[oAuth]test
         btnRegister.setOnClickListener(this);
 
         etUsername.addTextChangedListener(new TextWatcher() {
@@ -278,11 +304,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
-    ///[oAuth]
-    private void actionOAuthLogin(String network, String openId) {
-        loginViewModel.oAuthLogin(network, openId);
-    }
-
     /**
      * 根据SharedPreferences是否保存用户名/密码来设置RememberMe的初始选择状态
      *
@@ -320,5 +341,110 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     private void showLoginFailed(@StringRes Integer errorString) {
         Toast.makeText(getApplicationContext(), errorString, Toast.LENGTH_SHORT).show();
+    }
+
+    ///[oAuth]
+    private void initOauthBeforeSetContentView() {
+        EasyLogin.initialize();
+        easyLogin = EasyLogin.getInstance();
+
+        // TWITTER
+        // Initialization needs to happen before setContentView() if using the LoginButton!
+        String twitterKey = BuildConfig.TWITTER_CONSUMER_KEY;
+        String twitterSecret = BuildConfig.TWITTER_CONSUMER_SECRET;
+        easyLogin.addSocialNetwork(new TwitterNetwork(this, twitterKey, twitterSecret));
+    }
+
+    private void initOauth() {
+        tvConnectedStatus = (TextView) findViewById(R.id.connected_status);
+
+        // Google Sign In
+        easyLogin.addSocialNetwork(new GooglePlusNetwork(this));
+        googlePlusNetwork = (GooglePlusNetwork) easyLogin.getSocialNetwork(SocialNetwork.Network.GOOGLE_PLUS);
+        googlePlusNetwork.setListener(this);
+        sibGoogleSignIn = (SignInButton) findViewById(R.id.sib_google_sign_in);
+        googlePlusNetwork.setSignInButton(sibGoogleSignIn);
+
+        // FACEBOOK
+        List<String> fbScope = Arrays.asList("public_profile", "email");
+        easyLogin.addSocialNetwork(new FacebookNetwork(this, fbScope));
+        FacebookNetwork facebook = (FacebookNetwork) easyLogin.getSocialNetwork(SocialNetwork.Network.FACEBOOK);
+        LoginButton loginButton = (LoginButton) findViewById(R.id.lb_facebook_login);
+        facebook.requestLogin(loginButton, this);
+
+        // TWITTER
+        TwitterNetwork twitter = (TwitterNetwork) easyLogin.getSocialNetwork(SocialNetwork.Network.TWITTER);
+        twitter.setAdditionalEmailRequest(true);
+        TwitterLoginButton twitterButton = (TwitterLoginButton) findViewById(R.id.tlb_twitter_login);
+        twitter.requestLogin(twitterButton, this);
+
+    }
+
+    private void actionOAuthLogin(String network, String openId) {
+        loginViewModel.oAuthLogin(network, openId);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (!googlePlusNetwork.isConnected()) {
+            googlePlusNetwork.silentSignIn();
+        } else {
+            sibGoogleSignIn.setEnabled(false);
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        updateStatuses();
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        easyLogin.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public void onLoginSuccess(SocialNetwork.Network network) {
+        if (network == SocialNetwork.Network.GOOGLE_PLUS) {
+            AccessToken token = easyLogin.getSocialNetwork(SocialNetwork.Network.GOOGLE_PLUS).getAccessToken();
+            Log.d("TAG", "G+ Login successful: " + token.getToken() + "|||" + token.getEmail());
+            sibGoogleSignIn.setEnabled(false);
+        } else if (network == SocialNetwork.Network.FACEBOOK) {
+            AccessToken token = easyLogin.getSocialNetwork(SocialNetwork.Network.FACEBOOK).getAccessToken();
+            Log.d("TAG", "FACEBOOK Login successful: " + token.getToken() + "|||" + token.getEmail());
+        } else if (network == SocialNetwork.Network.TWITTER) {
+            AccessToken token = easyLogin.getSocialNetwork(SocialNetwork.Network.TWITTER).getAccessToken();
+            Log.d("TAG", "TWITTER Login successful: " + token.getToken() + "|||" + token.getEmail());
+        }
+        updateStatuses();
+    }
+
+    @Override
+    public void onError(SocialNetwork.Network socialNetwork, String errorMessage) {
+        Log.e("TAG", "ERROR!" + socialNetwork + "|||" + errorMessage);
+        Toast.makeText(getApplicationContext(), socialNetwork.name() + ": " + errorMessage,
+                Toast.LENGTH_SHORT).show();
+    }
+
+    private void updateStatuses() {
+        StringBuilder content = new StringBuilder();
+        for (SocialNetwork socialNetwork : easyLogin.getInitializedSocialNetworks()) {
+            content.append(socialNetwork.getNetwork())
+                    .append(": ")
+                    .append(socialNetwork.isConnected())
+                    .append("\n");
+        }
+        tvConnectedStatus.setText(content.toString());
+    }
+
+    public void logoutAllNetworks(View view) {
+        for (SocialNetwork socialNetwork : easyLogin.getInitializedSocialNetworks()) {
+            socialNetwork.logout();
+        }
+        updateStatuses();
     }
 }

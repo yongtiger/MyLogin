@@ -11,7 +11,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "cc.brainbook.android.study.mylogin"
+        applicationId "cc.brainbook.android.project.login"
         minSdkVersion 15
         targetSdkVersion 28
         versionCode 1
@@ -19,11 +19,26 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
+        ///[oAuth#Twitter]
+        applicationVariants.all { variant ->
+            variant.buildConfigField "String", "TWITTER_CONSUMER_KEY", getApiKey("TWITTER_CONSUMER_KEY")
+            variant.buildConfigField "String", "TWITTER_CONSUMER_SECRET", getApiKey("TWITTER_CONSUMER_SECRET")
+        }
+
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+}
+
+///[oAuth#Twitter]
+def getApiKey(def keyName){
+    Properties props = new Properties()
+//    props.load(new FileInputStream(new File('app/twitter-secrets.properties')))
+    InputStream inputStream = project.rootProject.file('app/twitter-secrets.properties').newDataInputStream()
+    props.load( inputStream )
+    return props[keyName]
 }
 
 dependencies {
@@ -43,4 +58,22 @@ dependencies {
 
     ///[SuperTextView]
     implementation 'com.github.lygttpod:SuperTextView:2.2.4'
+
+    ///[oAuth#Google Sign In]
+    ///https://developers.google.com/identity/sign-in/android/start-integrating
+    implementation 'com.google.android.gms:play-services-auth:16.0.1'
+    ///[oAuth#Facebook]
+    // https://developers.facebook.com/docs/android
+    implementation 'com.facebook.android:facebook-login:4.42.0'
+    ///[oAuth#Twitter]
+    // https://dev.twitter.com/twitterkit/android
+    implementation('com.twitter.sdk.android:twitter-core:3.1.1@aar') {
+        transitive = true
+    }
+
+
+    implementation 'com.google.firebase:firebase-core:16.0.9'
 }
+
+///[oAuth#Google Sign In]
+apply plugin: 'com.google.gms.google-services'

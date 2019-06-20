@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("cc.brainbook.android.study.mylogin", appContext.getPackageName());
+        assertEquals("cc.brainbook.android.project.login", appContext.getPackageName());
     }
 }
