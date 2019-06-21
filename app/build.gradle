@@ -50,7 +50,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-core:16.0.9'
     ///[oAuth#EasyLogin#Facebook]///改用Mob！
     ///https://developers.facebook.com/docs/android
-//    implementation 'com.facebook.android:facebook-login:4.42.0'
+    implementation 'com.facebook.android:facebook-login:4.42.0'
     ///[oAuth#EasyLogin#Twitter]///改用Mob！
     ///https://dev.twitter.com/twitterkit/android
     ///https://github.com/twitter-archive/twitter-kit-android/wiki/Log-In-with-Twitter

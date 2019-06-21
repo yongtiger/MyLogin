@@ -44,6 +44,7 @@
 //                    .secret(secret)
 //                    .userName(session.getUserName())
 //                    .userId(String.valueOf(session.getUserId()))
+//                    .photoUrl(result.data.profileImageUrl)   ///[EasyLogin#photoUrl]
 //                    .build();
 //            if (additionalEmailRequest) {
 //                requestEmail(session, tempToken);

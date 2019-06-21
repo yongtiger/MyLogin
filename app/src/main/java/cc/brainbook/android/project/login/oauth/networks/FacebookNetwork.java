@@ -54,6 +54,7 @@
 //            String userId = fbAccessToken.getUserId();
 //            accessToken = new AccessToken.Builder(token)
 //                    .userId(userId)
+//                    .photoUrl("https://graph.facebook.com/" + userId+ "/picture?type=large")   ///[EasyLogin#photoUrl]
 //                    .build();
 //            listener.onLoginSuccess(getNetwork());
 //        }
@@ -134,6 +135,7 @@
 //                            Log.d("FacebookNetwork", "Error occurred while fetching Facebook email");
 //                            accessToken = new AccessToken.Builder(token)
 //                                    .userId(userId)
+//                                    .photoUrl("https://graph.facebook.com/" + userId+ "/picture?type=large")   ///[EasyLogin#photoUrl]
 //                                    .build();
 //                            listener.onLoginSuccess(getNetwork());
 //                        } else {
@@ -146,6 +148,7 @@
 //                                    .userId(userId)
 //                                    .email(email)
 //                                    .userName(name)
+//                                    .photoUrl("https://graph.facebook.com/" + userId+ "/picture?type=large")   ///[EasyLogin#photoUrl]
 //                                    .build();
 //                            listener.onLoginSuccess(getNetwork());
 //                        }
