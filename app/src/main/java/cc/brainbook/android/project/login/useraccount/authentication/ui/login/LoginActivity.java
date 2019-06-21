@@ -79,7 +79,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         super.onCreate(savedInstanceState);
 
         ///[oAuth#EasyLogin]
-        initOauthBeforeSetContentView();
+        initEasyLoginBeforeSetContentView();
 
         setContentView(R.layout.activity_login);
 
@@ -178,7 +178,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         initRememberMe();
 
         ///[oAuth#EasyLogin]
-        initOauth();
+        initEasyLogin();
     }
 
     @Override
@@ -379,18 +379,17 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     ///[oAuth#EasyLogin]
-    private void initOauthBeforeSetContentView() {
-        EasyLogin.initialize();
+    ///Twitter initialization needs to happen before setContentView() if using the LoginButton!
+    private void initEasyLoginBeforeSetContentView() {
         easyLogin = EasyLogin.getInstance();
 
         ///[oAuth#EasyLogin#Twitter]///改用Mob！
-        // Initialization needs to happen before setContentView() if using the LoginButton!
 //        String twitterKey = getString(R.string.twitter_consumer_key);
 //        String twitterSecret = getString(R.string.twitter_consumer_secret);
 //        easyLogin.addSocialNetwork(new TwitterNetwork(this, twitterKey, twitterSecret));
     }
 
-    private void initOauth() {
+    private void initEasyLogin() {
         tvConnectedStatus = (TextView) findViewById(R.id.connected_status);
 
         ///[oAuth#EasyLogin#Google Sign In]

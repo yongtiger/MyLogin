@@ -17,8 +17,7 @@ public class EasyLogin {
 
     private Map<SocialNetwork.Network, SocialNetwork> socialNetworksMap = new HashMap<>();
 
-    private EasyLogin() {
-    }
+    private EasyLogin() {}
 
     public static void initialize() {
         if (instance == null) {

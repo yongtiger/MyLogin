@@ -194,6 +194,7 @@ public class GooglePlusNetwork extends SocialNetwork implements GoogleApiClient.
                         .email(acct.getEmail())
                         .userName(acct.getDisplayName())
                         .userId(acct.getId())
+                        .photoUrl((acct.getPhotoUrl() == null) ? null : acct.getPhotoUrl().toString())   ///[EasyLogin#photoUrl]
                         .build();
                 listener.onLoginSuccess(getNetwork());
             }

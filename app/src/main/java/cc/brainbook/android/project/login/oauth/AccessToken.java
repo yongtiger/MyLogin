@@ -8,6 +8,7 @@ public class AccessToken {
     private final String email;
     private final String userName;
     private final String userId;
+    private final String photoUrl;///[EasyLogin#photoUrl]
 
     private AccessToken(Builder builder) {
         token = builder.token;
@@ -15,6 +16,7 @@ public class AccessToken {
         email = builder.email;
         userName = builder.userName;
         userId = builder.userId;
+        photoUrl = builder.photoUrl;///[EasyLogin#photoUrl]
     }
 
     public String getToken() {
@@ -44,6 +46,7 @@ public class AccessToken {
         private String userName;
         private String email;
         private String userId;
+        private String photoUrl;///[EasyLogin#photoUrl]
 
         public Builder(String token) {
             this.token = token;
@@ -55,6 +58,7 @@ public class AccessToken {
             email = oldToken.email;
             userName = oldToken.userName;
             userId = oldToken.userId;
+            photoUrl = oldToken.photoUrl;///[EasyLogin#photoUrl]
         }
 
         public Builder secret(String secret) {
@@ -74,6 +78,11 @@ public class AccessToken {
 
         public Builder email(String email) {
             this.email = email;
+            return this;
+        }
+        ///[EasyLogin#photoUrl]
+        public Builder photoUrl(String photoUrl) {
+            this.photoUrl = photoUrl;
             return this;
         }
 

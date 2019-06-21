@@ -5,6 +5,8 @@ import android.content.Context;
 
 import com.mob.MobSDK;
 
+import cc.brainbook.android.project.login.oauth.EasyLogin;
+
 public class MyApplication extends Application {
     private static MyApplication sInstance;
     private static Context sContext;
@@ -21,6 +23,9 @@ public class MyApplication extends Application {
 
         sInstance = this;
         sContext = getApplicationContext();
+
+        ///[oAuth#EasyLogin]
+        EasyLogin.initialize();
 
         ///[oAuth#MobService]
         ///http://www.mob.com
