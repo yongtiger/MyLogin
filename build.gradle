@@ -5,7 +5,7 @@ buildscript {
         google()
         jcenter()
 
-        ///[oAuth#Google Sign In]
+        ///[oAuth#EasyLogin#Google Sign In]
         ///https://developers.google.com/identity/sign-in/android/start-integrating
         ///If you're using a version of Gradle lower than 4.1, you must instead use:
 //        maven { url 'https://maven.google.com'  }
@@ -14,7 +14,7 @@ buildscript {
     dependencies {
         classpath 'com.android.tools.build:gradle:3.4.1'
 
-        ///[oAuth#Google Sign In]
+        ///[oAuth#EasyLogin#Google Sign In]
         ///https://developers.google.com/identity/sign-in/android/start-integrating
         classpath 'com.google.gms:google-services:4.2.0'
 

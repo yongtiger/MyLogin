@@ -44,23 +44,22 @@ dependencies {
     ///[SuperTextView]
     implementation 'com.github.lygttpod:SuperTextView:2.2.4'
 
-    ///[oAuth#Google Sign In]
+    ///[oAuth#EasyLogin#Google Sign In]
     ///https://developers.google.com/identity/sign-in/android/start-integrating
     implementation 'com.google.android.gms:play-services-auth:16.0.1'
     implementation 'com.google.firebase:firebase-core:16.0.9'
-    ///[oAuth#Facebook]
+    ///[oAuth#EasyLogin#Facebook]///改用Mob！
     ///https://developers.facebook.com/docs/android
-    implementation 'com.facebook.android:facebook-login:4.42.0'
-    ///[oAuth#Twitter]
+//    implementation 'com.facebook.android:facebook-login:4.42.0'
+    ///[oAuth#EasyLogin#Twitter]///改用Mob！
     ///https://dev.twitter.com/twitterkit/android
     ///https://github.com/twitter-archive/twitter-kit-android/wiki/Log-In-with-Twitter
-//    implementation 'com.twitter.sdk.android:twitter:3.1.1'
-    implementation('com.twitter.sdk.android:twitter-core:3.1.1@aar') {
-        transitive = true
-    }
+//    implementation('com.twitter.sdk.android:twitter-core:3.1.1@aar') {
+//        transitive = true
+//    }
 }
 
-///[oAuth#Google Sign In]
+///[oAuth#EasyLogin#Google Sign In]
 apply plugin: 'com.google.gms.google-services'
 
 ///[oAuth#MobService]
@@ -101,22 +100,23 @@ MobSDK {
 //                callbackUri "http://www.sharesdk.cn"
 //            }
 
-//            GooglePlus {///不用Mob！！！
+//            GooglePlus {///不用Mob！！！用EasyLogin
 //                appId   "1065746615485-d5narip4m6akad1027nb0sq93mn9hrcc.apps.googleusercontent.com"
 ////                appId   "1:1065746615485:android:c0ba37533fc34d2e"
 //                appKey "AIzaSyDp2J9q02oxHbGoyU-IFql0n7tfiIEliAg"
 //                callbackUri "http://localhost"
 //            }
-//            Facebook {///不建议用Mob！
-//                appKey "452685335557424"
-//                appSecret "ecc77591b3f314ef88042542855da029"
-//                callbackUri "https://ljdy.tv"
-//            }
-//            Twitter {///不建议用Mob！
-//                appKey "LRBM0H75rWrU9gNHvlEAA2aOy"
-//                appSecret "gbeWsZvA9ELJSdoBzJ5oLKX0TU09UOwrzdGfo9Tg7DjyGuMe8G"
-//                callbackUri "http://mob.com"
-//            }
+            Facebook {///还可用EasyLogin
+                appKey "452685335557424"
+                appSecret "ecc77591b3f314ef88042542855da029"
+                callbackUri "https://ljdy.tv"
+            }
+            Twitter {///还可用EasyLogin
+                appKey "vj7dh7Emr4qwu7CgTAR4U7Xpv "
+                appSecret "WeuZkq08lXRMHU26JL0xc8gan2gKDmUn3U44A4ICgj95fBXnK1"
+                callbackUri "twittersdk://" ///解决Failed to get request token问题，https://stackoverflow.com/questions/33228235/failed-to-get-request-token-on-android-m-running-devices
+
+            }
             LinkedIn {
                 appKey "781w4jcpremmbs"
                 appSecret "5IkIfHArPRTz6nmX"

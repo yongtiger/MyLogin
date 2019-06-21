@@ -25,23 +25,19 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.common.SignInButton;
-import com.twitter.sdk.android.core.identity.TwitterLoginButton;
+//import com.facebook.login.widget.LoginButton;///改用Mob！
+//import com.twitter.sdk.android.core.identity.TwitterLoginButton;///改用Mob！
 
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 
-import cc.brainbook.android.project.login.BuildConfig;
 import cc.brainbook.android.project.login.R;
 import cc.brainbook.android.project.login.oauth.AccessToken;
 import cc.brainbook.android.project.login.oauth.EasyLogin;
 import cc.brainbook.android.project.login.oauth.listener.OnLoginCompleteListener;
-import cc.brainbook.android.project.login.oauth.networks.FacebookNetwork;
+//import cc.brainbook.android.project.login.oauth.networks.FacebookNetwork;///改用Mob！
 import cc.brainbook.android.project.login.oauth.networks.GooglePlusNetwork;
 import cc.brainbook.android.project.login.oauth.networks.SocialNetwork;
-import cc.brainbook.android.project.login.oauth.networks.TwitterNetwork;
 import cc.brainbook.android.project.login.resetpassword.ui.ResetPasswordActivity;
 import cc.brainbook.android.project.login.result.Result;
 import cc.brainbook.android.project.login.useraccount.authentication.ui.register.RegisterActivity;
@@ -49,9 +45,7 @@ import cc.brainbook.android.project.login.util.PrefsUtil;
 import cn.sharesdk.framework.Platform;
 import cn.sharesdk.framework.PlatformActionListener;
 import cn.sharesdk.framework.ShareSDK;
-import cn.sharesdk.linkedin.LinkedIn;
-import cn.sharesdk.sina.weibo.SinaWeibo;
-import cn.sharesdk.wechat.friends.Wechat;
+import cn.sharesdk.twitter.Twitter;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener, OnLoginCompleteListener, PlatformActionListener {
     private static final String KEY_REMEMBER_USERNAME = "remember_username";
@@ -70,21 +64,21 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private Button btnRegister;
     private ProgressBar pbLoading;
 
-    ///[oAuth]
+    ///[oAuth#EasyLogin]
     private EasyLogin easyLogin;
     private TextView tvConnectedStatus;
     private Button btnLogoutAllNetworks;
     private GooglePlusNetwork googlePlusNetwork;
     private SignInButton sibGoogleSignIn;
-    private LoginButton lbFacebookLogin;
-    private TwitterLoginButton tlbTwitterLogin;
+//    private LoginButton lbFacebookLogin;///改用Mob！
+//    private TwitterLoginButton tlbTwitterLogin;///改用Mob！
     private Button btnOauthLogin;/////////////////////////////
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        ///[oAuth]
+        ///[oAuth#EasyLogin]
         initOauthBeforeSetContentView();
 
         setContentView(R.layout.activity_login);
@@ -183,7 +177,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         ///[RememberMe#记住用户名密码自动登陆]
         initRememberMe();
 
-        ///[oAuth]
+        ///[oAuth#EasyLogin]
         initOauth();
     }
 
@@ -222,13 +216,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             case R.id.btn_oauth_login:
                 pbLoading.setVisibility(View.VISIBLE);
 
-                ///[oAuth]
-                ///[MobService]
+                ///[oAuth#MobService]
                 ///http://wiki.mob.com/sdk-share-android-3-0-0/#map-5
 //                Platform plat = ShareSDK.getPlatform(QQ.NAME);
 //                Platform plat = ShareSDK.getPlatform(Wechat.NAME);
 //                Platform plat = ShareSDK.getPlatform(SinaWeibo.NAME);
-                Platform plat = ShareSDK.getPlatform(LinkedIn.NAME);
+//                Platform plat = ShareSDK.getPlatform(Facebook.NAME);  ///不建议用Mob！
+                Platform plat = ShareSDK.getPlatform(Twitter.NAME);  ///不建议用Mob！
+//                Platform plat = ShareSDK.getPlatform(LinkedIn.NAME);
                 plat.removeAccount(true); //移除授权状态和本地缓存，下次授权会重新授权
                 plat.SSOSetting(false); //SSO授权，传false默认是客户端授权，没有客户端授权或者不支持客户端授权会跳web授权
                 plat.setPlatformActionListener(this);//授权回调监听，监听oncomplete，onerror，oncancel三种状态
@@ -383,40 +378,40 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         Toast.makeText(getApplicationContext(), errorString, Toast.LENGTH_SHORT).show();
     }
 
-    ///[oAuth]
+    ///[oAuth#EasyLogin]
     private void initOauthBeforeSetContentView() {
         EasyLogin.initialize();
         easyLogin = EasyLogin.getInstance();
 
-        ///[oAuth#Twitter]
+        ///[oAuth#EasyLogin#Twitter]///改用Mob！
         // Initialization needs to happen before setContentView() if using the LoginButton!
-        String twitterKey = getString(R.string.twitter_consumer_key);
-        String twitterSecret = getString(R.string.twitter_consumer_secret);
-        easyLogin.addSocialNetwork(new TwitterNetwork(this, twitterKey, twitterSecret));
+//        String twitterKey = getString(R.string.twitter_consumer_key);
+//        String twitterSecret = getString(R.string.twitter_consumer_secret);
+//        easyLogin.addSocialNetwork(new TwitterNetwork(this, twitterKey, twitterSecret));
     }
 
     private void initOauth() {
         tvConnectedStatus = (TextView) findViewById(R.id.connected_status);
 
-        ///[oAuth#Google Sign In]
+        ///[oAuth#EasyLogin#Google Sign In]
         easyLogin.addSocialNetwork(new GooglePlusNetwork(this));
         googlePlusNetwork = (GooglePlusNetwork) easyLogin.getSocialNetwork(SocialNetwork.Network.GOOGLE_PLUS);
         googlePlusNetwork.setListener(this);
         sibGoogleSignIn = (SignInButton) findViewById(R.id.sib_google_sign_in);
         googlePlusNetwork.setSignInButton(sibGoogleSignIn);
 
-        ///[oAuth#Facebook]
-        List<String> fbScope = Arrays.asList("public_profile", "email");
-        easyLogin.addSocialNetwork(new FacebookNetwork(this, fbScope));
-        FacebookNetwork facebook = (FacebookNetwork) easyLogin.getSocialNetwork(SocialNetwork.Network.FACEBOOK);
-        LoginButton loginButton = (LoginButton) findViewById(R.id.lb_facebook_login);
-        facebook.requestLogin(loginButton, this);
-
-        ///[oAuth#Twitter]
-        TwitterNetwork twitter = (TwitterNetwork) easyLogin.getSocialNetwork(SocialNetwork.Network.TWITTER);
-        twitter.setAdditionalEmailRequest(true);
-        TwitterLoginButton twitterButton = (TwitterLoginButton) findViewById(R.id.tlb_twitter_login);
-        twitter.requestLogin(twitterButton, this);
+//        ///[oAuth#EasyLogin#Facebook]///改用Mob！
+//        List<String> fbScope = Arrays.asList("public_profile", "email");
+//        easyLogin.addSocialNetwork(new FacebookNetwork(this, fbScope));
+//        FacebookNetwork facebook = (FacebookNetwork) easyLogin.getSocialNetwork(SocialNetwork.Network.FACEBOOK);
+//        LoginButton loginButton = (LoginButton) findViewById(R.id.lb_facebook_login);
+//        facebook.requestLogin(loginButton, this);
+//
+//        ///[oAuth#EasyLogin#Twitter]///改用Mob！
+//        TwitterNetwork twitter = (TwitterNetwork) easyLogin.getSocialNetwork(SocialNetwork.Network.TWITTER);
+//        twitter.setAdditionalEmailRequest(true);
+//        TwitterLoginButton twitterButton = (TwitterLoginButton) findViewById(R.id.tlb_twitter_login);
+//        twitter.requestLogin(twitterButton, this);
 
     }
 
