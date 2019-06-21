@@ -30,6 +30,7 @@ import com.google.android.gms.common.SignInButton;
 import com.twitter.sdk.android.core.identity.TwitterLoginButton;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 import cc.brainbook.android.project.login.BuildConfig;
@@ -45,8 +46,14 @@ import cc.brainbook.android.project.login.resetpassword.ui.ResetPasswordActivity
 import cc.brainbook.android.project.login.result.Result;
 import cc.brainbook.android.project.login.useraccount.authentication.ui.register.RegisterActivity;
 import cc.brainbook.android.project.login.util.PrefsUtil;
+import cn.sharesdk.framework.Platform;
+import cn.sharesdk.framework.PlatformActionListener;
+import cn.sharesdk.framework.ShareSDK;
+import cn.sharesdk.linkedin.LinkedIn;
+import cn.sharesdk.sina.weibo.SinaWeibo;
+import cn.sharesdk.wechat.friends.Wechat;
 
-public class LoginActivity extends AppCompatActivity implements View.OnClickListener, OnLoginCompleteListener {
+public class LoginActivity extends AppCompatActivity implements View.OnClickListener, OnLoginCompleteListener, PlatformActionListener {
     private static final String KEY_REMEMBER_USERNAME = "remember_username";
     private static final String KEY_REMEMBER_PASSWORD = "remember_password";
 
@@ -71,6 +78,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private SignInButton sibGoogleSignIn;
     private LoginButton lbFacebookLogin;
     private TwitterLoginButton tlbTwitterLogin;
+    private Button btnOauthLogin;/////////////////////////////
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -210,6 +218,34 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             case R.id.btn_register:
                 startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
                 break;
+            ///[oAuth#MobService]//////////////////////////
+            case R.id.btn_oauth_login:
+                pbLoading.setVisibility(View.VISIBLE);
+
+                ///[oAuth]
+                ///[MobService]
+                ///http://wiki.mob.com/sdk-share-android-3-0-0/#map-5
+//                Platform plat = ShareSDK.getPlatform(QQ.NAME);
+//                Platform plat = ShareSDK.getPlatform(Wechat.NAME);
+//                Platform plat = ShareSDK.getPlatform(SinaWeibo.NAME);
+                Platform plat = ShareSDK.getPlatform(LinkedIn.NAME);
+                plat.removeAccount(true); //移除授权状态和本地缓存，下次授权会重新授权
+                plat.SSOSetting(false); //SSO授权，传false默认是客户端授权，没有客户端授权或者不支持客户端授权会跳web授权
+                plat.setPlatformActionListener(this);//授权回调监听，监听oncomplete，onerror，oncancel三种状态
+                if(plat.isClientValid()){
+                    Log.d("TAG", "onClick: ");
+                    //判断是否存在授权凭条的客户端，true是有客户端，false是无
+                }
+                if(plat.isAuthValid()){
+                    //判断是否已经存在授权状态，可以根据自己的登录逻辑设置
+                    Toast.makeText(this, "已经授权过了", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                ShareSDK.setActivity(this);//抖音登录适配安卓9.0
+                plat.showUser(null);    //要数据不要功能，主要体现在不会重复出现授权界面
+
+//                actionOAuthLogin("1","1");
+                break;
         }
     }
 
@@ -228,9 +264,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         pbLoading = findViewById(R.id.pb_loading);
 
+        btnOauthLogin = findViewById(R.id.btn_oauth_login);///////////////////////
     }
 
     private void initListener() {
+        btnOauthLogin.setOnClickListener(this);//////////////////
+
+
         ivClearUsername.setOnClickListener(this);
         ivClearPassword.setOnClickListener(this);
         ivPasswordVisibility.setOnClickListener(this);
@@ -446,5 +486,22 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             socialNetwork.logout();
         }
         updateStatuses();
+    }
+
+    ///[oAuth#MobService]
+    ///http://wiki.mob.com/sdk-share-android-3-0-0/#map-5
+    @Override
+    public void onComplete(Platform platform, int i, HashMap<String, Object> hashMap) {
+        Log.d("TAG", "onComplete: ");
+    }
+
+    @Override
+    public void onError(Platform platform, int i, Throwable throwable) {
+        Log.d("TAG", "onError: ");
+    }
+
+    @Override
+    public void onCancel(Platform platform, int i) {
+        Log.d("TAG", "onCancel: ");
     }
 }

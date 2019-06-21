@@ -18,6 +18,11 @@ buildscript {
         ///https://developers.google.com/identity/sign-in/android/start-integrating
         classpath 'com.google.gms:google-services:4.2.0'
 
+        ///[oAuth#MobService]注册MobSDK
+        ///http://www.mob.com
+        ///http://wiki.mob.com/sdk-share-android-3-0-0/
+        classpath "com.mob.sdk:MobSDK:2018.0319.1724"
+
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }

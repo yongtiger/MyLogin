@@ -62,3 +62,74 @@ dependencies {
 
 ///[oAuth#Google Sign In]
 apply plugin: 'com.google.gms.google-services'
+
+///[oAuth#MobService]
+///http://www.mob.com
+///http://wiki.mob.com/sdk-share-android-3-0-0/
+apply plugin: 'com.mob.sdk'
+
+MobSDK {
+    ///http://www.mob.com/#/index
+    ///http://dashboard.mob.com/#!/share/dashboard
+    appKey "2b6e9b6c9ed8b"  ///替换为mob官方申请的appkey
+    appSecret "bbc1558f29ac6eacdd249b5c2abd57ad"    ///替换为mob官方申请的appkey对应的appSecret
+
+    ShareSDK {
+        devInfo {
+//            Email {}
+//            ShortMessage {}
+            QQ {
+                appId "101652380"
+                appKey "760921d89f2fbe934f644f6c98625cd1"
+            }
+            Wechat {
+                appId "wxbf9c29bd2d6b89c8"
+                appSecret "b97a95b266a2345127b35dfc25da434d"
+                userName "gh_afb25ac019c9"
+                path "pages/index/index.html?id=1"
+                withShareTicket true
+                miniprogramType 2
+            }
+            SinaWeibo {
+                appKey "1547322967"
+                appSecret "aed8b5d8cf12f8169ac83bec39c83055"
+                callbackUri "http://www.sharesdk.cn"
+            }
+//            TencentWeibo {
+//                appKey "801307650"
+//                appSecret "ae36f4ee3946e1cbb98d6965b0b2ff5c"
+//                callbackUri "http://www.sharesdk.cn"
+//            }
+
+//            GooglePlus {///不用Mob！！！
+//                appId   "1065746615485-d5narip4m6akad1027nb0sq93mn9hrcc.apps.googleusercontent.com"
+////                appId   "1:1065746615485:android:c0ba37533fc34d2e"
+//                appKey "AIzaSyDp2J9q02oxHbGoyU-IFql0n7tfiIEliAg"
+//                callbackUri "http://localhost"
+//            }
+//            Facebook {///不建议用Mob！
+//                appKey "452685335557424"
+//                appSecret "ecc77591b3f314ef88042542855da029"
+//                callbackUri "https://ljdy.tv"
+//            }
+//            Twitter {///不建议用Mob！
+//                appKey "LRBM0H75rWrU9gNHvlEAA2aOy"
+//                appSecret "gbeWsZvA9ELJSdoBzJ5oLKX0TU09UOwrzdGfo9Tg7DjyGuMe8G"
+//                callbackUri "http://mob.com"
+//            }
+            LinkedIn {
+                appKey "781w4jcpremmbs"
+                appSecret "5IkIfHArPRTz6nmX"
+                callbackUri "https://ljdy.tv"
+            }
+//            WechatMoments {
+//                appId "wx4868b35061f87885"
+//                appSecret "64020361b8ec4c99936c0e3999a9f249"
+//            }
+//            WechatFavorite {
+//                appId "wx4868b35061f87885"
+//                appSecret "64020361b8ec4c99936c0e3999a9f249"
+//            }
+        }
+    }
+}
