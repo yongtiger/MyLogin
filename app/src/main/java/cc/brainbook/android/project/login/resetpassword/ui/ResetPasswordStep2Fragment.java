@@ -127,7 +127,7 @@ public class ResetPasswordStep2Fragment extends Fragment implements View.OnClick
                 } else {
                     if (getActivity() != null) {
                         if (result.getSuccess() != null)
-                            ((ResetPasswordActivity) getActivity()).updateUi(result.getSuccess());
+                            ((ResetPasswordActivity) getActivity()).updateUI(result.getSuccess());
                         ((ResetPasswordActivity)getActivity()).showResetPasswordStep3Fragment();
                     }
                 }

@@ -111,7 +111,7 @@ public class ModifyUsernameFragment extends Fragment implements View.OnClickList
                 } else {
                     if (getActivity() != null) {
                         if (result.getSuccess() != null)
-                            ((ModifyActivity) getActivity()).updateUi(result.getSuccess());
+                            ((ModifyActivity) getActivity()).updateUI(result.getSuccess());
                         ///[关闭其它fragment后回退显示ModifyFragment]关闭当前的Fragment返回上一个fragment
                         if (getFragmentManager() != null) {
                             getFragmentManager().popBackStack();

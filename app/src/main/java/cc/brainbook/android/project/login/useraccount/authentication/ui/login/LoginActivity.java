@@ -139,7 +139,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     showLoginFailed(result.getError());
                 } else {
                     if (result.getSuccess() != null)
-                        updateUi(result.getSuccess());
+                        updateUI(result.getSuccess());
 
                     ///[RememberMe]登陆成功后如果勾选了RememberMe，则保存SharedPreferences为用户名/密码，否则保存为null
                     saveRememberMe(true);
@@ -335,7 +335,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
-    private void updateUi(@StringRes Integer successString) {
+    private void updateUI(@StringRes Integer successString) {
         Toast.makeText(getApplicationContext(), successString, Toast.LENGTH_LONG).show();
     }
 

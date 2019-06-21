@@ -108,7 +108,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                     showRegisterFailed(result.getError());
                 } else {
                     if (result.getSuccess() != null)
-                        updateUi(result.getSuccess());
+                        updateUI(result.getSuccess());
 
                     //Complete and destroy register activity once successful
                     finish();
@@ -316,7 +316,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         }
     }
 
-    public void updateUi(@StringRes Integer successString) {
+    public void updateUI(@StringRes Integer successString) {
         Toast.makeText(getApplicationContext(), successString, Toast.LENGTH_LONG).show();
     }
 

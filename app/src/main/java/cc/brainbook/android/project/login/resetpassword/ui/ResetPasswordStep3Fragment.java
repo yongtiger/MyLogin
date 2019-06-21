@@ -112,7 +112,7 @@ public class ResetPasswordStep3Fragment extends Fragment implements View.OnClick
                 } else {
                     if (getActivity() != null) {
                         if (result.getSuccess() != null)
-                            ((ResetPasswordActivity) getActivity()).updateUi(result.getSuccess());
+                            ((ResetPasswordActivity) getActivity()).updateUI(result.getSuccess());
 
                         if (result instanceof ResetPasswordSendVerificationCodeResult) {
                             ///[根据sendVerificationCode的结果来更新数据变化]

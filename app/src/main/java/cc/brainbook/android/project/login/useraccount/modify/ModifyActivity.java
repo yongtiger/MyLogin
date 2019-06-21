@@ -74,7 +74,7 @@ public class ModifyActivity extends AppCompatActivity {
                 .commit();
     }
 
-    public void updateUi(@StringRes Integer successString) {
+    public void updateUI(@StringRes Integer successString) {
         Toast.makeText(getApplicationContext(), successString, Toast.LENGTH_LONG).show();
     }
 

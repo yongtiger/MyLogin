@@ -63,7 +63,7 @@
                 "keyboard|keyboardHidden|screenLayout|screenSize|orientation"
             android:label="@string/app_name" />
         <!--///[oAuth#Twitter]-->
-        <activity android:name="com.twitter.sdk.android.core.identity.OAuthActivity" />
+        <!--<activity android:name="com.twitter.sdk.android.core.identity.OAuthActivity" />-->
 
     </application>
 

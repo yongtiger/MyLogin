@@ -79,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
                                 Toast.makeText(getApplicationContext(), "Logout! " + username, Toast.LENGTH_SHORT).show();
 
                                 ///Update UI
-                                updateUi();
+                                updateUI();
                             }
                         });
                     }
@@ -116,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         ///Update UI
-        updateUi();
+        updateUI();
     }
 
     @Override
@@ -128,13 +128,13 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "Login! " + loginRepository.getLoggedInUser().getUsername(), Toast.LENGTH_SHORT).show();
 
                     ///Update UI
-                    updateUi();
+                    updateUI();
                 }
             }
         }
     }
 
-    private void updateUi() {
+    private void updateUI() {
         final UserRepository loginRepository = UserRepository.getInstance();
         if (loginRepository.isLoggedIn()) {
             llLoggedIn.setVisibility(View.VISIBLE);

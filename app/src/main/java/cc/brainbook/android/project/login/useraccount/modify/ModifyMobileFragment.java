@@ -112,7 +112,7 @@ public class ModifyMobileFragment extends Fragment implements View.OnClickListen
                 } else {
                     if (getActivity() != null) {
                         if (result.getSuccess() != null)
-                            ((ModifyActivity) getActivity()).updateUi(result.getSuccess());
+                            ((ModifyActivity) getActivity()).updateUI(result.getSuccess());
                         ((ModifyActivity) getActivity()).showModifyFragment();
                         ///[关闭其它fragment后回退显示ModifyFragment]关闭当前的Fragment返回上一个fragment
                         if (getFragmentManager() != null) {
