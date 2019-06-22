@@ -54,9 +54,9 @@ dependencies {
     ///[oAuth#EasyLogin#Twitter]///改用Mob！
     ///https://dev.twitter.com/twitterkit/android
     ///https://github.com/twitter-archive/twitter-kit-android/wiki/Log-In-with-Twitter
-//    implementation('com.twitter.sdk.android:twitter-core:3.1.1@aar') {
-//        transitive = true
-//    }
+    implementation('com.twitter.sdk.android:twitter-core:3.1.1@aar') {
+        transitive = true
+    }
 }
 
 ///[oAuth#EasyLogin#Google Sign In]

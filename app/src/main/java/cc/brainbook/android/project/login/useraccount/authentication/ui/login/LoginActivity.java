@@ -25,19 +25,25 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.common.SignInButton;
+import com.twitter.sdk.android.core.identity.TwitterLoginButton;
 //import com.facebook.login.widget.LoginButton;///改用Mob！
 //import com.twitter.sdk.android.core.identity.TwitterLoginButton;///改用Mob！
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 
 import cc.brainbook.android.project.login.R;
 import cc.brainbook.android.project.login.oauth.AccessToken;
 import cc.brainbook.android.project.login.oauth.EasyLogin;
 import cc.brainbook.android.project.login.oauth.listener.OnLoginCompleteListener;
 //import cc.brainbook.android.project.login.oauth.networks.FacebookNetwork;///改用Mob！
+import cc.brainbook.android.project.login.oauth.networks.FacebookNetwork;
 import cc.brainbook.android.project.login.oauth.networks.GooglePlusNetwork;
 import cc.brainbook.android.project.login.oauth.networks.SocialNetwork;
+import cc.brainbook.android.project.login.oauth.networks.TwitterNetwork;
 import cc.brainbook.android.project.login.resetpassword.ui.ResetPasswordActivity;
 import cc.brainbook.android.project.login.result.Result;
 import cc.brainbook.android.project.login.useraccount.authentication.ui.register.RegisterActivity;
@@ -70,8 +76,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private Button btnLogoutAllNetworks;
     private GooglePlusNetwork googlePlusNetwork;
     private SignInButton sibGoogleSignIn;
-//    private LoginButton lbFacebookLogin;///改用Mob！
-//    private TwitterLoginButton tlbTwitterLogin;///改用Mob！
+
     private Button btnOauthLogin;/////////////////////////////
 
     @Override
@@ -384,9 +389,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         easyLogin = EasyLogin.getInstance();
 
         ///[oAuth#EasyLogin#Twitter]///改用Mob！
-//        String twitterKey = getString(R.string.twitter_consumer_key);
-//        String twitterSecret = getString(R.string.twitter_consumer_secret);
-//        easyLogin.addSocialNetwork(new TwitterNetwork(this, twitterKey, twitterSecret));
+        String twitterKey = getString(R.string.twitter_consumer_key);
+        String twitterSecret = getString(R.string.twitter_consumer_secret);
+        easyLogin.addSocialNetwork(new TwitterNetwork(this, twitterKey, twitterSecret));
     }
 
     private void initEasyLogin() {
@@ -400,18 +405,26 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         googlePlusNetwork.setSignInButton(sibGoogleSignIn);
 
 //        ///[oAuth#EasyLogin#Facebook]///改用Mob！
-//        List<String> fbScope = Arrays.asList("public_profile", "email");
-//        easyLogin.addSocialNetwork(new FacebookNetwork(this, fbScope));
-//        FacebookNetwork facebook = (FacebookNetwork) easyLogin.getSocialNetwork(SocialNetwork.Network.FACEBOOK);
-//        LoginButton loginButton = (LoginButton) findViewById(R.id.lb_facebook_login);
-//        facebook.requestLogin(loginButton, this);
+        List<String> fbScope = Arrays.asList("public_profile", "email");
+        easyLogin.addSocialNetwork(new FacebookNetwork(this, fbScope));
+        FacebookNetwork facebook = (FacebookNetwork) easyLogin.getSocialNetwork(SocialNetwork.Network.FACEBOOK);
+        LoginButton loginButton = (LoginButton) findViewById(R.id.lb_facebook_login);
+        facebook.requestLogin(loginButton, this);
 //
-//        ///[oAuth#EasyLogin#Twitter]///改用Mob！
-//        TwitterNetwork twitter = (TwitterNetwork) easyLogin.getSocialNetwork(SocialNetwork.Network.TWITTER);
-//        twitter.setAdditionalEmailRequest(true);
-//        TwitterLoginButton twitterButton = (TwitterLoginButton) findViewById(R.id.tlb_twitter_login);
-//        twitter.requestLogin(twitterButton, this);
+        ///[oAuth#EasyLogin#Twitter]///改用Mob！
+        TwitterNetwork twitter = (TwitterNetwork) easyLogin.getSocialNetwork(SocialNetwork.Network.TWITTER);
+        twitter.setAdditionalEmailRequest(true);
+        TwitterLoginButton twitterLoginButton = (TwitterLoginButton) findViewById(R.id.tlb_twitter_login);
+        twitter.requestLogin(twitterLoginButton, this);
 
+        ///[oAuth#EasyLogin#修改按钮样式]
+        ///https://stackoverflow.com/questions/27267809/using-custom-login-button-with-twitter-fabric
+        twitterLoginButton.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
+        twitterLoginButton.setBackgroundResource(R.mipmap.ic_launcher_round);
+        twitterLoginButton.setCompoundDrawablePadding(0);
+        twitterLoginButton.setPadding(0, 0, 0, 0);
+        twitterLoginButton.setText("Login with Twitter");
+        twitterLoginButton.setTextSize(18);
     }
 
     private void actionOAuthLogin(String network, String openId) {
