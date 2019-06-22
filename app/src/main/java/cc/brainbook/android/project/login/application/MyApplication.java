@@ -2,9 +2,14 @@ package cc.brainbook.android.project.login.application;
 
 import android.app.Application;
 import android.content.Context;
+import android.util.Log;
 
 import com.mob.MobSDK;
+import com.twitter.sdk.android.core.DefaultLogger;
+import com.twitter.sdk.android.core.TwitterAuthConfig;
+import com.twitter.sdk.android.core.TwitterConfig;
 
+import cc.brainbook.android.project.login.R;
 import cc.brainbook.android.project.login.oauth.EasyLogin;
 
 public class MyApplication extends Application {
@@ -26,6 +31,17 @@ public class MyApplication extends Application {
 
         ///[oAuth#EasyLogin]
         EasyLogin.initialize();
+
+        ///[oAuth#EasyLogin#Twitter]初始化
+        ///Twitter initialization needs to happen before setContentView() if using the LoginButton!
+        String twitterKey = getString(R.string.twitter_consumer_key);
+        String twitterSecret = getString(R.string.twitter_consumer_secret);
+        TwitterAuthConfig authConfig = new TwitterAuthConfig(twitterKey, twitterSecret);
+        TwitterConfig config = new TwitterConfig.Builder(getApplicationContext())
+                .logger(new DefaultLogger(Log.DEBUG))
+                .twitterAuthConfig(authConfig)
+                .build();
+        com.twitter.sdk.android.core.Twitter.initialize(config);
 
         ///[oAuth#MobService]
         ///http://www.mob.com

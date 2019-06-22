@@ -27,6 +27,9 @@ import android.widget.Toast;
 
 import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.common.SignInButton;
+import com.twitter.sdk.android.core.DefaultLogger;
+import com.twitter.sdk.android.core.TwitterAuthConfig;
+import com.twitter.sdk.android.core.TwitterConfig;
 import com.twitter.sdk.android.core.identity.TwitterLoginButton;
 //import com.facebook.login.widget.LoginButton;///改用Mob！
 //import com.twitter.sdk.android.core.identity.TwitterLoginButton;///改用Mob！
@@ -82,10 +85,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        ///[oAuth#EasyLogin]
-        initEasyLoginBeforeSetContentView();
-
         setContentView(R.layout.activity_login);
 
         initView();
@@ -383,19 +382,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         Toast.makeText(getApplicationContext(), errorString, Toast.LENGTH_SHORT).show();
     }
 
-    ///[oAuth#EasyLogin]
-    ///Twitter initialization needs to happen before setContentView() if using the LoginButton!
-    private void initEasyLoginBeforeSetContentView() {
-        easyLogin = EasyLogin.getInstance();
-
-        ///[oAuth#EasyLogin#Twitter]///改用Mob！
-        String twitterKey = getString(R.string.twitter_consumer_key);
-        String twitterSecret = getString(R.string.twitter_consumer_secret);
-        easyLogin.addSocialNetwork(new TwitterNetwork(this, twitterKey, twitterSecret));
-    }
-
     private void initEasyLogin() {
         tvConnectedStatus = (TextView) findViewById(R.id.connected_status);
+
+        easyLogin = EasyLogin.getInstance();
 
         ///[oAuth#EasyLogin#Google Sign In]
         easyLogin.addSocialNetwork(new GooglePlusNetwork(this));
@@ -412,6 +402,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         facebook.requestLogin(loginButton, this);
 //
         ///[oAuth#EasyLogin#Twitter]///改用Mob！
+        easyLogin.addSocialNetwork(new TwitterNetwork());
         TwitterNetwork twitter = (TwitterNetwork) easyLogin.getSocialNetwork(SocialNetwork.Network.EL_TWITTER);
         twitter.setAdditionalEmailRequest(true);
         TwitterLoginButton twitterLoginButton = (TwitterLoginButton) findViewById(R.id.tlb_twitter_login);

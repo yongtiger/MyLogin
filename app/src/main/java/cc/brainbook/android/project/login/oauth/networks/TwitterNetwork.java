@@ -63,13 +63,8 @@ public class TwitterNetwork extends SocialNetwork {
         }
     };
 
-    public TwitterNetwork(Activity activity, String consumerKey, String consumerSecret) {
-        TwitterAuthConfig authConfig = new TwitterAuthConfig(consumerKey, consumerSecret);
-        TwitterConfig config = new TwitterConfig.Builder(activity.getApplicationContext())
-                .logger(new DefaultLogger(Log.DEBUG))
-                .twitterAuthConfig(authConfig)
-                .build();
-        Twitter.initialize(config);
+    public TwitterNetwork() {
+
     }
 
     @Override
