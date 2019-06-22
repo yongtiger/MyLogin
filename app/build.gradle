@@ -48,10 +48,10 @@ dependencies {
     ///https://developers.google.com/identity/sign-in/android/start-integrating
     implementation 'com.google.android.gms:play-services-auth:16.0.1'
     implementation 'com.google.firebase:firebase-core:16.0.9'
-    ///[oAuth#EasyLogin#Facebook]///改用Mob！
+    ///[oAuth#EasyLogin#Facebook]
     ///https://developers.facebook.com/docs/android
     implementation 'com.facebook.android:facebook-login:4.42.0'
-    ///[oAuth#EasyLogin#Twitter]///改用Mob！
+    ///[oAuth#EasyLogin#Twitter]
     ///https://dev.twitter.com/twitterkit/android
     ///https://github.com/twitter-archive/twitter-kit-android/wiki/Log-In-with-Twitter
     implementation('com.twitter.sdk.android:twitter-core:3.1.1@aar') {

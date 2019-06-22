@@ -38,7 +38,7 @@ import cc.brainbook.android.project.login.oauth.AccessToken;
 import cc.brainbook.android.project.login.oauth.EasyLogin;
 import cc.brainbook.android.project.login.oauth.listener.OnLoginCompleteListener;
 import cc.brainbook.android.project.login.oauth.networks.FacebookNetwork;
-import cc.brainbook.android.project.login.oauth.networks.GooglePlusNetwork;
+import cc.brainbook.android.project.login.oauth.networks.GoogleNetwork;
 import cc.brainbook.android.project.login.oauth.networks.SocialNetwork;
 import cc.brainbook.android.project.login.oauth.networks.TwitterNetwork;
 import cc.brainbook.android.project.login.resetpassword.ui.ResetPasswordActivity;
@@ -71,7 +71,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private EasyLogin easyLogin;
     private TextView tvConnectedStatus;
     private Button btnLogoutAllNetworks;
-    private GooglePlusNetwork googlePlusNetwork;
+    private GoogleNetwork googlePlusNetwork;
     private SignInButton sibGoogleSignIn;
 
     private Button btnOauthLogin;/////////////////////////////
@@ -382,24 +382,20 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         easyLogin = EasyLogin.getInstance();
 
         ///[oAuth#EasyLogin#Google Sign In]
-        easyLogin.addSocialNetwork(new GooglePlusNetwork(this));
-        googlePlusNetwork = (GooglePlusNetwork) easyLogin.getSocialNetwork(SocialNetwork.Network.EL_GOOGLE);
-        googlePlusNetwork.setListener(this);
         sibGoogleSignIn = (SignInButton) findViewById(R.id.sib_google_sign_in);
-        googlePlusNetwork.setSignInButton(sibGoogleSignIn);
+        googlePlusNetwork = new GoogleNetwork(this, sibGoogleSignIn, this);
+        easyLogin.addSocialNetwork(googlePlusNetwork);
 
-//        ///[oAuth#EasyLogin#Facebook]///改用Mob！
+//        ///[oAuth#EasyLogin#Facebook]
         final List<String> fbScope = Arrays.asList("public_profile", "email");
-        easyLogin.addSocialNetwork(new FacebookNetwork(this, fbScope));
-        final FacebookNetwork facebook = (FacebookNetwork) easyLogin.getSocialNetwork(SocialNetwork.Network.EL_FACEBOOK);
         final LoginButton loginButton = (LoginButton) findViewById(R.id.lb_facebook_login);
-        facebook.requestLogin(loginButton, this);
-//
-        ///[oAuth#EasyLogin#Twitter]///改用Mob！
-        easyLogin.addSocialNetwork(new TwitterNetwork());
-        final TwitterNetwork twitter = (TwitterNetwork) easyLogin.getSocialNetwork(SocialNetwork.Network.EL_TWITTER);
+        final FacebookNetwork facebookNetwork = new FacebookNetwork(this, loginButton, this, fbScope);
+        easyLogin.addSocialNetwork(facebookNetwork);
+
+        ///[oAuth#EasyLogin#Twitter]
         final TwitterLoginButton twitterLoginButton = (TwitterLoginButton) findViewById(R.id.tlb_twitter_login);
-        twitter.requestLogin(twitterLoginButton, this);
+        final TwitterNetwork twitterNetwork = new TwitterNetwork(this, twitterLoginButton, this);
+        easyLogin.addSocialNetwork(twitterNetwork);
 
         ///[oAuth#EasyLogin#修改按钮样式]？？？？？？？？？？
         ///https://stackoverflow.com/questions/27267809/using-custom-login-button-with-twitter-fabric

@@ -1,8 +1,10 @@
 package cc.brainbook.android.project.login.oauth.networks;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.View;
 
 import com.twitter.sdk.android.core.Callback;
 import com.twitter.sdk.android.core.Result;
@@ -21,10 +23,6 @@ import retrofit2.Call;
 
 ///https://github.com/maksim88/EasyLogin
 public class TwitterNetwork extends SocialNetwork {
-
-    private AccessToken accessToken;
-
-    private WeakReference<TwitterLoginButton> loginButton;
 
     private Callback<TwitterSession> buttonCallback = new Callback<TwitterSession>() {
 
@@ -48,39 +46,12 @@ public class TwitterNetwork extends SocialNetwork {
         }
     };
 
-    @Override
-    public boolean isConnected() {
-        return TwitterCore.getInstance().getSessionManager().getActiveSession() != null;
-    }
+    public TwitterNetwork(Activity activity, View button, OnLoginCompleteListener onLoginCompleteListener) {
+        this.activity = new WeakReference<>(activity);
+        this.button = new WeakReference<>(button);
+        this.listener = onLoginCompleteListener;
 
-    @Override
-    public void requestLogin(OnLoginCompleteListener onLoginCompleteListener) {
-        throw new RuntimeException("Call requestLogin() with the TwitterLoginButton reference!");
-    }
-
-    public void requestLogin(TwitterLoginButton button, OnLoginCompleteListener onLoginCompleteListener) {
-        setListener(onLoginCompleteListener);
-        requestLogin(button);
-    }
-
-    private void requestLogin(TwitterLoginButton button) {
-        loginButton = new WeakReference<>(button);
-        loginButton.get().setCallback(buttonCallback);
-    }
-
-
-    @Override
-    public void logout() {
-        final TwitterSession twitterSession = TwitterCore.getInstance().getSessionManager().getActiveSession();
-        if (twitterSession != null) {
-            TwitterCore.getInstance().getSessionManager().clearActiveSession();
-            loginButton.get().setEnabled(true);
-        }
-    }
-
-    @Override
-    public AccessToken getAccessToken() {
-        return accessToken;
+        ((TwitterLoginButton)(this.button.get())).setCallback(buttonCallback);
     }
 
     @Override
@@ -89,19 +60,38 @@ public class TwitterNetwork extends SocialNetwork {
     }
 
     @Override
+    public AccessToken getAccessToken() {
+        return accessToken;
+    }
+
+    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (loginButton != null && loginButton.get() != null) {
-            loginButton.get().onActivityResult(requestCode, resultCode, data);
+        if (button != null && button.get() != null) {
+            ((TwitterLoginButton)button.get()).onActivityResult(requestCode, resultCode, data);
         }
     }
 
+    @Override
+    public void logout() {
+        final TwitterSession twitterSession = TwitterCore.getInstance().getSessionManager().getActiveSession();
+        if (twitterSession != null) {
+            TwitterCore.getInstance().getSessionManager().clearActiveSession();
+            button.get().setEnabled(true);
+        }
+    }
+
+    @Override
+    public boolean isConnected() {
+        return TwitterCore.getInstance().getSessionManager().getActiveSession() != null;
+    }
+
     private void callLoginSuccess() {
-        loginButton.get().setEnabled(false);
+        button.get().setEnabled(false);
         listener.onLoginSuccess(getNetwork());
     }
 
     private void callLoginFailure(final String errorMessage) {
-        loginButton.get().setEnabled(true);
+        button.get().setEnabled(true);
         listener.onError(getNetwork(), errorMessage);
     }
 

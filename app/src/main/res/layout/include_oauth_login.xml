@@ -26,14 +26,14 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"/>
 
-    <!--///[oAuth#EasyLogin#Facebook]///改用Mob！-->
+    <!--///[oAuth#EasyLogin#Facebook]-->
     <com.facebook.login.widget.LoginButton
         android:id="@+id/lb_facebook_login"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal" />
 
-    <!--///[oAuth#EasyLogin#Twitter]///改用Mob！-->
+    <!--///[oAuth#EasyLogin#Twitter]-->
     <com.twitter.sdk.android.core.identity.TwitterLoginButton
         android:id="@+id/tlb_twitter_login"
         android:layout_width="wrap_content"

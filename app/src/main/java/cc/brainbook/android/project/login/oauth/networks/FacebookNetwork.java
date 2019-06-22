@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.View;
 
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -30,13 +31,9 @@ public class FacebookNetwork extends SocialNetwork {
     private static final String EMAIL_PERMISSION_FIELD = "email";
     private static final String NAME_FIELD = "name";
 
-    private WeakReference<Activity> activity;
-
     private CallbackManager callbackManager;
 
     private List<String> permissions;
-
-    private AccessToken accessToken;
 
     private FacebookCallback<LoginResult> loginCallback = new FacebookCallback<LoginResult>() {
 
@@ -70,39 +67,24 @@ public class FacebookNetwork extends SocialNetwork {
         }
     };
 
-    public FacebookNetwork(Activity activity, List<String> permissions) {
+    public FacebookNetwork(Activity activity, View button, OnLoginCompleteListener onLoginCompleteListener, List<String> permissions) {
         this.activity = new WeakReference<>(activity);
+        this.button = new WeakReference<>(button);
+        this.listener = onLoginCompleteListener;
+
         callbackManager = CallbackManager.Factory.create();
         final String applicationID = Utility.getMetadataApplicationId(this.activity.get());
         this.permissions = permissions;
-
         if (applicationID == null) {
             throw new IllegalStateException("applicationID can't be null\n" +
                     "Please check https://developers.facebook.com/docs/android/getting-started/");
         }
-    }
 
-    @Override
-    public boolean isConnected() {
-        return com.facebook.AccessToken.getCurrentAccessToken() != null;
-    }
+        ((LoginButton)(this.button.get())).setReadPermissions(permissions);
+        ((LoginButton)(this.button.get())).registerCallback(callbackManager, loginCallback);
 
-    @Override
-    public void requestLogin(OnLoginCompleteListener onLoginCompleteListener) {
-        setListener(onLoginCompleteListener);
-        LoginManager.getInstance().logInWithReadPermissions(activity.get(), permissions);
+        LoginManager.getInstance().logInWithReadPermissions(this.activity.get(), permissions);
         LoginManager.getInstance().registerCallback(callbackManager, loginCallback);
-    }
-
-    public void requestLogin(LoginButton button, OnLoginCompleteListener onLoginCompleteListener) {
-        setListener(onLoginCompleteListener);
-        button.setReadPermissions(permissions);
-        button.registerCallback(callbackManager, loginCallback);
-    }
-
-    @Override
-    public void logout() {
-        LoginManager.getInstance().logOut();
     }
 
     @Override
@@ -122,6 +104,16 @@ public class FacebookNetwork extends SocialNetwork {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         callbackManager.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public void logout() {
+        LoginManager.getInstance().logOut();
+    }
+
+    @Override
+    public boolean isConnected() {
+        return com.facebook.AccessToken.getCurrentAccessToken() != null;
     }
 
     private void addEmailToToken(final com.facebook.AccessToken fbAccessToken) {
