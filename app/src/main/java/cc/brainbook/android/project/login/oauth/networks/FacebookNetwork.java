@@ -116,7 +116,7 @@ public class FacebookNetwork extends SocialNetwork {
 
     @Override
     public Network getNetwork() {
-        return Network.FACEBOOK;
+        return Network.EL_FACEBOOK;
     }
 
     @Override

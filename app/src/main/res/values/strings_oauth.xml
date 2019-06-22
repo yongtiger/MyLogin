@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:android="http://schemas.android.com/apk/res/android">
+<resources>
 
     <string name="logout_all_networks">Logout All Networks</string>
 
-    <!--///[oAuth#Facebook]-->
-    <string name="facebook_app_id">TO BE CHANGED</string>
-    <!--///[oAuth#Twitter]-->
+    <!--///[oAuth#EasyLogin#Facebook]-->
+    <string name="facebook_app_id">452685335557424</string>
+    <!--///[oAuth#EasyLogin#Twitter]-->
     <!--///https://developer.twitter.com/en/apps-->
-    <string name="twitter_consumer_key" android:name="com.twitter.sdk.android.CONSUMER_KEY">vj7dh7Emr4qwu7CgTAR4U7Xpv</string>
-    <string name="twitter_consumer_secret" android:name="com.twitter.sdk.android.CONSUMER_SECRET">WeuZkq08lXRMHU26JL0xc8gan2gKDmUn3U44A4ICgj95fBXnK1</string>
+    <string name="twitter_consumer_key">vj7dh7Emr4qwu7CgTAR4U7Xpv</string>
+    <string name="twitter_consumer_secret">WeuZkq08lXRMHU26JL0xc8gan2gKDmUn3U44A4ICgj95fBXnK1</string>
 
 </resources>

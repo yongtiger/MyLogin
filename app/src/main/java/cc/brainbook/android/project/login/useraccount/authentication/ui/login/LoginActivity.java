@@ -399,7 +399,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         ///[oAuth#EasyLogin#Google Sign In]
         easyLogin.addSocialNetwork(new GooglePlusNetwork(this));
-        googlePlusNetwork = (GooglePlusNetwork) easyLogin.getSocialNetwork(SocialNetwork.Network.GOOGLE_PLUS);
+        googlePlusNetwork = (GooglePlusNetwork) easyLogin.getSocialNetwork(SocialNetwork.Network.EL_GOOGLE);
         googlePlusNetwork.setListener(this);
         sibGoogleSignIn = (SignInButton) findViewById(R.id.sib_google_sign_in);
         googlePlusNetwork.setSignInButton(sibGoogleSignIn);
@@ -407,12 +407,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 //        ///[oAuth#EasyLogin#Facebook]///改用Mob！
         List<String> fbScope = Arrays.asList("public_profile", "email");
         easyLogin.addSocialNetwork(new FacebookNetwork(this, fbScope));
-        FacebookNetwork facebook = (FacebookNetwork) easyLogin.getSocialNetwork(SocialNetwork.Network.FACEBOOK);
+        FacebookNetwork facebook = (FacebookNetwork) easyLogin.getSocialNetwork(SocialNetwork.Network.EL_FACEBOOK);
         LoginButton loginButton = (LoginButton) findViewById(R.id.lb_facebook_login);
         facebook.requestLogin(loginButton, this);
 //
         ///[oAuth#EasyLogin#Twitter]///改用Mob！
-        TwitterNetwork twitter = (TwitterNetwork) easyLogin.getSocialNetwork(SocialNetwork.Network.TWITTER);
+        TwitterNetwork twitter = (TwitterNetwork) easyLogin.getSocialNetwork(SocialNetwork.Network.EL_TWITTER);
         twitter.setAdditionalEmailRequest(true);
         TwitterLoginButton twitterLoginButton = (TwitterLoginButton) findViewById(R.id.tlb_twitter_login);
         twitter.requestLogin(twitterLoginButton, this);
@@ -456,16 +456,16 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     @Override
     public void onLoginSuccess(SocialNetwork.Network network) {
-        if (network == SocialNetwork.Network.GOOGLE_PLUS) {
-            AccessToken token = easyLogin.getSocialNetwork(SocialNetwork.Network.GOOGLE_PLUS).getAccessToken();
+        if (network == SocialNetwork.Network.EL_GOOGLE) {
+            AccessToken token = easyLogin.getSocialNetwork(SocialNetwork.Network.EL_GOOGLE).getAccessToken();
             Log.d("TAG", "G+ Login successful: " + token.getToken() + "|||" + token.getEmail());
             sibGoogleSignIn.setEnabled(false);
-        } else if (network == SocialNetwork.Network.FACEBOOK) {
-            AccessToken token = easyLogin.getSocialNetwork(SocialNetwork.Network.FACEBOOK).getAccessToken();
-            Log.d("TAG", "FACEBOOK Login successful: " + token.getToken() + "|||" + token.getEmail());
-        } else if (network == SocialNetwork.Network.TWITTER) {
-            AccessToken token = easyLogin.getSocialNetwork(SocialNetwork.Network.TWITTER).getAccessToken();
-            Log.d("TAG", "TWITTER Login successful: " + token.getToken() + "|||" + token.getEmail());
+        } else if (network == SocialNetwork.Network.EL_FACEBOOK) {
+            AccessToken token = easyLogin.getSocialNetwork(SocialNetwork.Network.EL_FACEBOOK).getAccessToken();
+            Log.d("TAG", "EL_FACEBOOK Login successful: " + token.getToken() + "|||" + token.getEmail());
+        } else if (network == SocialNetwork.Network.EL_TWITTER) {
+            AccessToken token = easyLogin.getSocialNetwork(SocialNetwork.Network.EL_TWITTER).getAccessToken();
+            Log.d("TAG", "EL_TWITTER Login successful: " + token.getToken() + "|||" + token.getEmail());
         }
         updateStatuses();
     }

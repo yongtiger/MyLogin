@@ -8,10 +8,10 @@ import cc.brainbook.android.project.login.oauth.listener.OnLoginCompleteListener
 ///https://github.com/maksim88/EasyLogin
 public abstract class SocialNetwork {
 
-    static final String SHARED_PREFS_NAME = "easylogin_prefs";
+    static final String SHARED_PREFS_NAME = "easy_login_prefs";
 
     public enum Network {
-        GOOGLE_PLUS, FACEBOOK, TWITTER
+        EL_GOOGLE, EL_FACEBOOK, EL_TWITTER
     }
 
     OnLoginCompleteListener listener;

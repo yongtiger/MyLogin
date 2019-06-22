@@ -114,7 +114,7 @@ public class GooglePlusNetwork extends SocialNetwork implements GoogleApiClient.
 
     @Override
     public Network getNetwork() {
-        return Network.GOOGLE_PLUS;
+        return Network.EL_GOOGLE;
     }
 
     @Nullable
