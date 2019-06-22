@@ -1,17 +1,12 @@
 package cc.brainbook.android.project.login.oauth.networks;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.text.TextUtils;
 import android.util.Log;
 
 import com.twitter.sdk.android.core.Callback;
-import com.twitter.sdk.android.core.DefaultLogger;
 import com.twitter.sdk.android.core.Result;
-import com.twitter.sdk.android.core.Twitter;
-import com.twitter.sdk.android.core.TwitterAuthConfig;
 import com.twitter.sdk.android.core.TwitterAuthToken;
-import com.twitter.sdk.android.core.TwitterConfig;
 import com.twitter.sdk.android.core.TwitterCore;
 import com.twitter.sdk.android.core.TwitterException;
 import com.twitter.sdk.android.core.TwitterSession;
@@ -62,10 +57,6 @@ public class TwitterNetwork extends SocialNetwork {
             callLoginFailure(e.getMessage());
         }
     };
-
-    public TwitterNetwork() {
-
-    }
 
     @Override
     public boolean isConnected() {
