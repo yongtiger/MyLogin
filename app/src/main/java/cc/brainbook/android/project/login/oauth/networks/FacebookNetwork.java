@@ -50,8 +50,8 @@ public class FacebookNetwork extends SocialNetwork {
                 return;
             }
 
-            String token = fbAccessToken.getToken();
-            String userId = fbAccessToken.getUserId();
+            final String token = fbAccessToken.getToken();
+            final String userId = fbAccessToken.getUserId();
             accessToken = new AccessToken.Builder(token)
                     .userId(userId)
                     .photoUrl("https://graph.facebook.com/" + userId+ "/picture?type=large")   ///[EasyLogin#photoUrl]
@@ -73,7 +73,7 @@ public class FacebookNetwork extends SocialNetwork {
     public FacebookNetwork(Activity activity, List<String> permissions) {
         this.activity = new WeakReference<>(activity);
         callbackManager = CallbackManager.Factory.create();
-        String applicationID = Utility.getMetadataApplicationId(this.activity.get());
+        final String applicationID = Utility.getMetadataApplicationId(this.activity.get());
         this.permissions = permissions;
 
         if (applicationID == null) {
@@ -108,7 +108,7 @@ public class FacebookNetwork extends SocialNetwork {
     @Override
     public AccessToken getAccessToken() {
         if (com.facebook.AccessToken.getCurrentAccessToken() != null && accessToken == null) {
-            com.facebook.AccessToken facebookToken = com.facebook.AccessToken.getCurrentAccessToken();
+            final com.facebook.AccessToken facebookToken = com.facebook.AccessToken.getCurrentAccessToken();
             accessToken = new AccessToken.Builder(facebookToken.getToken()).userId(facebookToken.getUserId()).build();
         }
         return accessToken;
@@ -125,7 +125,7 @@ public class FacebookNetwork extends SocialNetwork {
     }
 
     private void addEmailToToken(final com.facebook.AccessToken fbAccessToken) {
-        GraphRequest meRequest = GraphRequest.newMeRequest(
+        final GraphRequest meRequest = GraphRequest.newMeRequest(
                 fbAccessToken, new GraphRequest.GraphJSONObjectCallback() {
                     @Override
                     public void onCompleted(JSONObject me, GraphResponse response) {
@@ -155,7 +155,7 @@ public class FacebookNetwork extends SocialNetwork {
                     }
                 });
 
-        Bundle parameters = new Bundle();
+        final Bundle parameters = new Bundle();
         parameters.putString("fields", NAME_FIELD + "," + EMAIL_PERMISSION_FIELD);
         meRequest.setParameters(parameters);
         meRequest.executeAsync();

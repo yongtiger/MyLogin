@@ -132,14 +132,14 @@ public class GooglePlusNetwork extends SocialNetwork implements GoogleApiClient.
     @Override
     public void requestLogin(OnLoginCompleteListener onLoginCompleteListener) {
         setListener(onLoginCompleteListener);
-        Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(googleApiClient);
+        final Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(googleApiClient);
          activity.get().startActivityForResult(signInIntent, REQUEST_AUTH);
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_AUTH) {
-            GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
+            final GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             handleSignInResult(result);
         }
     }

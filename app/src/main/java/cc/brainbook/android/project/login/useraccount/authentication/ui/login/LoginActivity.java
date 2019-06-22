@@ -27,12 +27,7 @@ import android.widget.Toast;
 
 import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.common.SignInButton;
-import com.twitter.sdk.android.core.DefaultLogger;
-import com.twitter.sdk.android.core.TwitterAuthConfig;
-import com.twitter.sdk.android.core.TwitterConfig;
 import com.twitter.sdk.android.core.identity.TwitterLoginButton;
-//import com.facebook.login.widget.LoginButton;///改用Mob！
-//import com.twitter.sdk.android.core.identity.TwitterLoginButton;///改用Mob！
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -42,7 +37,6 @@ import cc.brainbook.android.project.login.R;
 import cc.brainbook.android.project.login.oauth.AccessToken;
 import cc.brainbook.android.project.login.oauth.EasyLogin;
 import cc.brainbook.android.project.login.oauth.listener.OnLoginCompleteListener;
-//import cc.brainbook.android.project.login.oauth.networks.FacebookNetwork;///改用Mob！
 import cc.brainbook.android.project.login.oauth.networks.FacebookNetwork;
 import cc.brainbook.android.project.login.oauth.networks.GooglePlusNetwork;
 import cc.brainbook.android.project.login.oauth.networks.SocialNetwork;
@@ -226,7 +220,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 //                Platform plat = ShareSDK.getPlatform(Wechat.NAME);
 //                Platform plat = ShareSDK.getPlatform(SinaWeibo.NAME);
 //                Platform plat = ShareSDK.getPlatform(Facebook.NAME);  ///不建议用Mob！
-                Platform plat = ShareSDK.getPlatform(Twitter.NAME);  ///不建议用Mob！
+                final Platform plat = ShareSDK.getPlatform(Twitter.NAME);  ///不建议用Mob！
 //                Platform plat = ShareSDK.getPlatform(LinkedIn.NAME);
                 plat.removeAccount(true); //移除授权状态和本地缓存，下次授权会重新授权
                 plat.SSOSetting(false); //SSO授权，传false默认是客户端授权，没有客户端授权或者不支持客户端授权会跳web授权
@@ -395,16 +389,16 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         googlePlusNetwork.setSignInButton(sibGoogleSignIn);
 
 //        ///[oAuth#EasyLogin#Facebook]///改用Mob！
-        List<String> fbScope = Arrays.asList("public_profile", "email");
+        final List<String> fbScope = Arrays.asList("public_profile", "email");
         easyLogin.addSocialNetwork(new FacebookNetwork(this, fbScope));
-        FacebookNetwork facebook = (FacebookNetwork) easyLogin.getSocialNetwork(SocialNetwork.Network.EL_FACEBOOK);
-        LoginButton loginButton = (LoginButton) findViewById(R.id.lb_facebook_login);
+        final FacebookNetwork facebook = (FacebookNetwork) easyLogin.getSocialNetwork(SocialNetwork.Network.EL_FACEBOOK);
+        final LoginButton loginButton = (LoginButton) findViewById(R.id.lb_facebook_login);
         facebook.requestLogin(loginButton, this);
 //
         ///[oAuth#EasyLogin#Twitter]///改用Mob！
         easyLogin.addSocialNetwork(new TwitterNetwork());
-        TwitterNetwork twitter = (TwitterNetwork) easyLogin.getSocialNetwork(SocialNetwork.Network.EL_TWITTER);
-        TwitterLoginButton twitterLoginButton = (TwitterLoginButton) findViewById(R.id.tlb_twitter_login);
+        final TwitterNetwork twitter = (TwitterNetwork) easyLogin.getSocialNetwork(SocialNetwork.Network.EL_TWITTER);
+        final TwitterLoginButton twitterLoginButton = (TwitterLoginButton) findViewById(R.id.tlb_twitter_login);
         twitter.requestLogin(twitterLoginButton, this);
 
         ///[oAuth#EasyLogin#修改按钮样式]？？？？？？？？？？
@@ -447,14 +441,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     @Override
     public void onLoginSuccess(SocialNetwork.Network network) {
         if (network == SocialNetwork.Network.EL_GOOGLE) {
-            AccessToken token = easyLogin.getSocialNetwork(SocialNetwork.Network.EL_GOOGLE).getAccessToken();
+            final AccessToken token = easyLogin.getSocialNetwork(SocialNetwork.Network.EL_GOOGLE).getAccessToken();
             Log.d("TAG", "G+ Login successful: " + token.getToken() + "|||" + token.getEmail());
             sibGoogleSignIn.setEnabled(false);
         } else if (network == SocialNetwork.Network.EL_FACEBOOK) {
-            AccessToken token = easyLogin.getSocialNetwork(SocialNetwork.Network.EL_FACEBOOK).getAccessToken();
+            final AccessToken token = easyLogin.getSocialNetwork(SocialNetwork.Network.EL_FACEBOOK).getAccessToken();
             Log.d("TAG", "EL_FACEBOOK Login successful: " + token.getToken() + "|||" + token.getEmail());
         } else if (network == SocialNetwork.Network.EL_TWITTER) {
-            AccessToken token = easyLogin.getSocialNetwork(SocialNetwork.Network.EL_TWITTER).getAccessToken();
+            final AccessToken token = easyLogin.getSocialNetwork(SocialNetwork.Network.EL_TWITTER).getAccessToken();
             Log.d("TAG", "EL_TWITTER Login successful: " + token.getToken() + "|||" + token.getEmail());
         }
         updateStatuses();
@@ -468,7 +462,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void updateStatuses() {
-        StringBuilder content = new StringBuilder();
+        final StringBuilder content = new StringBuilder();
         for (SocialNetwork socialNetwork : easyLogin.getInitializedSocialNetworks()) {
             content.append(socialNetwork.getNetwork())
                     .append(": ")
