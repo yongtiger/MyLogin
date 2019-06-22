@@ -10,13 +10,14 @@ import com.twitter.sdk.android.core.TwitterAuthToken;
 import com.twitter.sdk.android.core.TwitterCore;
 import com.twitter.sdk.android.core.TwitterException;
 import com.twitter.sdk.android.core.TwitterSession;
-import com.twitter.sdk.android.core.identity.TwitterAuthClient;
 import com.twitter.sdk.android.core.identity.TwitterLoginButton;
+import com.twitter.sdk.android.core.models.User;
 
 import java.lang.ref.WeakReference;
 
 import cc.brainbook.android.project.login.oauth.AccessToken;
 import cc.brainbook.android.project.login.oauth.listener.OnLoginCompleteListener;
+import retrofit2.Call;
 
 ///https://github.com/maksim88/EasyLogin
 public class TwitterNetwork extends SocialNetwork {
@@ -25,31 +26,20 @@ public class TwitterNetwork extends SocialNetwork {
 
     private WeakReference<TwitterLoginButton> loginButton;
 
-    private boolean additionalEmailRequest;
-
     private Callback<TwitterSession> buttonCallback = new Callback<TwitterSession>() {
 
         @Override
         public void success(Result<TwitterSession> result) {
-            TwitterSession session = result.data;
-            TwitterAuthToken authToken = session.getAuthToken();
-            String token = authToken.token;
-            String secret = authToken.secret;
-            AccessToken tempToken = new AccessToken.Builder(token)
+            final TwitterSession session = result.data;
+            final TwitterAuthToken authToken = session.getAuthToken();
+            final String token = authToken.token;
+            final String secret = authToken.secret;
+            final AccessToken tempToken = new AccessToken.Builder(token)
                     .secret(secret)
                     .userName(session.getUserName())
                     .userId(String.valueOf(session.getUserId()))
-                    ///[EasyLogin#photoUrl]获取头像？？？？？？？？？
-                    ///https://medium.com/@raziaranisandhu/twitter-integration-in-android-application-7b461317d921
-//                    .photoUrl(result.data.profileImageUrl)
                     .build();
-            if (additionalEmailRequest) {
-                requestEmail(session, tempToken);
-            } else {
-                accessToken = tempToken;
-                callLoginSuccess();
-            }
-
+            requestUser(session, tempToken);
         }
 
         @Override
@@ -73,10 +63,6 @@ public class TwitterNetwork extends SocialNetwork {
         requestLogin(button);
     }
 
-    public void setAdditionalEmailRequest(boolean additionalEmailRequest) {
-        this.additionalEmailRequest = additionalEmailRequest;
-    }
-
     private void requestLogin(TwitterLoginButton button) {
         loginButton = new WeakReference<>(button);
         loginButton.get().setCallback(buttonCallback);
@@ -85,7 +71,7 @@ public class TwitterNetwork extends SocialNetwork {
 
     @Override
     public void logout() {
-        TwitterSession twitterSession = TwitterCore.getInstance().getSessionManager().getActiveSession();
+        final TwitterSession twitterSession = TwitterCore.getInstance().getSessionManager().getActiveSession();
         if (twitterSession != null) {
             TwitterCore.getInstance().getSessionManager().clearActiveSession();
             loginButton.get().setEnabled(true);
@@ -119,18 +105,25 @@ public class TwitterNetwork extends SocialNetwork {
         listener.onError(getNetwork(), errorMessage);
     }
 
-    private void requestEmail(final TwitterSession session, final AccessToken tempToken) {
-        TwitterAuthClient authClient = new TwitterAuthClient();
-        authClient.requestEmail(session, new Callback<String>() {
+    ///[EasyLogin#Twitter]获取头像和Email等User数据
+    ///com.twitter.sdk.android.core.identity.TwitterAuthClient#requestUser(TwitterSession session, final Callback<String> callback)
+    public void requestUser(TwitterSession session, final AccessToken tempToken) {
+        final Call<User> verifyRequest = TwitterCore.getInstance().getApiClient(session).getAccountService()
+                .verifyCredentials(false, false, true);
+
+        verifyRequest.enqueue(new Callback<User>() {
             @Override
-            public void success(Result<String> result) {
-                final String email = result.data;
+            public void success(Result<User> result) {
+                final String email = result.data.email;
                 if (TextUtils.isEmpty(email)) {
                     logout();
                     callLoginFailure("Before fetching an email, ensure that 'Request email addresses from users' is checked for your Twitter app.");
                     return;
                 }
-                accessToken = new AccessToken.Builder(tempToken).email(email).build();
+                accessToken = new AccessToken.Builder(tempToken)
+                        .email(email)
+                        .photoUrl(result.data.profileImageUrl)
+                        .build();
                 callLoginSuccess();
             }
 
@@ -141,4 +134,5 @@ public class TwitterNetwork extends SocialNetwork {
             }
         });
     }
+
 }

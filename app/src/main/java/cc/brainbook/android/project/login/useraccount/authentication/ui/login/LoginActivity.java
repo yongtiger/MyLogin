@@ -404,11 +404,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         ///[oAuth#EasyLogin#Twitter]///改用Mob！
         easyLogin.addSocialNetwork(new TwitterNetwork());
         TwitterNetwork twitter = (TwitterNetwork) easyLogin.getSocialNetwork(SocialNetwork.Network.EL_TWITTER);
-        twitter.setAdditionalEmailRequest(true);
         TwitterLoginButton twitterLoginButton = (TwitterLoginButton) findViewById(R.id.tlb_twitter_login);
         twitter.requestLogin(twitterLoginButton, this);
 
-        ///[oAuth#EasyLogin#修改按钮样式]
+        ///[oAuth#EasyLogin#修改按钮样式]？？？？？？？？？？
         ///https://stackoverflow.com/questions/27267809/using-custom-login-button-with-twitter-fabric
         twitterLoginButton.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
         twitterLoginButton.setBackgroundResource(R.mipmap.ic_launcher_round);
