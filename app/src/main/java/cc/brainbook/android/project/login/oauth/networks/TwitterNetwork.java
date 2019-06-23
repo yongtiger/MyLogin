@@ -76,7 +76,7 @@ public class TwitterNetwork extends SocialNetwork {
         final TwitterSession twitterSession = TwitterCore.getInstance().getSessionManager().getActiveSession();
         if (twitterSession != null) {
             TwitterCore.getInstance().getSessionManager().clearActiveSession();
-            button.get().setEnabled(true);
+            setButtonEnabled(true);
         }
     }
 
@@ -85,13 +85,19 @@ public class TwitterNetwork extends SocialNetwork {
         return TwitterCore.getInstance().getSessionManager().getActiveSession() != null;
     }
 
+    private void setButtonEnabled(boolean enabled) {
+        if (button != null && button.get() != null) {
+            ((TwitterLoginButton)(this.button.get())).setEnabled(enabled);
+        }
+    }
+
     private void callLoginSuccess() {
-        button.get().setEnabled(false);
+        setButtonEnabled(false);
         listener.onLoginSuccess(getNetwork());
     }
 
     private void callLoginFailure(final String errorMessage) {
-        button.get().setEnabled(true);
+        setButtonEnabled(true);
         listener.onError(getNetwork(), errorMessage);
     }
 

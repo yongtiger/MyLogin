@@ -116,6 +116,12 @@ public class FacebookNetwork extends SocialNetwork {
         return com.facebook.AccessToken.getCurrentAccessToken() != null;
     }
 
+    private void setButtonEnabled(boolean enabled) {
+        if (button != null && button.get() != null) {
+            ((LoginButton)(this.button.get())).setEnabled(enabled);
+        }
+    }
+
     private void addEmailToToken(final com.facebook.AccessToken fbAccessToken) {
         final GraphRequest meRequest = GraphRequest.newMeRequest(
                 fbAccessToken, new GraphRequest.GraphJSONObjectCallback() {

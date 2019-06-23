@@ -31,7 +31,7 @@ public class EasyLogin {
 
 
     public void addSocialNetwork(SocialNetwork socialNetwork) {
-        if (hasSocialNetwork(socialNetwork.getNetwork())) {
+        if (!hasSocialNetwork(socialNetwork.getNetwork())) {
             socialNetworksMap.put(socialNetwork.getNetwork(), socialNetwork);
         }
     }

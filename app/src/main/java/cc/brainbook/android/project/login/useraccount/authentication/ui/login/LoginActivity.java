@@ -413,10 +413,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     @Override
     protected void onStart() {
         super.onStart();
-        if (!googlePlusNetwork.isConnected()) {
-            googlePlusNetwork.silentSignIn();
-        } else {
-            sibGoogleSignIn.setEnabled(false);
+
+        ///[oAuth#EasyLogin#Google Sign In]
+        // Check for existing Google Sign In account, if the user is already signed in
+        // the GoogleSignInAccount will be non-null.
+        if (sibGoogleSignIn != null) {
+            sibGoogleSignIn.setEnabled(!googlePlusNetwork.isConnected());
         }
     }
 
@@ -438,7 +440,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         if (network == SocialNetwork.Network.EL_GOOGLE) {
             final AccessToken token = easyLogin.getSocialNetwork(SocialNetwork.Network.EL_GOOGLE).getAccessToken();
             Log.d("TAG", "G+ Login successful: " + token.getToken() + "|||" + token.getEmail());
-            sibGoogleSignIn.setEnabled(false);
         } else if (network == SocialNetwork.Network.EL_FACEBOOK) {
             final AccessToken token = easyLogin.getSocialNetwork(SocialNetwork.Network.EL_FACEBOOK).getAccessToken();
             Log.d("TAG", "EL_FACEBOOK Login successful: " + token.getToken() + "|||" + token.getEmail());
