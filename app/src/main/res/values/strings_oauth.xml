@@ -4,7 +4,9 @@
     <string name="logout_all_networks">Logout All Networks</string>
 
     <!--///[oAuth#EasyLogin#Facebook]-->
-    <string name="facebook_app_id">452685335557424</string>
+    <string name="facebook_app_id">2273428079403301</string>
+    <string name="fb_login_protocol_scheme">fb2273428079403301</string>
+
     <!--///[oAuth#EasyLogin#Twitter]-->
     <!--///https://developer.twitter.com/en/apps-->
     <string name="twitter_consumer_key">vj7dh7Emr4qwu7CgTAR4U7Xpv</string>

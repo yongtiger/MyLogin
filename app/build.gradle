@@ -50,7 +50,10 @@ dependencies {
     implementation 'com.google.firebase:firebase-core:16.0.9'
     ///[oAuth#EasyLogin#Facebook]
     ///https://developers.facebook.com/docs/android
-    implementation 'com.facebook.android:facebook-login:4.42.0'
+//    implementation 'com.facebook.android:facebook-login:4.42.0'
+//    implementation 'com.facebook.android:facebook-android-sdk:[5,6)'
+    implementation 'com.facebook.android:facebook-login:[5,6)'
+
     ///[oAuth#EasyLogin#Twitter]
     ///https://dev.twitter.com/twitterkit/android
     ///https://github.com/twitter-archive/twitter-kit-android/wiki/Log-In-with-Twitter
@@ -106,9 +109,9 @@ MobSDK {
 //                appKey "AIzaSyDp2J9q02oxHbGoyU-IFql0n7tfiIEliAg"
 //                callbackUri "http://localhost"
 //            }
-            Facebook {///还可用EasyLogin
-                appKey "452685335557424"
-                appSecret "ecc77591b3f314ef88042542855da029"
+            Facebook {///https://developers.facebook.com/apps/2273428079403301/settings/basic/
+                appKey "2273428079403301"
+                appSecret "2d82bc07341a9bd01915ce1317ff3cd5"
                 callbackUri "https://ljdy.tv"
             }
             Twitter {///还可用EasyLogin
