@@ -56,7 +56,7 @@ public class TwitterNetwork extends SocialNetwork {
 
     @Override
     public Network getNetwork() {
-        return Network.EL_TWITTER;
+        return Network.TWITTER;
     }
 
     @Override

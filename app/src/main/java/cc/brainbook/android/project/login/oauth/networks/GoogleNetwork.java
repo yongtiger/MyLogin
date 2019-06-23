@@ -36,8 +36,11 @@ public class GoogleNetwork extends SocialNetwork {
         ((SignInButton)(this.button.get())).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final Intent signInIntent = mGoogleSignInClient.getSignInIntent();
-                activity.startActivityForResult(signInIntent, RC_SIGN_IN);
+                if (!isConnected()) {
+                    setButtonEnabled(false);
+                    final Intent signInIntent = mGoogleSignInClient.getSignInIntent();
+                    activity.startActivityForResult(signInIntent, RC_SIGN_IN);
+                }
             }
         });
 
@@ -59,7 +62,7 @@ public class GoogleNetwork extends SocialNetwork {
 
     @Override
     public Network getNetwork() {
-        return Network.EL_GOOGLE;
+        return Network.GOOGLE;
     }
 
     @Override
@@ -101,10 +104,10 @@ public class GoogleNetwork extends SocialNetwork {
             final GoogleSignInAccount acct = completedTask.getResult(ApiException.class);
 
             if (acct != null) {
-                accessToken = new AccessToken.Builder(acct.getId())
-                        .email(acct.getEmail())
-                        .userName(acct.getDisplayName())
+                accessToken = new AccessToken.Builder(acct.getIdToken())
                         .userId(acct.getId())
+                        .userName(acct.getDisplayName())
+                        .email(acct.getEmail())
                         .photoUrl((acct.getPhotoUrl() == null) ? null : acct.getPhotoUrl().toString())   ///[EasyLogin#photoUrl]
                         .build();
                 listener.onLoginSuccess(getNetwork());

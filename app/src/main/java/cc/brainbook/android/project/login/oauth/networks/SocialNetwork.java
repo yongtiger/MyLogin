@@ -15,7 +15,7 @@ public abstract class SocialNetwork {
     protected static final String SHARED_PREFS_NAME = "easy_login_prefs";
 
     public enum Network {
-        EL_GOOGLE, EL_FACEBOOK, EL_TWITTER
+        GOOGLE, FACEBOOK, TWITTER, MOB_FACEBOOK, MOB_TWITTER, MOB_LINKEDIN, MOB_QQ, MOB_WECHAT, MOB_SINAWEIBO
     }
 
     protected WeakReference<Activity> activity;
