@@ -31,17 +31,16 @@ public class EasyLogin {
 
 
     public void addSocialNetwork(SocialNetwork socialNetwork) {
-        if (socialNetworksMap.get(socialNetwork.getNetwork()) != null) {
-            throw new RuntimeException("Social network with id = " + socialNetwork.getNetwork() + " already exists");
+        if (hasSocialNetwork(socialNetwork.getNetwork())) {
+            socialNetworksMap.put(socialNetwork.getNetwork(), socialNetwork);
         }
-
-        socialNetworksMap.put(socialNetwork.getNetwork(), socialNetwork);
     }
 
-    public SocialNetwork getSocialNetwork(SocialNetwork.Network network) throws RuntimeException {
-        if (!socialNetworksMap.containsKey(network)) {
-            throw new RuntimeException("Social network " + network + " not found");
-        }
+    public boolean hasSocialNetwork(SocialNetwork.Network network) {
+        return socialNetworksMap.containsKey(network);
+    }
+
+    public SocialNetwork getSocialNetwork(SocialNetwork.Network network) {
         return socialNetworksMap.get(network);
     }
 

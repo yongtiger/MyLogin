@@ -42,7 +42,7 @@ public class GoogleNetwork extends SocialNetwork implements GoogleApiClient.Conn
         this.button = new WeakReference<>(button);
         this.listener = onLoginCompleteListener;
 
-        ((SignInButton)(this.button.get())).setOnClickListener(new View.OnClickListener() {
+        button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (!isConnected()) {

@@ -385,26 +385,25 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         sibGoogleSignIn = (SignInButton) findViewById(R.id.sib_google_sign_in);
         googlePlusNetwork = new GoogleNetwork(this, sibGoogleSignIn, this);
         easyLogin.addSocialNetwork(googlePlusNetwork);
+        ///注意：因为会根据状态而改变文字或背景颜色，所以不建议修改！
+//        sibGoogleSignIn.setSize(SIZE_ICON_ONLY);
+//        sibGoogleSignIn.setColorScheme(COLOR_DARK);
 
 //        ///[oAuth#EasyLogin#Facebook]
         final List<String> fbScope = Arrays.asList("public_profile", "email");
         final LoginButton loginButton = (LoginButton) findViewById(R.id.lb_facebook_login);
         final FacebookNetwork facebookNetwork = new FacebookNetwork(this, loginButton, this, fbScope);
         easyLogin.addSocialNetwork(facebookNetwork);
+        ///注意：因为会根据状态而改变文字或背景颜色，所以不建议修改！
+//        loginButton.setLoginText("Facebook");
 
         ///[oAuth#EasyLogin#Twitter]
         final TwitterLoginButton twitterLoginButton = (TwitterLoginButton) findViewById(R.id.tlb_twitter_login);
         final TwitterNetwork twitterNetwork = new TwitterNetwork(this, twitterLoginButton, this);
         easyLogin.addSocialNetwork(twitterNetwork);
+        ///注意：因为会根据状态而改变文字或背景颜色，所以不建议修改！
+//        twitterLoginButton.setText("Twitter");
 
-        ///[oAuth#EasyLogin#修改按钮样式]？？？？？？？？？？
-        ///https://stackoverflow.com/questions/27267809/using-custom-login-button-with-twitter-fabric
-        twitterLoginButton.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
-        twitterLoginButton.setBackgroundResource(R.mipmap.ic_launcher_round);
-        twitterLoginButton.setCompoundDrawablePadding(0);
-        twitterLoginButton.setPadding(0, 0, 0, 0);
-        twitterLoginButton.setText("Login with Twitter");
-        twitterLoginButton.setTextSize(18);
     }
 
     private void actionOAuthLogin(String network, String openId) {

@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="#fff"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
@@ -20,11 +21,13 @@
         android:layout_height="wrap_content" />
 
     <!--///[oAuth#EasyLogin#Google]-->
+    <!--app:buttonSize="icon_only"-->
+    <!--app:colorScheme="dark"-->
     <com.google.android.gms.common.SignInButton
         android:id="@+id/sib_google_sign_in"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"/>
+        android:layout_gravity="center_horizontal" />
 
     <!--///[oAuth#EasyLogin#Facebook]-->
     <com.facebook.login.widget.LoginButton
@@ -38,7 +41,7 @@
         android:id="@+id/tlb_twitter_login"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"/>
+        android:layout_gravity="center_horizontal" />
 
     <TextView
         android:id="@+id/connected_status"
