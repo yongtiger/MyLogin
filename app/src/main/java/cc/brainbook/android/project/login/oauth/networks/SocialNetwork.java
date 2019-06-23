@@ -43,4 +43,11 @@ public abstract class SocialNetwork {
      */
     public abstract boolean isConnected();
 
+    /**
+     * Enable or disable button
+     *
+     * @param enabled
+     */
+    public abstract void setButtonEnabled(boolean enabled);
+
 }

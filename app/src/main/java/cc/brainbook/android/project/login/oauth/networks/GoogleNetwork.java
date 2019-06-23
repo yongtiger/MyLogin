@@ -72,6 +72,16 @@ public class GoogleNetwork extends SocialNetwork {
     }
 
     @Override
+    public void logout() {
+        if (isConnected()) {
+            setButtonEnabled(true);
+            ///https://developers.google.com/identity/sign-in/android/disconnect
+            mGoogleSignInClient.signOut();
+            mGoogleSignInClient.revokeAccess();
+        }
+    }
+
+    @Override
     public boolean isConnected() {
         // Check for existing Google Sign In account, if the user is already signed in the GoogleSignInAccount will be non-null.
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this.activity.get());
@@ -79,12 +89,9 @@ public class GoogleNetwork extends SocialNetwork {
     }
 
     @Override
-    public void logout() {
-        if (isConnected()) {
-            setButtonEnabled(true);
-            ///https://developers.google.com/identity/sign-in/android/disconnect
-            mGoogleSignInClient.signOut();
-            mGoogleSignInClient.revokeAccess();
+    public void setButtonEnabled(boolean enabled) {
+        if (button != null && button.get() != null) {
+            ((SignInButton)(this.button.get())).setEnabled(enabled);
         }
     }
 
@@ -108,12 +115,6 @@ public class GoogleNetwork extends SocialNetwork {
             Log.w("TAG", "signInResult:failed code=" + e.getStatusCode());
             setButtonEnabled(true);
             listener.onError(getNetwork(), CommonStatusCodes.getStatusCodeString(e.getStatusCode()));
-        }
-    }
-
-    private void setButtonEnabled(boolean enabled) {
-        if (button != null && button.get() != null) {
-            ((SignInButton)(this.button.get())).setEnabled(enabled);
         }
     }
 

@@ -121,7 +121,8 @@ public class FacebookNetwork extends SocialNetwork {
         return com.facebook.AccessToken.getCurrentAccessToken() != null;
     }
 
-    private void setButtonEnabled(boolean enabled) {
+    @Override
+    public void setButtonEnabled(boolean enabled) {
         if (button != null && button.get() != null) {
             ((LoginButton)(this.button.get())).setEnabled(enabled);
         }

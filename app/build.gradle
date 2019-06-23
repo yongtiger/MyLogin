@@ -50,7 +50,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-core:16.0.9'
     ///[oAuth#EasyLogin#Facebook]
     ///https://developers.facebook.com/docs/android
-//    implementation 'com.facebook.android:facebook-login:4.42.0'
+//    implementation 'com.facebook.android:facebook-login:5.1.0'
 //    implementation 'com.facebook.android:facebook-android-sdk:[5,6)'
     implementation 'com.facebook.android:facebook-login:[5,6)'
 

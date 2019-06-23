@@ -72,11 +72,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private TextView tvConnectedStatus;
     private Button btnLogoutAllNetworks;
     private GoogleNetwork googlePlusNetwork;
-    private SignInButton sibGoogleSignIn;
     private FacebookNetwork facebookNetwork;
-    private LoginButton loginButton;
     private TwitterNetwork twitterNetwork;
-    private TwitterLoginButton twitterLoginButton;
 
     private Button btnOauthLogin;/////////////////////////////
 
@@ -386,23 +383,23 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         easyLogin = EasyLogin.getInstance();
 
         ///[oAuth#EasyLogin#Google Sign In]
-        sibGoogleSignIn = (SignInButton) findViewById(R.id.sib_google_sign_in);
+        final SignInButton sibGoogleSignIn = (SignInButton) findViewById(R.id.sib_google_sign_in);
         googlePlusNetwork = new GoogleNetwork(this, sibGoogleSignIn, this);
         easyLogin.addSocialNetwork(googlePlusNetwork);
         ///注意：因为会根据状态而改变文字或背景颜色，所以不建议修改！
-//        sibGoogleSignIn.setSize(SIZE_ICON_ONLY);
-//        sibGoogleSignIn.setColorScheme(COLOR_DARK);
+//        sibGoogleSignIn.setSize(SIZE_ICON_ONLY);///https://developers.google.com/android/reference/com/google/android/gms/common/SignInButton.ButtonSize
+//        sibGoogleSignIn.setColorScheme(COLOR_DARK);///https://developers.google.com/android/reference/com/google/android/gms/common/SignInButton.ColorScheme
 
         ///[oAuth#EasyLogin#Facebook]
         final List<String> fbScope = Arrays.asList("public_profile", "email");
-        loginButton = (LoginButton) findViewById(R.id.lb_facebook_login);
+        final LoginButton loginButton = (LoginButton) findViewById(R.id.lb_facebook_login);
         facebookNetwork = new FacebookNetwork(this, loginButton, this, fbScope);
         easyLogin.addSocialNetwork(facebookNetwork);
         ///注意：因为会根据状态而改变文字或背景颜色，所以不建议修改！
 //        loginButton.setLoginText("Facebook");
 
         ///[oAuth#EasyLogin#Twitter]
-        twitterLoginButton = (TwitterLoginButton) findViewById(R.id.tlb_twitter_login);
+        final TwitterLoginButton twitterLoginButton = (TwitterLoginButton) findViewById(R.id.tlb_twitter_login);
         twitterNetwork = new TwitterNetwork(this, twitterLoginButton, this);
         easyLogin.addSocialNetwork(twitterNetwork);
         ///注意：因为会根据状态而改变文字或背景颜色，所以不建议修改！
@@ -412,26 +409,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     private void actionOAuthLogin(String network, String openId) {
         loginViewModel.oAuthLogin(network, openId);
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-
-        ///[oAuth#EasyLogin#Google Sign In]
-        // Check for existing Google Sign In account, if the user is already signed in
-        // the GoogleSignInAccount will be non-null.
-        if (sibGoogleSignIn != null) {
-            sibGoogleSignIn.setEnabled(!googlePlusNetwork.isConnected());
-        }
-        ///[oAuth#EasyLogin#Facebook]
-        if (loginButton != null) {
-            loginButton.setEnabled(!facebookNetwork.isConnected());
-        }
-        ///[oAuth#EasyLogin#Twitter]
-        if (twitterLoginButton != null) {
-            twitterLoginButton.setEnabled(!twitterNetwork.isConnected());
-        }
     }
 
     @Override
@@ -470,6 +447,21 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void updateStatuses() {
+        ///[oAuth#EasyLogin#Google Sign In]
+        // Check for existing Google Sign In account, if the user is already signed in
+        // the GoogleSignInAccount will be non-null.
+        if (googlePlusNetwork != null) {
+            googlePlusNetwork.setButtonEnabled(!googlePlusNetwork.isConnected());
+        }
+        ///[oAuth#EasyLogin#Facebook]
+        if (facebookNetwork != null) {
+            facebookNetwork.setButtonEnabled(!facebookNetwork.isConnected());
+        }
+        ///[oAuth#EasyLogin#Twitter]
+        if (twitterNetwork != null) {
+            twitterNetwork.setButtonEnabled(!twitterNetwork.isConnected());
+        }
+
         final StringBuilder content = new StringBuilder();
         for (SocialNetwork socialNetwork : easyLogin.getInitializedSocialNetworks()) {
             content.append(socialNetwork.getNetwork())

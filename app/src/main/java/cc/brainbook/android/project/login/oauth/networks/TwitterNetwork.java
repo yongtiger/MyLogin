@@ -85,7 +85,8 @@ public class TwitterNetwork extends SocialNetwork {
         return TwitterCore.getInstance().getSessionManager().getActiveSession() != null;
     }
 
-    private void setButtonEnabled(boolean enabled) {
+    @Override
+    public void setButtonEnabled(boolean enabled) {
         if (button != null && button.get() != null) {
             ((TwitterLoginButton)(this.button.get())).setEnabled(enabled);
         }
@@ -103,7 +104,7 @@ public class TwitterNetwork extends SocialNetwork {
 
     ///[EasyLogin#Twitter]获取头像和Email等User数据
     ///com.twitter.sdk.android.core.identity.TwitterAuthClient#requestUser(TwitterSession session, final Callback<String> callback)
-    public void requestUser(TwitterSession session, final AccessToken tempToken) {
+    private void requestUser(TwitterSession session, final AccessToken tempToken) {
         final Call<User> verifyRequest = TwitterCore.getInstance().getApiClient(session).getAccountService()
                 .verifyCredentials(false, false, true);
 
