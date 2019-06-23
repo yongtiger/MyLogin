@@ -83,8 +83,13 @@ public class FacebookNetwork extends SocialNetwork {
         ((LoginButton)(this.button.get())).setReadPermissions(permissions);
         ((LoginButton)(this.button.get())).registerCallback(callbackManager, loginCallback);
 
-        LoginManager.getInstance().logInWithReadPermissions(this.activity.get(), permissions);
-        LoginManager.getInstance().registerCallback(callbackManager, loginCallback);
+        ((LoginButton)(this.button.get())).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LoginManager.getInstance().logInWithReadPermissions(activity, permissions);
+                LoginManager.getInstance().registerCallback(callbackManager, loginCallback);
+            }
+        });
     }
 
     @Override
