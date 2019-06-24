@@ -404,16 +404,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     @Override
-    public void onLoginSuccess(SocialNetwork.Network network) {
+    public void onLoginSuccess(SocialNetwork.Network network, AccessToken accessToken) {
         if (network == SocialNetwork.Network.GOOGLE) {
-            final AccessToken token = easyLogin.getSocialNetwork(SocialNetwork.Network.GOOGLE).getAccessToken();
-            Log.d("TAG", "G+ Login successful: " + token.getToken() + "|||" + token.getEmail());
+            Log.d("TAG", "G+ Login successful: " + accessToken.getToken() + "|||" + accessToken.getEmail());
         } else if (network == SocialNetwork.Network.FACEBOOK) {
-            final AccessToken token = easyLogin.getSocialNetwork(SocialNetwork.Network.FACEBOOK).getAccessToken();
-            Log.d("TAG", "FACEBOOK Login successful: " + token.getToken() + "|||" + token.getEmail());
+            Log.d("TAG", "FACEBOOK Login successful: " + accessToken.getToken() + "|||" + accessToken.getEmail());
         } else if (network == SocialNetwork.Network.TWITTER) {
-            final AccessToken token = easyLogin.getSocialNetwork(SocialNetwork.Network.TWITTER).getAccessToken();
-            Log.d("TAG", "TWITTER Login successful: " + token.getToken() + "|||" + token.getEmail());
+            Log.d("TAG", "TWITTER Login successful: " + accessToken.getToken() + "|||" + accessToken.getEmail());
         }
         updateStatuses();
     }

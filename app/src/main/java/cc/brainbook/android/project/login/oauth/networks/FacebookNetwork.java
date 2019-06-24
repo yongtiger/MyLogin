@@ -53,17 +53,17 @@ public class FacebookNetwork extends SocialNetwork {
                     .userId(userId)
                     .photoUrl("https://graph.facebook.com/" + userId+ "/picture?type=large")   ///[EasyLogin#photoUrl]
                     .build();
-            listener.onLoginSuccess(getNetwork());
+            callLoginSuccess();
         }
 
         @Override
         public void onCancel() {
-            listener.onError(getNetwork(), null);
+            callLoginFailure("Authorization failed, request was canceled.");
         }
 
         @Override
         public void onError(FacebookException error) {
-            listener.onError(getNetwork(), error.getMessage());
+            callLoginFailure(error.getMessage());
         }
     };
 
@@ -80,16 +80,18 @@ public class FacebookNetwork extends SocialNetwork {
                     "Please check https://developers.facebook.com/docs/android/getting-started/");
         }
 
-        ((LoginButton)(this.button.get())).setReadPermissions(permissions);
+        ((LoginButton)(this.button.get())).setPermissions(permissions);
         ((LoginButton)(this.button.get())).registerCallback(callbackManager, loginCallback);
 
-        ((LoginButton)(this.button.get())).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                LoginManager.getInstance().logInWithReadPermissions(activity, permissions);
-                LoginManager.getInstance().registerCallback(callbackManager, loginCallback);
-            }
-        });
+        ///[FIX BUG]下面代码执行后，点击会重复出现Facebook认证对话框！所以注释掉
+        ///https://developers.facebook.com/docs/facebook-login/android
+//        ((LoginButton)(this.button.get())).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                LoginManager.getInstance().logInWithReadPermissions(activity, permissions);
+//                LoginManager.getInstance().registerCallback(callbackManager, loginCallback);
+//            }
+//        });
     }
 
     @Override
@@ -108,17 +110,22 @@ public class FacebookNetwork extends SocialNetwork {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        callbackManager.onActivityResult(requestCode, resultCode, data);
+        if (callbackManager != null && requestCode == ((LoginButton)(this.button.get())).getRequestCode()) {
+            callbackManager.onActivityResult(requestCode, resultCode, data);
+        }
     }
 
     @Override
     public void logout() {
         LoginManager.getInstance().logOut();
+        setButtonEnabled(true);
     }
 
     @Override
     public boolean isConnected() {
-        return com.facebook.AccessToken.getCurrentAccessToken() != null;
+        ///https://developers.facebook.com/docs/facebook-login/android
+        return com.facebook.AccessToken.getCurrentAccessToken() != null
+                && com.facebook.AccessToken.getCurrentAccessToken().isExpired();
     }
 
     @Override
@@ -126,6 +133,16 @@ public class FacebookNetwork extends SocialNetwork {
         if (button != null && button.get() != null) {
             ((LoginButton)(this.button.get())).setEnabled(enabled);
         }
+    }
+
+    private void callLoginSuccess() {
+        setButtonEnabled(false);
+        listener.onLoginSuccess(getNetwork(), accessToken);
+    }
+
+    private void callLoginFailure(final String errorMessage) {
+        setButtonEnabled(true);
+        listener.onError(getNetwork(), errorMessage);
     }
 
     private void addEmailToToken(final com.facebook.AccessToken fbAccessToken) {
@@ -136,17 +153,17 @@ public class FacebookNetwork extends SocialNetwork {
                         final String token = fbAccessToken.getToken();
                         final String userId = fbAccessToken.getUserId();
                         if (response.getError() != null) {
-                            Log.d("FacebookNetwork", "Error occurred while fetching Facebook email");
+                            Log.e("FacebookNetwork", "Error occurred while fetching Facebook email");
                             accessToken = new AccessToken.Builder(token)
                                     .userId(userId)
                                     .photoUrl("https://graph.facebook.com/" + userId+ "/picture?type=large")   ///[EasyLogin#photoUrl]
                                     .build();
-                            listener.onLoginSuccess(getNetwork());
+                            callLoginSuccess();
                         } else {
                             final String email = me.optString(EMAIL_PERMISSION_FIELD);
                             final String name = me.optString(NAME_FIELD);
                             if (TextUtils.isEmpty(email)) {
-                                Log.d("FacebookNetwork", "Email could not be fetched. The user might not have an email or have unchecked the checkbox while connecting.");
+                                Log.w("FacebookNetwork", "Email could not be fetched. The user might not have an email or have unchecked the checkbox while connecting.");
                             }
                             accessToken = new AccessToken.Builder(token)
                                     .userId(userId)
@@ -154,7 +171,7 @@ public class FacebookNetwork extends SocialNetwork {
                                     .userName(name)
                                     .photoUrl("https://graph.facebook.com/" + userId+ "/picture?type=large")   ///[EasyLogin#photoUrl]
                                     .build();
-                            listener.onLoginSuccess(getNetwork());
+                            callLoginSuccess();
                         }
                     }
                 });

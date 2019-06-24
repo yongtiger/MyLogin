@@ -59,11 +59,10 @@ public class MobQQNetwork extends SocialNetwork implements PlatformActionListene
     @Override
     public void logout() {
         if (isConnected()) {
-            setButtonEnabled(true);
-
             ///移除授权状态和本地缓存，下次授权会重新授权
             plat.removeAccount(true);
         }
+        setButtonEnabled(true);
     }
 
     @Override
@@ -78,6 +77,16 @@ public class MobQQNetwork extends SocialNetwork implements PlatformActionListene
         }
     }
 
+    private void callLoginSuccess() {
+        setButtonEnabled(false);
+        listener.onLoginSuccess(getNetwork(), accessToken);
+    }
+
+    private void callLoginFailure(final String errorMessage) {
+        setButtonEnabled(true);
+        listener.onError(getNetwork(), errorMessage);
+    }
+
     ///[oAuth#MobService]
     ///http://wiki.mob.com/sdk-share-android-3-0-0/#map-5
     @Override
@@ -88,8 +97,6 @@ public class MobQQNetwork extends SocialNetwork implements PlatformActionListene
             activity.get().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    setButtonEnabled(false);
-
                     ///http://wiki.mob.com/%E8%8E%B7%E5%8F%96%E6%8E%88%E6%9D%83%E7%94%A8%E6%88%B7%E8%B5%84%E6%96%99-2/
                     ///获取数平台数据DB
                     final PlatformDb platDB = platform.getDb();
@@ -101,8 +108,7 @@ public class MobQQNetwork extends SocialNetwork implements PlatformActionListene
                             .userName(platDB.getUserName())
                             .photoUrl(platDB.getUserIcon())   ///[EasyLogin#photoUrl]
                             .build();
-
-                    listener.onLoginSuccess(getNetwork());
+                    callLoginSuccess();
                 }
             });
         }
@@ -111,27 +117,13 @@ public class MobQQNetwork extends SocialNetwork implements PlatformActionListene
     @Override
     public void onError(Platform platform, int action, Throwable throwable) {
         Log.d("TAG", "onError: ");
-
-        activity.get().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                setButtonEnabled(true);
-                listener.onError(getNetwork(), throwable.getMessage());
-            }
-        });
+        callLoginFailure(throwable.getMessage());
     }
 
     @Override
     public void onCancel(Platform platform, int action) {
         Log.d("TAG", "onCancel: ");
-
-        activity.get().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                setButtonEnabled(true);
-                listener.onError(getNetwork(), "Cancelled");
-            }
-        });
+        callLoginFailure("Authorization failed, request was canceled.");
     }
 
 }

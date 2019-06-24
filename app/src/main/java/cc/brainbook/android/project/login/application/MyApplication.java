@@ -34,13 +34,13 @@ public class MyApplication extends Application {
         EasyLogin.initialize();
 
         ///[oAuth#EasyLogin#Twitter]初始化
+//        Twitter.initialize(this);///[FIX BUG]无法获取key/secret！改为Twitter.initialize(config)
         ///Twitter initialization needs to happen before setContentView() if using the LoginButton!
         final String twitterKey = getString(R.string.twitter_consumer_key);
         final String twitterSecret = getString(R.string.twitter_consumer_secret);
-        final TwitterAuthConfig authConfig = new TwitterAuthConfig(twitterKey, twitterSecret);
         final TwitterConfig config = new TwitterConfig.Builder(getApplicationContext())
                 .logger(new DefaultLogger(Log.DEBUG))
-                .twitterAuthConfig(authConfig)
+                .twitterAuthConfig(new TwitterAuthConfig(twitterKey, twitterSecret))
                 .build();
         Twitter.initialize(config);
 
