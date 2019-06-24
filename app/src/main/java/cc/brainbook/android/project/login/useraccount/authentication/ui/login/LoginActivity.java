@@ -406,7 +406,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     @Override
     public void onLoginSuccess(SocialNetwork.Network network, AccessToken accessToken) {
         if (network == SocialNetwork.Network.GOOGLE) {
-            Log.d("TAG", "G+ Login successful: " + accessToken.getToken() + "|||" + accessToken.getEmail());
+            Log.d("TAG", "GOOGLE Login successful: " + accessToken.getToken() + "|||" + accessToken.getEmail());
         } else if (network == SocialNetwork.Network.FACEBOOK) {
             Log.d("TAG", "FACEBOOK Login successful: " + accessToken.getToken() + "|||" + accessToken.getEmail());
         } else if (network == SocialNetwork.Network.TWITTER) {
