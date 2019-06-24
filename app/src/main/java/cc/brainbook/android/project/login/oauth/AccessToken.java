@@ -5,17 +5,17 @@ public class AccessToken {
 
     private final String token;
     private final String secret;
-    private final String email;
-    private final String userName;
     private final String userId;
+    private final String userName;
+    private final String email;
     private final String photoUrl;///[EasyLogin#photoUrl]
 
     private AccessToken(Builder builder) {
         token = builder.token;
         secret = builder.secret;
-        email = builder.email;
-        userName = builder.userName;
         userId = builder.userId;
+        userName = builder.userName;
+        email = builder.email;
         photoUrl = builder.photoUrl;///[EasyLogin#photoUrl]
     }
 
@@ -27,25 +27,28 @@ public class AccessToken {
         return secret;
     }
 
-    public String getEmail() {
-        return email;
+    public String getUserId() {
+        return userId;
     }
 
     public String getUserName() {
         return userName;
     }
 
-    public String getUserId() {
-        return userId;
+    public String getEmail() {
+        return email;
+    }
+
+    public String getPhotoUrl() {
+        return photoUrl;
     }
 
     public static class Builder {
-
         private final String token;
         private String secret;
+        private String userId;
         private String userName;
         private String email;
-        private String userId;
         private String photoUrl;///[EasyLogin#photoUrl]
 
         public Builder(String token) {
@@ -55,9 +58,9 @@ public class AccessToken {
         public Builder(AccessToken oldToken) {
             token = oldToken.token;
             secret = oldToken.secret;
-            email = oldToken.email;
-            userName = oldToken.userName;
             userId = oldToken.userId;
+            userName = oldToken.userName;
+            email = oldToken.email;
             photoUrl = oldToken.photoUrl;///[EasyLogin#photoUrl]
         }
 
@@ -66,13 +69,13 @@ public class AccessToken {
             return this;
         }
 
-        public Builder userName(String userName) {
-            this.userName = userName;
+        public Builder userId(String userId) {
+            this.userId = userId;
             return this;
         }
 
-        public Builder userId(String userId) {
-            this.userId = userId;
+        public Builder userName(String userName) {
+            this.userName = userName;
             return this;
         }
 

@@ -13,6 +13,7 @@ import cc.brainbook.android.project.login.oauth.AccessToken;
 import cc.brainbook.android.project.login.oauth.listener.OnLoginCompleteListener;
 import cn.sharesdk.framework.Platform;
 import cn.sharesdk.framework.PlatformActionListener;
+import cn.sharesdk.framework.PlatformDb;
 import cn.sharesdk.framework.ShareSDK;
 
 ///https://github.com/maksim88/EasyLogin
@@ -51,9 +52,7 @@ public abstract class MobBaseNetwork extends SocialNetwork implements PlatformAc
     }
 
     @Override
-    public Network getNetwork() {
-        return Network.MOB_QQ;
-    }
+    public abstract Network getNetwork();
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {}
@@ -74,8 +73,14 @@ public abstract class MobBaseNetwork extends SocialNetwork implements PlatformAc
 
     @Override
     public void setButtonEnabled(boolean enabled) {
-        if (button != null && button.get() != null) {
-            ((Button)button.get()).setEnabled(enabled);
+        if (button != null && button.get() != null
+                && activity != null && activity.get() != null) {
+            activity.get().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    ((Button)button.get()).setEnabled(enabled);
+                }
+            });
         }
     }
 
@@ -91,7 +96,23 @@ public abstract class MobBaseNetwork extends SocialNetwork implements PlatformAc
 
     @Override
     public void onComplete(Platform platform, int action, HashMap<String, Object> hashMap) {
-        doComplete(platform, action, hashMap);
+        if (action == Platform.ACTION_USER_INFOR && activity.get() != null) {
+            ///http://wiki.mob.com/%E8%8E%B7%E5%8F%96%E6%8E%88%E6%9D%83%E7%94%A8%E6%88%B7%E8%B5%84%E6%96%99-2/
+            ///获取数平台数据DB
+            final PlatformDb platDB = platform.getDb();
+            ///通过DB获取各种数据
+            //////??????注意：无Email！
+            accessToken = new AccessToken.Builder(platDB.getToken())
+                    .secret(platDB.getTokenSecret())
+                    .userId(platDB.getUserId())
+                    .userName(platDB.getUserName())
+                    .photoUrl(platDB.getUserIcon())   ///[EasyLogin#photoUrl]
+                    .build();
+
+            addExtraData(hashMap);
+
+            callLoginSuccess();
+        }
     }
 
     @Override
@@ -104,6 +125,12 @@ public abstract class MobBaseNetwork extends SocialNetwork implements PlatformAc
         callLoginFailure("Authorization failed, request was canceled.");
     }
 
-    public abstract void doComplete(Platform platform, int action, HashMap<String, Object> hashMap);
+    /**
+     * 给accessToken添加数据
+     * 各个平台hashMap返回值不同，需要各平台子类具体处理
+     *
+     * @param hashMap
+     */
+    public abstract void addExtraData(HashMap<String, Object> hashMap);
 
 }

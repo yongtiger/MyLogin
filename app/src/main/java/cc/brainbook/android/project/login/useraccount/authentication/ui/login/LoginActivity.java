@@ -39,7 +39,12 @@ import cc.brainbook.android.project.login.oauth.EasyLogin;
 import cc.brainbook.android.project.login.oauth.listener.OnLoginCompleteListener;
 import cc.brainbook.android.project.login.oauth.networks.FacebookNetwork;
 import cc.brainbook.android.project.login.oauth.networks.GoogleNetwork;
+import cc.brainbook.android.project.login.oauth.networks.MobFacebookNetwork;
+import cc.brainbook.android.project.login.oauth.networks.MobLinkedInNetwork;
 import cc.brainbook.android.project.login.oauth.networks.MobQQNetwork;
+import cc.brainbook.android.project.login.oauth.networks.MobSinaWeiboNetwork;
+import cc.brainbook.android.project.login.oauth.networks.MobTwitterNetwork;
+import cc.brainbook.android.project.login.oauth.networks.MobWechatNetwork;
 import cc.brainbook.android.project.login.oauth.networks.SocialNetwork;
 import cc.brainbook.android.project.login.oauth.networks.TwitterNetwork;
 import cc.brainbook.android.project.login.resetpassword.ui.ResetPasswordActivity;
@@ -77,12 +82,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private TwitterNetwork twitterNetwork;
 
     ///[oAuth#EasyLogin#Mob]
-//    private MobFacebookNetwork mobFacebookNetwork;
-//    private MobTwitterNetwork mobTwitterNetwork;
-//    private MobLinkedInNetwork mobLinkedInNetwork;
+    private MobFacebookNetwork mobFacebookNetwork;
+    private MobTwitterNetwork mobTwitterNetwork;
+    private MobLinkedInNetwork mobLinkedInNetwork;
     private MobQQNetwork mobQQNetwork;
-//    private MobWechatNetwork mobWechatNetwork;
-//    private MobSinaWeiboNetwork mobSinaWeiboNetwork;
+    private MobWechatNetwork mobWechatNetwork;
+    private MobSinaWeiboNetwork mobSinaWeiboNetwork;
 
 
     @Override
@@ -379,10 +384,35 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         ///注意：因为会根据状态而改变文字或背景颜色，所以不建议修改！
 //        twitterLoginButton.setText("Twitter");
 
-        ///[oAuth#EasyLogin#MobQq]
+        ///[oAuth#EasyLogin#MobQQ]
         final Button btnQQLogin = findViewById(R.id.btn_qq_login);
         mobQQNetwork = new MobQQNetwork(this, btnQQLogin, this);
         easyLogin.addSocialNetwork(mobQQNetwork);
+
+        ///[oAuth#EasyLogin#MobWechat]
+        final Button btnWechatLogin = findViewById(R.id.btn_wechat_login);
+        mobWechatNetwork = new MobWechatNetwork(this, btnWechatLogin, this);
+        easyLogin.addSocialNetwork(mobWechatNetwork);
+
+        ///[oAuth#EasyLogin#MobSinaWeibo]
+        final Button btnSinaWeiboLogin = findViewById(R.id.btn_sinaweibo_login);
+        mobSinaWeiboNetwork = new MobSinaWeiboNetwork(this, btnSinaWeiboLogin, this);
+        easyLogin.addSocialNetwork(mobSinaWeiboNetwork);
+
+        ///[oAuth#EasyLogin#MobFacebook]
+        final Button btnFacebookLogin = findViewById(R.id.btn_facebook_login);
+        mobFacebookNetwork = new MobFacebookNetwork(this, btnFacebookLogin, this);
+        easyLogin.addSocialNetwork(mobFacebookNetwork);
+
+        ///[oAuth#EasyLogin#MobTwitter]
+        final Button btnTwitterLogin = findViewById(R.id.btn_twitter_login);
+        mobTwitterNetwork = new MobTwitterNetwork(this, btnTwitterLogin, this);
+        easyLogin.addSocialNetwork(mobTwitterNetwork);
+
+        ///[oAuth#EasyLogin#MobLinkedIn]
+        final Button btnLinkedInLogin = findViewById(R.id.btn_linkedin_login);
+        mobLinkedInNetwork = new MobLinkedInNetwork(this, btnLinkedInLogin, this);
+        easyLogin.addSocialNetwork(mobLinkedInNetwork);
 
     }
 
@@ -405,13 +435,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     @Override
     public void onLoginSuccess(SocialNetwork.Network network, AccessToken accessToken) {
-        if (network == SocialNetwork.Network.GOOGLE) {
-            Log.d("TAG", "GOOGLE Login successful: " + accessToken.getToken() + "|||" + accessToken.getEmail());
-        } else if (network == SocialNetwork.Network.FACEBOOK) {
-            Log.d("TAG", "FACEBOOK Login successful: " + accessToken.getToken() + "|||" + accessToken.getEmail());
-        } else if (network == SocialNetwork.Network.TWITTER) {
-            Log.d("TAG", "TWITTER Login successful: " + accessToken.getToken() + "|||" + accessToken.getEmail());
-        }
+        Log.d("TAG", network + " Login successful: " + accessToken.getToken()
+                + "|||" + accessToken.getUserId()
+                + "|||" + accessToken.getUserName()
+                + "|||" + accessToken.getEmail()
+                + "|||" + accessToken.getPhotoUrl());
         updateStatuses();
     }
 

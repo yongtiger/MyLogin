@@ -7,19 +7,19 @@ import java.util.HashMap;
 
 import cc.brainbook.android.project.login.oauth.listener.OnLoginCompleteListener;
 import cn.sharesdk.framework.ShareSDK;
-import cn.sharesdk.tencent.qq.QQ;
+import cn.sharesdk.wechat.friends.Wechat;
 
 ///https://github.com/maksim88/EasyLogin
 ///https://developers.google.com/identity/sign-in/android/start
-public class MobQQNetwork extends MobBaseNetwork {
+public class MobWechatNetwork extends MobBaseNetwork {
 
-    public MobQQNetwork(Activity activity, View button, OnLoginCompleteListener onLoginCompleteListener) {
-        super(activity, button, onLoginCompleteListener, ShareSDK.getPlatform(QQ.NAME));
+    public MobWechatNetwork(Activity activity, View button, OnLoginCompleteListener onLoginCompleteListener) {
+        super(activity, button, onLoginCompleteListener, ShareSDK.getPlatform(Wechat.NAME));
     }
 
     @Override
     public Network getNetwork() {
-        return Network.MOB_QQ;
+        return Network.MOB_WECHAT;
     }
 
     @Override
