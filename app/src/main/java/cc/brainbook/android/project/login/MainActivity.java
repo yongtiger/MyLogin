@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
         stvUserAccount.setOnSuperTextViewClickListener(new SuperTextView.OnSuperTextViewClickListener() {
             @Override
             public void onClickListener(SuperTextView superTextView) {
-                ///
+                ///start ModifyActivity
                 startActivity(new Intent(MainActivity.this, ModifyActivity.class));
             }
         });
@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
         stvUserProfile.setOnSuperTextViewClickListener(new SuperTextView.OnSuperTextViewClickListener() {
             @Override
             public void onClickListener(SuperTextView superTextView) {
-                ///
+                ///start UserAccountProfile
 //                startActivity(new Intent(MainActivity.this, UserAccountProfile.class));
             }
         });
@@ -114,6 +114,11 @@ public class MainActivity extends AppCompatActivity {
                 });
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
 
         ///Update UI
         updateUI();
@@ -126,9 +131,6 @@ public class MainActivity extends AppCompatActivity {
                 final UserRepository loginRepository = UserRepository.getInstance();
                 if (loginRepository.isLoggedIn()) {
                     Toast.makeText(getApplicationContext(), "Login! " + loginRepository.getLoggedInUser().getUsername(), Toast.LENGTH_SHORT).show();
-
-                    ///Update UI
-                    updateUI();
                 }
             }
         }
