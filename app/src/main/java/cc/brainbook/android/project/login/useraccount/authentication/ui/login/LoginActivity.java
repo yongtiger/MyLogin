@@ -423,6 +423,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     @Override
     protected void onResume() {
         super.onResume();
+
+        ///updateStatuses
         updateStatuses();
     }
 
@@ -440,6 +442,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 + "|||" + accessToken.getUserName()
                 + "|||" + accessToken.getEmail()
                 + "|||" + accessToken.getPhotoUrl());
+
+        ///updateStatuses
         updateStatuses();
     }
 
@@ -451,23 +455,30 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void updateStatuses() {
-        final StringBuilder content = new StringBuilder();
-        for (SocialNetwork socialNetwork : easyLogin.getInitializedSocialNetworks()) {
-            content.append(socialNetwork.getNetwork())
-                    .append(": ")
-                    .append(socialNetwork.isConnected())
-                    .append("\n");
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                final StringBuilder content = new StringBuilder();
+                for (SocialNetwork socialNetwork : easyLogin.getInitializedSocialNetworks()) {
+                    content.append(socialNetwork.getNetwork())
+                            .append(": ")
+                            .append(socialNetwork.isConnected())
+                            .append("\n");
 
-            socialNetwork.setButtonEnabled(!socialNetwork.isConnected());
-        }
+                    socialNetwork.setButtonEnabled(!socialNetwork.isConnected());
+                }
 
-        tvConnectedStatus.setText(content.toString());
+                tvConnectedStatus.setText(content.toString());
+            }
+        });
     }
 
     public void logoutAllNetworks(View view) {
         for (SocialNetwork socialNetwork : easyLogin.getInitializedSocialNetworks()) {
             socialNetwork.logout();
         }
+
+        ///updateStatuses
         updateStatuses();
     }
 
