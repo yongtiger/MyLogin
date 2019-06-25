@@ -58,10 +58,10 @@ dependencies {
     ///https://dev.twitter.com/twitterkit/android
     ///https://github.com/twitter-archive/twitter-kit-android/wiki/Log-In-with-Twitter
     // Include all the Twitter APIs
-    implementation 'com.twitter.sdk.android:twitter:3.1.1'
-//    implementation('com.twitter.sdk.android:twitter-core:3.1.1@aar') {
-//        transitive = true
-//    }
+//    implementation 'com.twitter.sdk.android:twitter:3.1.1'
+    implementation('com.twitter.sdk.android:twitter-core:3.1.1@aar') {
+        transitive = true
+    }
 }
 
 ///[oAuth#EasyLogin#Google Sign In]
@@ -89,21 +89,17 @@ MobSDK {
             Wechat {
                 appId "wxbf9c29bd2d6b89c8"
                 appSecret "b97a95b266a2345127b35dfc25da434d"
-                userName "gh_afb25ac019c9"
-                path "pages/index/index.html?id=1"
-                withShareTicket true
-                miniprogramType 2
             }
             SinaWeibo {
                 appKey "1547322967"
                 appSecret "aed8b5d8cf12f8169ac83bec39c83055"
                 callbackUri "http://www.sharesdk.cn"
             }
-//            TencentWeibo {
-//                appKey "801307650"
-//                appSecret "ae36f4ee3946e1cbb98d6965b0b2ff5c"
-//                callbackUri "http://www.sharesdk.cn"
-//            }
+            TencentWeibo {
+                appKey "801307650"
+                appSecret "ae36f4ee3946e1cbb98d6965b0b2ff5c"
+                callbackUri "http://www.sharesdk.cn"
+            }
 
 //            GooglePlus {///不用Mob！！！用EasyLogin
 //                appId   "1065746615485-d5narip4m6akad1027nb0sq93mn9hrcc.apps.googleusercontent.com"
