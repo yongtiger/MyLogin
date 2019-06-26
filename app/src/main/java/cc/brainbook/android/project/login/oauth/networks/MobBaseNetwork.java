@@ -10,7 +10,7 @@ import java.lang.ref.WeakReference;
 import java.util.HashMap;
 
 import cc.brainbook.android.project.login.oauth.AccessToken;
-import cc.brainbook.android.project.login.oauth.listener.OnLoginCompleteListener;
+import cc.brainbook.android.project.login.oauth.listener.OnOauthCompleteListener;
 import cn.sharesdk.framework.Platform;
 import cn.sharesdk.framework.PlatformActionListener;
 import cn.sharesdk.framework.PlatformDb;
@@ -21,10 +21,10 @@ import cn.sharesdk.framework.ShareSDK;
 public abstract class MobBaseNetwork extends SocialNetwork implements PlatformActionListener {
     protected Platform plat;
 
-    public MobBaseNetwork(Activity activity, View button, OnLoginCompleteListener onLoginCompleteListener, Platform plat) {
+    public MobBaseNetwork(Activity activity, View button, OnOauthCompleteListener onOauthCompleteListener, Platform plat) {
         this.activity = new WeakReference<>(activity);
         this.button = new WeakReference<>(button);
-        this.listener = onLoginCompleteListener;
+        this.listener = onOauthCompleteListener;
         this.plat = plat;
 
         this.button.get().setOnClickListener(new View.OnClickListener() {
@@ -39,7 +39,7 @@ public abstract class MobBaseNetwork extends SocialNetwork implements PlatformAc
 
         //SSO授权，传false默认是客户端授权，没有客户端授权或者不支持客户端授权会跳web授权
         plat.SSOSetting(false);
-        //授权回调监听，监听onComplete，onError，onCancel三种状态
+        //授权回调监听，监听onComplete，onOauthError，onCancel三种状态
         plat.setPlatformActionListener(this);
         //抖音登录适配安卓9.0
         ShareSDK.setActivity(activity);
@@ -50,9 +50,6 @@ public abstract class MobBaseNetwork extends SocialNetwork implements PlatformAc
     public AccessToken getAccessToken() {
         return accessToken;
     }
-
-    @Override
-    public abstract Network getNetwork();
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {}
@@ -78,20 +75,10 @@ public abstract class MobBaseNetwork extends SocialNetwork implements PlatformAc
             activity.get().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    ((Button)button.get()).setEnabled(enabled);
+                    button.get().setEnabled(enabled);
                 }
             });
         }
-    }
-
-    protected void callLoginSuccess() {
-        setButtonEnabled(false);
-        listener.onLoginSuccess(getNetwork(), accessToken);
-    }
-
-    protected void callLoginFailure(final String errorMessage) {
-        setButtonEnabled(true);
-        listener.onError(getNetwork(), errorMessage);
     }
 
     @Override
@@ -111,18 +98,18 @@ public abstract class MobBaseNetwork extends SocialNetwork implements PlatformAc
 
             addExtraData(hashMap);
 
-            callLoginSuccess();
+            callOauthSuccess();
         }
     }
 
     @Override
     public void onError(Platform platform, int action, Throwable throwable) {
-        callLoginFailure(throwable.getMessage());
+        callOauthFailure(throwable.getMessage());
     }
 
     @Override
     public void onCancel(Platform platform, int action) {
-        callLoginFailure("Authorization failed, request was canceled.");
+        callOauthFailure("Authorization failed, request was canceled.");
     }
 
     /**

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
+        <!--按照顺序依次判断，如果满足条件则退出-->
         <item android:color="#f15e3f" android:state_enabled="true" />
         <item android:color="#9e9e9e" android:state_enabled="false" />
 </selector>

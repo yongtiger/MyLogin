@@ -57,4 +57,11 @@ public class EasyLogin {
             network.onActivityResult(requestCode, resultCode, data);
         }
     }
+
+    public void logoutAllNetworks() {
+        for (SocialNetwork socialNetwork : getInitializedSocialNetworks()) {
+            socialNetwork.logout();
+        }
+    }
+
 }

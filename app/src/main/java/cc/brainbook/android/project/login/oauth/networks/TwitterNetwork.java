@@ -18,7 +18,7 @@ import com.twitter.sdk.android.core.models.User;
 import java.lang.ref.WeakReference;
 
 import cc.brainbook.android.project.login.oauth.AccessToken;
-import cc.brainbook.android.project.login.oauth.listener.OnLoginCompleteListener;
+import cc.brainbook.android.project.login.oauth.listener.OnOauthCompleteListener;
 import retrofit2.Call;
 
 ///https://github.com/maksim88/EasyLogin
@@ -41,14 +41,14 @@ public class TwitterNetwork extends SocialNetwork {
 
         @Override
         public void failure(TwitterException e) {
-            callLoginFailure(e.getMessage());
+            callOauthFailure(e.getMessage());
         }
     };
 
-    public TwitterNetwork(Activity activity, View button, OnLoginCompleteListener onLoginCompleteListener) {
+    public TwitterNetwork(Activity activity, View button, OnOauthCompleteListener onOauthCompleteListener) {
         this.activity = new WeakReference<>(activity);
         this.button = new WeakReference<>(button);
-        this.listener = onLoginCompleteListener;
+        this.listener = onOauthCompleteListener;
 
         ((TwitterLoginButton)(this.button.get())).setCallback(buttonCallback);
     }
@@ -91,16 +91,6 @@ public class TwitterNetwork extends SocialNetwork {
         }
     }
 
-    private void callLoginSuccess() {
-        setButtonEnabled(false);
-        listener.onLoginSuccess(getNetwork(), accessToken);
-    }
-
-    private void callLoginFailure(final String errorMessage) {
-        setButtonEnabled(true);
-        listener.onError(getNetwork(), errorMessage);
-    }
-
     ///[EasyLogin#Twitter]获取头像和Email等User数据
     ///com.twitter.sdk.android.core.identity.TwitterAuthClient#requestUser(TwitterSession session, final Callback<String> callback)
     private void requestUser(TwitterSession session, final AccessToken tempToken) {
@@ -113,20 +103,20 @@ public class TwitterNetwork extends SocialNetwork {
                 final String email = result.data.email;
                 if (TextUtils.isEmpty(email)) {
                     logout();
-                    callLoginFailure("Before fetching an email, ensure that 'Request email addresses from users' is checked for your Twitter app.");
+                    callOauthFailure("Before fetching an email, ensure that 'Request email addresses from users' is checked for your Twitter app.");
                     return;
                 }
                 accessToken = new AccessToken.Builder(tempToken)
                         .email(email)
                         .photoUrl(result.data.profileImageUrl)
                         .build();
-                callLoginSuccess();
+                callOauthSuccess();
             }
 
             @Override
             public void failure(TwitterException exception) {
                 Log.e("TwitterNetwork", "Before fetching an email, ensure that 'Request email addresses from users' is checked for your Twitter app.");
-                callLoginFailure(exception.getMessage());
+                callOauthFailure(exception.getMessage());
             }
         });
     }

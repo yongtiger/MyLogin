@@ -7,7 +7,7 @@ import android.view.View;
 import java.lang.ref.WeakReference;
 
 import cc.brainbook.android.project.login.oauth.AccessToken;
-import cc.brainbook.android.project.login.oauth.listener.OnLoginCompleteListener;
+import cc.brainbook.android.project.login.oauth.listener.OnOauthCompleteListener;
 
 ///https://github.com/maksim88/EasyLogin
 public abstract class SocialNetwork {
@@ -22,7 +22,7 @@ public abstract class SocialNetwork {
 
     protected WeakReference<View> button;
 
-    protected OnLoginCompleteListener listener;
+    protected OnOauthCompleteListener listener;
 
     protected AccessToken accessToken;
 
@@ -49,5 +49,15 @@ public abstract class SocialNetwork {
      * @param enabled
      */
     public abstract void setButtonEnabled(boolean enabled);
+
+    protected void callOauthSuccess() {
+        setButtonEnabled(false);
+        listener.onOauthSuccess(getNetwork(), accessToken);
+    }
+
+    protected void callOauthFailure(final String errorMessage) {
+        setButtonEnabled(true);
+        listener.onOauthError(getNetwork(), errorMessage);
+    }
 
 }

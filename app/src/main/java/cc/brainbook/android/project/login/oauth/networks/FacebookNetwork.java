@@ -23,7 +23,7 @@ import java.lang.ref.WeakReference;
 import java.util.List;
 
 import cc.brainbook.android.project.login.oauth.AccessToken;
-import cc.brainbook.android.project.login.oauth.listener.OnLoginCompleteListener;
+import cc.brainbook.android.project.login.oauth.listener.OnOauthCompleteListener;
 
 ///https://github.com/maksim88/EasyLogin
 public class FacebookNetwork extends SocialNetwork {
@@ -35,7 +35,7 @@ public class FacebookNetwork extends SocialNetwork {
 
     private List<String> permissions;
 
-    private FacebookCallback<LoginResult> loginCallback = new FacebookCallback<LoginResult>() {
+    private FacebookCallback<LoginResult> facebookCallback = new FacebookCallback<LoginResult>() {
 
         @Override
         public void onSuccess(LoginResult loginResult) {
@@ -53,24 +53,24 @@ public class FacebookNetwork extends SocialNetwork {
                     .userId(userId)
                     .photoUrl("https://graph.facebook.com/" + userId+ "/picture?type=large")   ///[EasyLogin#photoUrl]
                     .build();
-            callLoginSuccess();
+            callOauthSuccess();
         }
 
         @Override
         public void onCancel() {
-            callLoginFailure("Authorization failed, request was canceled.");
+            callOauthFailure("Authorization failed, request was canceled.");
         }
 
         @Override
         public void onError(FacebookException error) {
-            callLoginFailure(error.getMessage());
+            callOauthFailure(error.getMessage());
         }
     };
 
-    public FacebookNetwork(Activity activity, View button, OnLoginCompleteListener onLoginCompleteListener, List<String> permissions) {
+    public FacebookNetwork(Activity activity, View button, OnOauthCompleteListener onOauthCompleteListener, List<String> permissions) {
         this.activity = new WeakReference<>(activity);
         this.button = new WeakReference<>(button);
-        this.listener = onLoginCompleteListener;
+        this.listener = onOauthCompleteListener;
 
         callbackManager = CallbackManager.Factory.create();
         final String applicationID = Utility.getMetadataApplicationId(this.activity.get());
@@ -81,7 +81,7 @@ public class FacebookNetwork extends SocialNetwork {
         }
 
         ((LoginButton)(this.button.get())).setPermissions(permissions);
-        ((LoginButton)(this.button.get())).registerCallback(callbackManager, loginCallback);
+        ((LoginButton)(this.button.get())).registerCallback(callbackManager, facebookCallback);
 
         ///[FIX BUG]下面代码执行后，点击会重复出现Facebook认证对话框！所以注释掉
         ///https://developers.facebook.com/docs/facebook-login/android
@@ -89,7 +89,7 @@ public class FacebookNetwork extends SocialNetwork {
 //            @Override
 //            public void onClick(View v) {
 //                LoginManager.getInstance().logInWithReadPermissions(activity, permissions);
-//                LoginManager.getInstance().registerCallback(callbackManager, loginCallback);
+//                LoginManager.getInstance().registerCallback(callbackManager, facebookCallback);
 //            }
 //        });
     }
@@ -135,16 +135,6 @@ public class FacebookNetwork extends SocialNetwork {
         }
     }
 
-    private void callLoginSuccess() {
-        setButtonEnabled(false);
-        listener.onLoginSuccess(getNetwork(), accessToken);
-    }
-
-    private void callLoginFailure(final String errorMessage) {
-        setButtonEnabled(true);
-        listener.onError(getNetwork(), errorMessage);
-    }
-
     private void addEmailToToken(final com.facebook.AccessToken fbAccessToken) {
         final GraphRequest meRequest = GraphRequest.newMeRequest(
                 fbAccessToken, new GraphRequest.GraphJSONObjectCallback() {
@@ -158,7 +148,7 @@ public class FacebookNetwork extends SocialNetwork {
                                     .userId(userId)
                                     .photoUrl("https://graph.facebook.com/" + userId+ "/picture?type=large")   ///[EasyLogin#photoUrl]
                                     .build();
-                            callLoginSuccess();
+                            callOauthSuccess();
                         } else {
                             final String email = me.optString(EMAIL_PERMISSION_FIELD);
                             final String name = me.optString(NAME_FIELD);
@@ -171,7 +161,7 @@ public class FacebookNetwork extends SocialNetwork {
                                     .userName(name)
                                     .photoUrl("https://graph.facebook.com/" + userId+ "/picture?type=large")   ///[EasyLogin#photoUrl]
                                     .build();
-                            callLoginSuccess();
+                            callOauthSuccess();
                         }
                     }
                 });

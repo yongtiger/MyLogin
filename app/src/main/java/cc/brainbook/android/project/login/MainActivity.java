@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import com.allen.library.SuperTextView;
 
+import cc.brainbook.android.project.login.oauth.EasyLogin;
 import cc.brainbook.android.project.login.useraccount.modify.ModifyActivity;
 import cc.brainbook.android.project.login.useraccount.data.UserRepository;
 import cc.brainbook.android.project.login.useraccount.authentication.exception.LogoutException;
@@ -66,6 +67,10 @@ public class MainActivity extends AppCompatActivity {
         btnLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                ///[oAuth]
+                final EasyLogin easyLogin = EasyLogin.getInstance();
+                easyLogin.logoutAllNetworks();
+
                 final UserRepository userRepository = UserRepository.getInstance();
                 userRepository.logout(new LogoutCallback() {
                     @Override
@@ -128,17 +133,16 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_CODE_LOGIN) {
             if (resultCode == Activity.RESULT_OK) {
-                final UserRepository loginRepository = UserRepository.getInstance();
-                if (loginRepository.isLoggedIn()) {
-                    Toast.makeText(getApplicationContext(), "Login! " + loginRepository.getLoggedInUser().getUsername(), Toast.LENGTH_SHORT).show();
+                if (UserRepository.getInstance().isLoggedIn()) {
+                    Toast.makeText(getApplicationContext(), "Login! "
+                            + UserRepository.getInstance().getLoggedInUser().getUsername(), Toast.LENGTH_SHORT).show();
                 }
             }
         }
     }
 
     private void updateUI() {
-        final UserRepository loginRepository = UserRepository.getInstance();
-        if (loginRepository.isLoggedIn()) {
+        if (UserRepository.getInstance().isLoggedIn()) {
             llLoggedIn.setVisibility(View.VISIBLE);
             llLoggedOut.setVisibility(View.GONE);
         } else {

@@ -18,7 +18,7 @@ import com.google.android.gms.tasks.Task;
 import java.lang.ref.WeakReference;
 
 import cc.brainbook.android.project.login.oauth.AccessToken;
-import cc.brainbook.android.project.login.oauth.listener.OnLoginCompleteListener;
+import cc.brainbook.android.project.login.oauth.listener.OnOauthCompleteListener;
 
 ///https://github.com/maksim88/EasyLogin
 ///https://developers.google.com/identity/sign-in/android/start
@@ -28,10 +28,10 @@ public class GoogleNetwork extends SocialNetwork {
 
     private GoogleSignInClient mGoogleSignInClient;
 
-    public GoogleNetwork(Activity activity, View button, OnLoginCompleteListener onLoginCompleteListener) {
+    public GoogleNetwork(Activity activity, View button, OnOauthCompleteListener onOauthCompleteListener) {
         this.activity = new WeakReference<>(activity);
         this.button = new WeakReference<>(button);
-        this.listener = onLoginCompleteListener;
+        this.listener = onOauthCompleteListener;
 
         ((SignInButton)(this.button.get())).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -74,7 +74,7 @@ public class GoogleNetwork extends SocialNetwork {
                 handleSignInResult(task);
             } else if (resultCode == Activity.RESULT_CANCELED) {
                 Log.e("TAG", "Authorization failed, request was canceled.");
-                callLoginFailure(CommonStatusCodes.getStatusCodeString(CommonStatusCodes.CANCELED));
+                callOauthFailure(CommonStatusCodes.getStatusCodeString(CommonStatusCodes.CANCELED));
             }
         }
     }
@@ -103,16 +103,6 @@ public class GoogleNetwork extends SocialNetwork {
         }
     }
 
-    private void callLoginSuccess() {
-        setButtonEnabled(false);
-        listener.onLoginSuccess(getNetwork(), accessToken);
-    }
-
-    private void callLoginFailure(final String errorMessage) {
-        setButtonEnabled(true);
-        listener.onError(getNetwork(), errorMessage);
-    }
-
     private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
         try {
             final GoogleSignInAccount acct = completedTask.getResult(ApiException.class);
@@ -124,13 +114,13 @@ public class GoogleNetwork extends SocialNetwork {
                         .email(acct.getEmail())
                         .photoUrl((acct.getPhotoUrl() == null) ? null : acct.getPhotoUrl().toString())   ///[EasyLogin#photoUrl]
                         .build();
-                callLoginSuccess();
+                callOauthSuccess();
             }
         } catch (ApiException e) {
             // The ApiException status code indicates the detailed failure reason.
             // Please refer to the GoogleSignInStatusCodes class reference for more information.
             Log.e("TAG", "GoogleSignInResult:failed code=" + e.getStatusCode());
-            callLoginFailure(CommonStatusCodes.getStatusCodeString(e.getStatusCode()));
+            callOauthFailure(CommonStatusCodes.getStatusCodeString(e.getStatusCode()));
         }
     }
 

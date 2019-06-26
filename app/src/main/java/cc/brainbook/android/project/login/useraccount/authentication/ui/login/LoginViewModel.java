@@ -87,7 +87,28 @@ public class LoginViewModel extends ViewModel {
         });
     }
 
-    ///[oAuth]
+    public void loginDataChanged(String username, String password) {
+        ///[EditText错误提示]
+        ///[FIX#只显示username或password其中一个错误提示！应该同时都显示]
+        loginFormState.setValue(new LoginFormState(
+                isUsernameValid(username) ? null : R.string.error_invalid_username,
+                isPasswordValid(password) ? null : R.string.error_invalid_password));
+    }
+
+    // A placeholder username validation
+    private boolean isUsernameValid(String username) {
+        return !TextUtils.isEmpty(username) && (Pattern.matches(REGEXP_USERNAME, username)
+                || Patterns.EMAIL_ADDRESS.matcher(username).matches()
+                || Patterns.PHONE.matcher(username).matches());
+    }
+
+    // A placeholder password validation
+    private boolean isPasswordValid(String password) {
+        return !TextUtils.isEmpty(password) && Pattern.matches(REGEXP_PASSWORD, password);
+    }
+
+
+    /* --------------------- ///[oAuth] --------------------- */
     public void oAuthLogin(String network, String openId) {
         // can be launched in a separate asynchronous job
         loginRepository.oAuthLogin(network, openId, new LoginCallback() {
@@ -120,23 +141,4 @@ public class LoginViewModel extends ViewModel {
         });
     }
 
-    public void loginDataChanged(String username, String password) {
-        ///[EditText错误提示]
-        ///[FIX#只显示username或password其中一个错误提示！应该同时都显示]
-        loginFormState.setValue(new LoginFormState(
-                isUsernameValid(username) ? null : R.string.error_invalid_username,
-                isPasswordValid(password) ? null : R.string.error_invalid_password));
-    }
-
-    // A placeholder username validation
-    private boolean isUsernameValid(String username) {
-        return !TextUtils.isEmpty(username) && (Pattern.matches(REGEXP_USERNAME, username)
-                || Patterns.EMAIL_ADDRESS.matcher(username).matches()
-                || Patterns.PHONE.matcher(username).matches());
-    }
-
-    // A placeholder password validation
-    private boolean isPasswordValid(String password) {
-        return !TextUtils.isEmpty(password) && Pattern.matches(REGEXP_PASSWORD, password);
-    }
 }

@@ -5,7 +5,7 @@ import android.view.View;
 
 import java.util.HashMap;
 
-import cc.brainbook.android.project.login.oauth.listener.OnLoginCompleteListener;
+import cc.brainbook.android.project.login.oauth.listener.OnOauthCompleteListener;
 import cn.sharesdk.framework.ShareSDK;
 import cn.sharesdk.linkedin.LinkedIn;
 
@@ -13,8 +13,8 @@ import cn.sharesdk.linkedin.LinkedIn;
 ///https://developers.google.com/identity/sign-in/android/start
 public class MobLinkedInNetwork extends MobBaseNetwork {
 
-    public MobLinkedInNetwork(Activity activity, View button, OnLoginCompleteListener onLoginCompleteListener) {
-        super(activity, button, onLoginCompleteListener, ShareSDK.getPlatform(LinkedIn.NAME));
+    public MobLinkedInNetwork(Activity activity, View button, OnOauthCompleteListener onOauthCompleteListener) {
+        super(activity, button, onOauthCompleteListener, ShareSDK.getPlatform(LinkedIn.NAME));
     }
 
     @Override

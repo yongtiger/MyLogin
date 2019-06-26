@@ -95,12 +95,4 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal" />
 
-    <Button
-        android:id="@+id/btn_logout_all_networks"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:onClick="logoutAllNetworks"
-        android:text="@string/logout_all_networks" />
-
 </LinearLayout>

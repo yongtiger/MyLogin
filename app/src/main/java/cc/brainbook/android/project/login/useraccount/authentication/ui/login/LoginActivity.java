@@ -30,13 +30,12 @@ import com.google.android.gms.common.SignInButton;
 import com.twitter.sdk.android.core.identity.TwitterLoginButton;
 
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 
 import cc.brainbook.android.project.login.R;
 import cc.brainbook.android.project.login.oauth.AccessToken;
 import cc.brainbook.android.project.login.oauth.EasyLogin;
-import cc.brainbook.android.project.login.oauth.listener.OnLoginCompleteListener;
+import cc.brainbook.android.project.login.oauth.listener.OnOauthCompleteListener;
 import cc.brainbook.android.project.login.oauth.networks.FacebookNetwork;
 import cc.brainbook.android.project.login.oauth.networks.GoogleNetwork;
 import cc.brainbook.android.project.login.oauth.networks.MobFacebookNetwork;
@@ -51,12 +50,8 @@ import cc.brainbook.android.project.login.resetpassword.ui.ResetPasswordActivity
 import cc.brainbook.android.project.login.result.Result;
 import cc.brainbook.android.project.login.useraccount.authentication.ui.register.RegisterActivity;
 import cc.brainbook.android.project.login.util.PrefsUtil;
-import cn.sharesdk.framework.Platform;
-import cn.sharesdk.framework.PlatformActionListener;
-import cn.sharesdk.framework.ShareSDK;
-import cn.sharesdk.twitter.Twitter;
 
-public class LoginActivity extends AppCompatActivity implements View.OnClickListener, OnLoginCompleteListener {
+public class LoginActivity extends AppCompatActivity implements View.OnClickListener, OnOauthCompleteListener {
     private static final String KEY_REMEMBER_USERNAME = "remember_username";
     private static final String KEY_REMEMBER_PASSWORD = "remember_password";
 
@@ -153,7 +148,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     showLoginFailed(result.getError());
                 } else {
                     if (result.getSuccess() != null)
-                        updateUI(result.getSuccess());
+                        Toast.makeText(getApplicationContext(), result.getSuccess(), Toast.LENGTH_LONG).show();
 
                     ///[RememberMe]登陆成功后如果勾选了RememberMe，则保存SharedPreferences为用户名/密码，否则保存为null
                     saveRememberMe(true);
@@ -308,15 +303,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         });
     }
 
-    private void actionLogin() {
-        ///[FIX#IME_ACTION_DONE没检验form表单状态]
-        if (loginViewModel.getLoginFormState().getValue() != null
-                && loginViewModel.getLoginFormState().getValue().isDataValid()) {
-            loginViewModel.login(etUsername.getText().toString(),
-                    etPassword.getText().toString());
-        }
-    }
-
     /**
      * 根据SharedPreferences是否保存用户名/密码来设置RememberMe的初始选择状态
      *
@@ -348,14 +334,21 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
-    private void updateUI(@StringRes Integer successString) {
-        Toast.makeText(getApplicationContext(), successString, Toast.LENGTH_LONG).show();
+    private void actionLogin() {
+        ///[FIX#IME_ACTION_DONE没检验form表单状态]
+        if (loginViewModel.getLoginFormState().getValue() != null
+                && loginViewModel.getLoginFormState().getValue().isDataValid()) {
+            loginViewModel.login(etUsername.getText().toString(),
+                    etPassword.getText().toString());
+        }
     }
 
     private void showLoginFailed(@StringRes Integer errorString) {
         Toast.makeText(getApplicationContext(), errorString, Toast.LENGTH_SHORT).show();
     }
 
+
+    /* --------------------- ///[oAuth] --------------------- */
     private void initEasyLogin() {
         tvConnectedStatus = (TextView) findViewById(R.id.connected_status);
 
@@ -424,10 +417,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     protected void onResume() {
         super.onResume();
 
-        ///updateStatuses
-        updateStatuses();
+        ///updateUI
+        updateUI();
     }
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -436,50 +428,60 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     @Override
-    public void onLoginSuccess(SocialNetwork.Network network, AccessToken accessToken) {
-        Log.d("TAG", network + " Login successful: " + accessToken.getToken()
+    public void onOauthSuccess(SocialNetwork.Network network, AccessToken accessToken) {
+        Log.d("TAG", network + " Oauth successful: " + accessToken.getToken()
                 + "|||" + accessToken.getUserId()
                 + "|||" + accessToken.getUserName()
                 + "|||" + accessToken.getEmail()
                 + "|||" + accessToken.getPhotoUrl());
 
-        ///updateStatuses
-        updateStatuses();
-    }
-
-    @Override
-    public void onError(SocialNetwork.Network socialNetwork, String errorMessage) {
-        Log.e("TAG", "ERROR!" + socialNetwork + "|||" + errorMessage);
-        Toast.makeText(getApplicationContext(), socialNetwork.name() + ": " + errorMessage,
-                Toast.LENGTH_SHORT).show();
-    }
-
-    private void updateStatuses() {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                final StringBuilder content = new StringBuilder();
-                for (SocialNetwork socialNetwork : easyLogin.getInitializedSocialNetworks()) {
-                    content.append(socialNetwork.getNetwork())
-                            .append(": ")
-                            .append(socialNetwork.isConnected())
-                            .append("\n");
+                ///updateUI
+                updateUI();
 
-                    socialNetwork.setButtonEnabled(!socialNetwork.isConnected());
-                }
+                Toast.makeText(getApplicationContext(), network + " Oauth successful", Toast.LENGTH_SHORT).show();
+            }
+        });
 
-                tvConnectedStatus.setText(content.toString());
+        ///todo ... oAuthLogin()
+
+    }
+
+    @Override
+    public void onOauthError(SocialNetwork.Network socialNetwork, String errorMessage) {
+        Log.e("TAG", "ERROR!" + socialNetwork + "|||" + errorMessage);
+
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                ///updateUI
+                updateUI();
+
+                Toast.makeText(getApplicationContext(), socialNetwork.name() + ": " + errorMessage,
+                        Toast.LENGTH_SHORT).show();
             }
         });
     }
 
-    public void logoutAllNetworks(View view) {
+    private void updateUI() {
+        final StringBuilder content = new StringBuilder();
         for (SocialNetwork socialNetwork : easyLogin.getInitializedSocialNetworks()) {
-            socialNetwork.logout();
+            content.append(socialNetwork.getNetwork())
+                    .append(": ")
+                    .append(socialNetwork.isConnected())
+                    .append("\n");
+
+            socialNetwork.setButtonEnabled(!socialNetwork.isConnected());
+
+            if (socialNetwork.isConnected()) {
+                Log.d("TAG", "updateUI(): " + socialNetwork.getNetwork());
+            }
+
         }
 
-        ///updateStatuses
-        updateStatuses();
+        tvConnectedStatus.setText(content.toString());
     }
 
 }
