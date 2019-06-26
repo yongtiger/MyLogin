@@ -15,7 +15,7 @@ public class EasyLogin {
 
     private static EasyLogin instance = null;
 
-    private Map<SocialNetwork.Network, SocialNetwork> socialNetworksMap = new HashMap<>();
+    private HashMap<SocialNetwork.Network, SocialNetwork> socialNetworksMap = new HashMap<>();
 
     private EasyLogin() {}
 
@@ -31,9 +31,9 @@ public class EasyLogin {
 
 
     public void addSocialNetwork(SocialNetwork socialNetwork) {
-        if (!hasSocialNetwork(socialNetwork.getNetwork())) {
-            socialNetworksMap.put(socialNetwork.getNetwork(), socialNetwork);
-        }
+        ///If the map previously contained a mapping for the key, the old value is replaced.
+        ///https://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html#put%28K,%20V%29
+        socialNetworksMap.put(socialNetwork.getNetwork(), socialNetwork);
     }
 
     public boolean hasSocialNetwork(SocialNetwork.Network network) {
