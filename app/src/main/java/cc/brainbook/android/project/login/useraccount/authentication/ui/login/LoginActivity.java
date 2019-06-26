@@ -71,7 +71,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     ///[oAuth#EasyLogin]
     private EasyLogin easyLogin;
     private TextView tvConnectedStatus;
-    private Button btnLogoutAllNetworks;
     private GoogleNetwork googlePlusNetwork;
     private FacebookNetwork facebookNetwork;
     private TwitterNetwork twitterNetwork;
