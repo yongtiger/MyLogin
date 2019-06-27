@@ -12,11 +12,7 @@ import cc.brainbook.android.project.login.R;
 import cc.brainbook.android.project.login.resetpassword.data.ResetPasswordRepository;
 import cc.brainbook.android.project.login.resetpassword.data.model.ResetPasswordUser;
 import cc.brainbook.android.project.login.resetpassword.exception.ResetPasswordException;
-import cc.brainbook.android.project.login.resetpassword.interfaces.CheckSendModeCallback;
-import cc.brainbook.android.project.login.resetpassword.interfaces.FindUserCallback;
 import cc.brainbook.android.project.login.resetpassword.interfaces.ResetPasswordCallback;
-import cc.brainbook.android.project.login.resetpassword.interfaces.SendVerificationCodeCallback;
-import cc.brainbook.android.project.login.resetpassword.interfaces.VerifyCodeCallback;
 import cc.brainbook.android.project.login.result.Result;
 
 import static cc.brainbook.android.project.login.config.Config.REGEXP_PASSWORD;
@@ -103,10 +99,9 @@ public class ResetPasswordViewModel extends ViewModel {
 
     public void findUser(String username) {
         // can be launched in a separate asynchronous job
-        resetPasswordRepository.findUser(username, new FindUserCallback() {
+        resetPasswordRepository.findUser(username, new ResetPasswordCallback() {
             @Override
-            public void onSuccess(ResetPasswordUser resetPasswordUser) {
-                ///[返回结果及错误处理]返回结果
+            public void onSuccess(Object object) {
                 result.postValue(new Result(null, null));   ///use live data's postValue(..) method from background thread.
             }
 
@@ -120,9 +115,11 @@ public class ResetPasswordViewModel extends ViewModel {
 
     public void checkSendMode(String email, String mobile) {
         // can be launched in a separate asynchronous job
-        resetPasswordRepository.checkSendMode(getUserId(), email, mobile, new CheckSendModeCallback() {
+        resetPasswordRepository.checkSendMode(getUserId(), email, mobile, new ResetPasswordCallback() {
             @Override
-            public void onSuccess(int sendMode) {
+            public void onSuccess(Object object) {
+                final int sendMode = (int) object;
+
                 ///[SendMode传递参数给下个fragment]
                 setSendMode(sendMode);
 
@@ -140,9 +137,11 @@ public class ResetPasswordViewModel extends ViewModel {
 
     public void sendVerificationCode() {
         // can be launched in a separate asynchronous job
-        resetPasswordRepository.sendVerificationCode(getUserId(), getSendMode(), new SendVerificationCodeCallback() {
+        resetPasswordRepository.sendVerificationCode(getUserId(), getSendMode(), new ResetPasswordCallback() {
             @Override
-            public void onSuccess(String sessionId) {
+            public void onSuccess(Object object) {
+                final String sessionId = (String) object;
+
                 ///[SessionId]
                 setSessionId(sessionId);
 
@@ -160,9 +159,9 @@ public class ResetPasswordViewModel extends ViewModel {
 
     public void verifyCode(String verificationCode) {
         // can be launched in a separate asynchronous job
-        resetPasswordRepository.verifyCode(getSessionId(), verificationCode, new VerifyCodeCallback() {
+        resetPasswordRepository.verifyCode(getSessionId(), verificationCode, new ResetPasswordCallback() {
             @Override
-            public void onSuccess() {
+            public void onSuccess(Object object) {
                 ///[返回结果及错误处理]返回结果
                 result.postValue(new Result(null, null));   ///use live data's postValue(..) method from background thread.
             }
@@ -179,7 +178,7 @@ public class ResetPasswordViewModel extends ViewModel {
         // can be launched in a separate asynchronous job
         resetPasswordRepository.resetPassword(getUserId(), password, new ResetPasswordCallback() {
             @Override
-            public void onSuccess() {
+            public void onSuccess(Object object) {
                 ///[返回结果及错误处理]返回结果
                 result.postValue(new Result(R.string.result_success_reset_password, null));   ///use live data's postValue(..) method from background thread.
             }

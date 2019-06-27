@@ -2,11 +2,7 @@ package cc.brainbook.android.project.login.resetpassword.data;
 
 import cc.brainbook.android.project.login.resetpassword.data.model.ResetPasswordUser;
 import cc.brainbook.android.project.login.resetpassword.exception.ResetPasswordException;
-import cc.brainbook.android.project.login.resetpassword.interfaces.CheckSendModeCallback;
-import cc.brainbook.android.project.login.resetpassword.interfaces.FindUserCallback;
 import cc.brainbook.android.project.login.resetpassword.interfaces.ResetPasswordCallback;
-import cc.brainbook.android.project.login.resetpassword.interfaces.SendVerificationCodeCallback;
-import cc.brainbook.android.project.login.resetpassword.interfaces.VerifyCodeCallback;
 
 public class ResetPasswordRepository {
     private static volatile ResetPasswordRepository sInstance;
@@ -29,59 +25,62 @@ public class ResetPasswordRepository {
         return sInstance;
     }
 
-    public void findUser(String username, final FindUserCallback findUserCallback) {
-        mResetPasswordDataSource.findUser(username, new FindUserCallback(){
+    public void findUser(String username, final ResetPasswordCallback resetPasswordCallback) {
+        mResetPasswordDataSource.findUser(username, new ResetPasswordCallback(){
             @Override
-            public void onSuccess(ResetPasswordUser resetPasswordUser) {
+            public void onSuccess(Object object) {
+                final ResetPasswordUser resetPasswordUser = (ResetPasswordUser) object;
                 setResetPasswordUser(resetPasswordUser);
-                findUserCallback.onSuccess(resetPasswordUser);
+                resetPasswordCallback.onSuccess(resetPasswordUser);
             }
 
             @Override
             public void onError(ResetPasswordException e) {
-                findUserCallback.onError(e);
+                resetPasswordCallback.onError(e);
             }
         });
     }
 
-    public void checkSendMode(String userId, String email, String mobile, final CheckSendModeCallback checkSendModeCallback) {
-        mResetPasswordDataSource.checkSendMode(userId, email, mobile, new CheckSendModeCallback(){
+    public void checkSendMode(String userId, String email, String mobile, final ResetPasswordCallback resetPasswordCallback) {
+        mResetPasswordDataSource.checkSendMode(userId, email, mobile, new ResetPasswordCallback(){
             @Override
-            public void onSuccess(int sendMode) {
-                checkSendModeCallback.onSuccess(sendMode);
+            public void onSuccess(Object object) {
+                final int sendMode = (int) object;
+                resetPasswordCallback.onSuccess(sendMode);
             }
 
             @Override
             public void onError(ResetPasswordException e) {
-                checkSendModeCallback.onError(e);
+                resetPasswordCallback.onError(e);
             }
         });
     }
 
-    public void sendVerificationCode(String userId, int sendMode, final SendVerificationCodeCallback verificationCodeCallback) {
-        mResetPasswordDataSource.sendVerificationCode(userId, sendMode, new SendVerificationCodeCallback(){
+    public void sendVerificationCode(String userId, int sendMode, final ResetPasswordCallback resetPasswordCallback) {
+        mResetPasswordDataSource.sendVerificationCode(userId, sendMode, new ResetPasswordCallback(){
             @Override
-            public void onSuccess(String sessionId) {
-                verificationCodeCallback.onSuccess(sessionId);
+            public void onSuccess(Object object) {
+                final String sessionId = (String) object;
+                resetPasswordCallback.onSuccess(sessionId);
             }
 
             @Override
             public void onError(ResetPasswordException e) {
-                verificationCodeCallback.onError(e);
+                resetPasswordCallback.onError(e);
             }
         });
     }
 
-    public void verifyCode(String sessionId, String verificationCode, final VerifyCodeCallback verifyCodeCallback) {
-        mResetPasswordDataSource.verifyCode(sessionId, verificationCode, new VerifyCodeCallback(){
+    public void verifyCode(String sessionId, String verificationCode, final ResetPasswordCallback resetPasswordCallback) {
+        mResetPasswordDataSource.verifyCode(sessionId, verificationCode, new ResetPasswordCallback(){
             @Override
-            public void onSuccess() {
-                verifyCodeCallback.onSuccess();
+            public void onSuccess(Object object) {
+                resetPasswordCallback.onSuccess(null);
             }
 
             @Override
             public void onError(ResetPasswordException e) {
-                verifyCodeCallback.onError(e);
+                resetPasswordCallback.onError(e);
             }
         });
     }
@@ -89,8 +88,8 @@ public class ResetPasswordRepository {
     public void resetPassword(String userId, String password, final ResetPasswordCallback resetPasswordCallback) {
         mResetPasswordDataSource.resetPassword(userId, password, new ResetPasswordCallback(){
             @Override
-            public void onSuccess() {
-                resetPasswordCallback.onSuccess();
+            public void onSuccess(Object object) {
+                resetPasswordCallback.onSuccess(null);
             }
 
             @Override
