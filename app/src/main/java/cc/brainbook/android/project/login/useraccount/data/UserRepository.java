@@ -1,14 +1,9 @@
 package cc.brainbook.android.project.login.useraccount.data;
 
 import cc.brainbook.android.project.login.application.MyApplication;
-import cc.brainbook.android.project.login.useraccount.modify.exception.ModifyEmailException;
-import cc.brainbook.android.project.login.useraccount.modify.exception.ModifyMobileException;
-import cc.brainbook.android.project.login.useraccount.modify.exception.ModifyPasswordException;
-import cc.brainbook.android.project.login.useraccount.modify.exception.ModifyUsernameException;
-import cc.brainbook.android.project.login.useraccount.modify.interfaces.ModifyEmailCallback;
-import cc.brainbook.android.project.login.useraccount.modify.interfaces.ModifyMobileCallback;
-import cc.brainbook.android.project.login.useraccount.modify.interfaces.ModifyPasswordCallback;
-import cc.brainbook.android.project.login.useraccount.modify.interfaces.ModifyUsernameCallback;
+import cc.brainbook.android.project.login.oauth.networks.SocialNetwork;
+import cc.brainbook.android.project.login.useraccount.modify.exception.ModifyException;
+import cc.brainbook.android.project.login.useraccount.modify.interfaces.ModifyCallback;
 import cc.brainbook.android.project.login.useraccount.authentication.exception.LoginException;
 import cc.brainbook.android.project.login.useraccount.authentication.exception.LogoutException;
 import cc.brainbook.android.project.login.useraccount.authentication.exception.RegisterException;
@@ -97,27 +92,7 @@ public class UserRepository {
         });
     }
 
-    ///[oAuth]
-    public void oAuthLogin(String network, String openId, final LoginCallback loginCallback) {
-        // handle login
-        mDataSource.oAuthLogin(network, openId, new LoginCallback(){
-            @Override
-            public void onSuccess(LoggedInUser loggedInUser) {
-                setLoggedInUser(loggedInUser);
-                loginCallback.onSuccess(loggedInUser);
-            }
-
-            @Override
-            public void onError(LoginException e) {
-                loginCallback.onError(e);
-            }
-        });
-    }
-
     public void logout(final LogoutCallback logoutCallback) {
-        ///[oAuth]
-//        oAuthLogout();    //////?????
-
         mDataSource.logout(getLoggedInUser(), new LogoutCallback() {
             @Override
             public void onSuccess() {
@@ -137,64 +112,83 @@ public class UserRepository {
     }
 
 
-    public void modifyUsername(final String username, final ModifyUsernameCallback modifyUsernameCallback) {
-        mDataSource.modifyUsername(getLoggedInUser(), username, new ModifyUsernameCallback(){
+    /* --------------------- ///[Modify Account] --------------------- */
+    public void modifyUsername(final String username, final ModifyCallback modifyCallback) {
+        mDataSource.modifyUsername(getLoggedInUser(), username, new ModifyCallback(){
             @Override
             public void onSuccess() {
                 getLoggedInUser().setUsername(username);
                 setLoggedInUser(getLoggedInUser());
-                modifyUsernameCallback.onSuccess();
+                modifyCallback.onSuccess();
             }
 
             @Override
-            public void onError(ModifyUsernameException e) {
-                modifyUsernameCallback.onError(e);
+            public void onError(ModifyException e) {
+                modifyCallback.onError(e);
             }
         });
     }
 
-    public void modifyPassword(String password, final ModifyPasswordCallback modifyPasswordCallback) {
-        mDataSource.modifyPassword(getLoggedInUser(), password, new ModifyPasswordCallback(){
+    public void modifyPassword(String password, final ModifyCallback modifyCallback) {
+        mDataSource.modifyPassword(getLoggedInUser(), password, new ModifyCallback(){
             @Override
             public void onSuccess() {
-                modifyPasswordCallback.onSuccess();
+                modifyCallback.onSuccess();
             }
 
             @Override
-            public void onError(ModifyPasswordException e) {
-                modifyPasswordCallback.onError(e);
+            public void onError(ModifyException e) {
+                modifyCallback.onError(e);
             }
         });
     }
 
-    public void modifyEmail(final String email, final ModifyEmailCallback modifyEmailCallback) {
-        mDataSource.modifyEmail(getLoggedInUser(), email, new ModifyEmailCallback(){
+    public void modifyEmail(final String email, final ModifyCallback modifyCallback) {
+        mDataSource.modifyEmail(getLoggedInUser(), email, new ModifyCallback(){
             @Override
             public void onSuccess() {
                 getLoggedInUser().setEmail(email);
                 setLoggedInUser(getLoggedInUser());
-                modifyEmailCallback.onSuccess();
+                modifyCallback.onSuccess();
             }
 
             @Override
-            public void onError(ModifyEmailException e) {
-                modifyEmailCallback.onError(e);
+            public void onError(ModifyException e) {
+                modifyCallback.onError(e);
             }
         });
     }
 
-    public void modifyMobile(final String mobile, final ModifyMobileCallback modifyMobileCallback) {
-        mDataSource.modifyMobile(getLoggedInUser(), mobile, new ModifyMobileCallback(){
+    public void modifyMobile(final String mobile, final ModifyCallback modifyCallback) {
+        mDataSource.modifyMobile(getLoggedInUser(), mobile, new ModifyCallback(){
             @Override
             public void onSuccess() {
                 getLoggedInUser().setMobile(mobile);
                 setLoggedInUser(getLoggedInUser());
-                modifyMobileCallback.onSuccess();
+                modifyCallback.onSuccess();
             }
 
             @Override
-            public void onError(ModifyMobileException e) {
-                modifyMobileCallback.onError(e);
+            public void onError(ModifyException e) {
+                modifyCallback.onError(e);
+            }
+        });
+    }
+
+
+    /* --------------------- ///[oAuth] --------------------- */
+    public void oAuthLogin(SocialNetwork.Network network, String openId, final LoginCallback loginCallback) {
+        // handle login
+        mDataSource.oAuthLogin(network, openId, new LoginCallback(){
+            @Override
+            public void onSuccess(LoggedInUser loggedInUser) {
+                setLoggedInUser(loggedInUser);
+                loginCallback.onSuccess(loggedInUser);
+            }
+
+            @Override
+            public void onError(LoginException e) {
+                loginCallback.onError(e);
             }
         });
     }

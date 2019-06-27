@@ -11,6 +11,7 @@ public class LoginException extends RuntimeException {
     public static final int EXCEPTION_INVALID_PARAMETERS = -1;
     public static final int EXCEPTION_INVALID_USERNAME = 1;
     public static final int EXCEPTION_INVALID_PASSWORD = 2;
+    public static final int EXCEPTION_INVALID_OAUTH_NETWORK_AND_OPENID = 3;
 
     private int code;
 
@@ -49,7 +50,8 @@ public class LoginException extends RuntimeException {
             EXCEPTION_UNKNOWN,
             EXCEPTION_INVALID_PARAMETERS,
             EXCEPTION_INVALID_USERNAME,
-            EXCEPTION_INVALID_PASSWORD
+            EXCEPTION_INVALID_PASSWORD,
+            EXCEPTION_INVALID_OAUTH_NETWORK_AND_OPENID
     })
     @Retention(RetentionPolicy.SOURCE)
     public @interface ExceptionType {}

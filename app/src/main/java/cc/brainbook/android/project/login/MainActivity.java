@@ -18,6 +18,11 @@ import cc.brainbook.android.project.login.useraccount.authentication.exception.L
 import cc.brainbook.android.project.login.useraccount.authentication.interfaces.LogoutCallback;
 import cc.brainbook.android.project.login.useraccount.authentication.ui.login.LoginActivity;
 
+import static cc.brainbook.android.project.login.useraccount.authentication.exception.LogoutException.EXCEPTION_INVALID_PARAMETERS;
+import static cc.brainbook.android.project.login.useraccount.authentication.exception.LogoutException.EXCEPTION_IO_EXCEPTION;
+import static cc.brainbook.android.project.login.useraccount.authentication.exception.LogoutException.EXCEPTION_TOKEN_IS_INVALID_OR_EXPIRED;
+import static cc.brainbook.android.project.login.useraccount.authentication.exception.LogoutException.EXCEPTION_UNKNOWN;
+
 public class MainActivity extends AppCompatActivity {
     private static final int REQUEST_CODE_LOGIN = 1;
 
@@ -91,28 +96,10 @@ public class MainActivity extends AppCompatActivity {
 
                     @Override
                     public void onError(LogoutException e) {
-                        ///[返回结果及错误处理]错误处理
-                        final int error;
-                        switch (e.getCode()) {
-                            case -4:
-                                error = R.string.error_token_is_invalid_or_expired;
-                                break;
-                            case -3:
-                                error = R.string.error_network_error;
-                                break;
-                            case -2:
-                                error = R.string.error_unknown;
-                                break;
-                            case -1:
-                                error = R.string.error_invalid_parameters;
-                                break;
-                            default:
-                                error = R.string.error_unknown;
-                        }
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                Toast.makeText(getApplicationContext(), getString(error), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(), getString(getErrorIntegerRes(e)), Toast.LENGTH_SHORT).show();
                             }
                         });
                     }
@@ -151,4 +138,24 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private int getErrorIntegerRes(LogoutException e) {
+        final int error;
+        switch (e.getCode()) {
+            case EXCEPTION_TOKEN_IS_INVALID_OR_EXPIRED:
+                error = R.string.error_token_is_invalid_or_expired;
+                break;
+            case EXCEPTION_IO_EXCEPTION:
+                error = R.string.error_network_error;
+                break;
+            case EXCEPTION_UNKNOWN:
+                error = R.string.error_unknown;
+                break;
+            case EXCEPTION_INVALID_PARAMETERS:
+                error = R.string.error_invalid_parameters;
+                break;
+            default:
+                error = R.string.error_unknown;
+        }
+        return error;
+    }
 }

@@ -11,11 +11,7 @@ import java.util.regex.Pattern;
 import cc.brainbook.android.project.login.R;
 import cc.brainbook.android.project.login.resetpassword.data.ResetPasswordRepository;
 import cc.brainbook.android.project.login.resetpassword.data.model.ResetPasswordUser;
-import cc.brainbook.android.project.login.resetpassword.exception.CheckSendModeException;
-import cc.brainbook.android.project.login.resetpassword.exception.FindUserException;
-import cc.brainbook.android.project.login.resetpassword.exception.SendVerificationCodeException;
 import cc.brainbook.android.project.login.resetpassword.exception.ResetPasswordException;
-import cc.brainbook.android.project.login.resetpassword.exception.VerifyCodeException;
 import cc.brainbook.android.project.login.resetpassword.interfaces.CheckSendModeCallback;
 import cc.brainbook.android.project.login.resetpassword.interfaces.FindUserCallback;
 import cc.brainbook.android.project.login.resetpassword.interfaces.ResetPasswordCallback;
@@ -115,30 +111,9 @@ public class ResetPasswordViewModel extends ViewModel {
             }
 
             @Override
-            public void onError(FindUserException e) {
-                ///[返回结果及错误处理]错误处理
-                int error;
-                switch (e.getCode()) {
-                    case -3:
-                        error = R.string.error_network_error;
-                        break;
-                    case -2:
-                        error = R.string.error_unknown;
-                        break;
-                    case -1:
-                        error = R.string.error_invalid_parameters;
-                        break;
-                    case 1:
-                        error = R.string.error_invalid_username;
-                        break;
-                    case 2:
-                        error = R.string.result_error_cannot_reset_password;
-                        break;
-                    default:
-                        error = R.string.error_unknown;
-                }
+            public void onError(ResetPasswordException e) {
                 ///use live data's postValue(..) method from background thread.
-                result.postValue(new Result(null, error));
+                result.postValue(new Result(null, getErrorIntegerRes(e)));
             }
         });
     }
@@ -156,39 +131,9 @@ public class ResetPasswordViewModel extends ViewModel {
             }
 
             @Override
-            public void onError(CheckSendModeException e) {
-                ///[返回结果及错误处理]错误处理
-                int error;
-                switch (e.getCode()) {
-                    case -3:
-                        error = R.string.error_network_error;
-                        break;
-                    case -2:
-                        error = R.string.error_unknown;
-                        break;
-                    case -1:
-                        error = R.string.error_invalid_parameters;
-                        break;
-                    case 1:
-                        error = R.string.result_error_invalid_user_id;
-                        break;
-                    case 2:
-                        error = R.string.result_error_cannot_reset_password;
-                        break;
-                    case 3:
-                        error = R.string.result_error_not_match_email;
-                        break;
-                    case 4:
-                        error = R.string.result_error_not_match_mobile;
-                        break;
-                    case 5:
-                        error = R.string.result_error_not_match_email_or_mobile;
-                        break;
-                    default:
-                        error = R.string.error_unknown;
-                }
+            public void onError(ResetPasswordException e) {
                 ///use live data's postValue(..) method from background thread.
-                result.postValue(new Result(null, error));
+                result.postValue(new Result(null, getErrorIntegerRes(e)));
             }
         });
     }
@@ -206,39 +151,9 @@ public class ResetPasswordViewModel extends ViewModel {
             }
 
             @Override
-            public void onError(SendVerificationCodeException e) {
-                ///[返回结果及错误处理]错误处理
-                int error;
-                switch (e.getCode()) {
-                    case -3:
-                        error = R.string.error_network_error;
-                        break;
-                    case -2:
-                        error = R.string.error_unknown;
-                        break;
-                    case -1:
-                        error = R.string.error_invalid_parameters;
-                        break;
-                    case 1:
-                        error = R.string.result_error_invalid_user_id;
-                        break;
-                    case 2:
-                        error = R.string.result_error_cannot_reset_password;
-                        break;
-                    case 3:
-                        error = R.string.result_error_failed_to_send_email;
-                        break;
-                    case 4:
-                        error = R.string.result_error_failed_to_send_mobile;
-                        break;
-                    case 5:
-                        error = R.string.result_error_failed_to_send_email_and_mobile;
-                        break;
-                    default:
-                        error = R.string.error_unknown;
-                }
+            public void onError(ResetPasswordException e) {
                 ///use live data's postValue(..) method from background thread.
-                result.postValue(new ResetPasswordSendVerificationCodeResult(null, error));
+                result.postValue(new ResetPasswordSendVerificationCodeResult(null, getErrorIntegerRes(e)));
             }
         });
     }
@@ -253,30 +168,9 @@ public class ResetPasswordViewModel extends ViewModel {
             }
 
             @Override
-            public void onError(VerifyCodeException e) {
-                ///[返回结果及错误处理]错误处理
-                int error;
-                switch (e.getCode()) {
-                    case -3:
-                        error = R.string.error_network_error;
-                        break;
-                    case -2:
-                        error = R.string.error_unknown;
-                        break;
-                    case -1:
-                        error = R.string.error_invalid_parameters;
-                        break;
-                    case 1:
-                        error = R.string.result_error_invalid_user_id;
-                        break;
-                    case 2:
-                        error = R.string.result_error_invalid_verification_code;
-                        break;
-                    default:
-                        error = R.string.error_unknown;
-                }
+            public void onError(ResetPasswordException e) {
                 ///use live data's postValue(..) method from background thread.
-                result.postValue(new Result(null, error));
+                result.postValue(new Result(null, getErrorIntegerRes(e)));
             }
         });
     }
@@ -292,26 +186,8 @@ public class ResetPasswordViewModel extends ViewModel {
 
             @Override
             public void onError(ResetPasswordException e) {
-                ///[返回结果及错误处理]错误处理
-                int error;
-                switch (e.getCode()) {
-                    case -3:
-                        error = R.string.error_network_error;
-                        break;
-                    case -2:
-                        error = R.string.error_unknown;
-                        break;
-                    case -1:
-                        error = R.string.error_invalid_parameters;
-                        break;
-                    case 1:
-                        error = R.string.result_error_invalid_user_id;
-                        break;
-                    default:
-                        error = R.string.error_unknown;
-                }
                 ///use live data's postValue(..) method from background thread.
-                result.postValue(new Result(null, error));
+                result.postValue(new Result(null, getErrorIntegerRes(e)));
             }
         });
     }
@@ -369,6 +245,54 @@ public class ResetPasswordViewModel extends ViewModel {
     // A placeholder repeat password validation
     private boolean isRepeatPasswordValid(String password, String repeatPassword) {
         return !TextUtils.isEmpty(password) && password.equals(repeatPassword);
+    }
+
+    private int getErrorIntegerRes(ResetPasswordException e) {
+        int error;
+        switch (e.getCode()) {
+            case -3:
+                error = R.string.error_network_error;
+                break;
+            case -2:
+                error = R.string.error_unknown;
+                break;
+            case -1:
+                error = R.string.error_invalid_parameters;
+                break;
+            case 1:
+                error = R.string.result_error_cannot_reset_password;
+                break;
+            case 2:
+                error = R.string.error_invalid_username;
+                break;
+            case 3:
+                error = R.string.result_error_invalid_user_id;
+                break;
+            case 4:
+                error = R.string.result_error_not_match_email;
+                break;
+            case 5:
+                error = R.string.result_error_not_match_mobile;
+                break;
+            case 6:
+                error = R.string.result_error_not_match_email_or_mobile;
+                break;
+            case 7:
+                error = R.string.result_error_failed_to_send_email;
+                break;
+            case 8:
+                error = R.string.result_error_failed_to_send_mobile;
+                break;
+            case 9:
+                error = R.string.result_error_failed_to_send_email_and_mobile;
+                break;
+            case 10:
+                error = R.string.result_error_invalid_verification_code;
+                break;
+            default:
+                error = R.string.error_unknown;
+        }
+        return error;
     }
 
 }

@@ -10,11 +10,11 @@ public class Config {
 //        public static final String LOGIN_URL = HTTP_DOMAIN + "/_study/_login/MyLogin/member/login.php?start_debug=1&debug_stop=1&use_remote=1&debug_host=" + DEBUG_HOST;
         public static final String LOGIN_URL = HTTP_DOMAIN + "/_study/_login/MyLogin/member/login.php";
 
-    public static final String OAUTH_LOGIN_URL = HTTP_DOMAIN + "/_study/_login/MyLogin/member/oauth_login.php?start_debug=1&debug_stop=1&use_remote=1&debug_host=" + DEBUG_HOST;
-//    public static final String OAUTH_LOGIN_URL = HTTP_DOMAIN + "/_study/_login/MyLogin/member/oauth_login.php";
-
 //    public static final String LOGOUT_URL = HTTP_DOMAIN + "/_study/_login/MyLogin/member/logout.php?start_debug=1&debug_stop=1&use_remote=1&debug_host=" + DEBUG_HOST;
     public static final String LOGOUT_URL = HTTP_DOMAIN + "/_study/_login/MyLogin/member/logout.php";
+
+    public static final String OAUTH_LOGIN_URL = HTTP_DOMAIN + "/_study/_login/MyLogin/member/oauth_login.php?start_debug=1&debug_stop=1&use_remote=1&debug_host=" + DEBUG_HOST;
+//    public static final String OAUTH_LOGIN_URL = HTTP_DOMAIN + "/_study/_login/MyLogin/member/oauth_login.php";
 
 //    public static final int CONNECT_TIMEOUT = 10;
     public static final int CONNECT_TIMEOUT = 300;  ///test

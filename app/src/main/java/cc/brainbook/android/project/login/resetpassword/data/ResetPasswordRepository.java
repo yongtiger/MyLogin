@@ -1,11 +1,7 @@
 package cc.brainbook.android.project.login.resetpassword.data;
 
 import cc.brainbook.android.project.login.resetpassword.data.model.ResetPasswordUser;
-import cc.brainbook.android.project.login.resetpassword.exception.CheckSendModeException;
-import cc.brainbook.android.project.login.resetpassword.exception.FindUserException;
-import cc.brainbook.android.project.login.resetpassword.exception.SendVerificationCodeException;
 import cc.brainbook.android.project.login.resetpassword.exception.ResetPasswordException;
-import cc.brainbook.android.project.login.resetpassword.exception.VerifyCodeException;
 import cc.brainbook.android.project.login.resetpassword.interfaces.CheckSendModeCallback;
 import cc.brainbook.android.project.login.resetpassword.interfaces.FindUserCallback;
 import cc.brainbook.android.project.login.resetpassword.interfaces.ResetPasswordCallback;
@@ -42,7 +38,7 @@ public class ResetPasswordRepository {
             }
 
             @Override
-            public void onError(FindUserException e) {
+            public void onError(ResetPasswordException e) {
                 findUserCallback.onError(e);
             }
         });
@@ -56,7 +52,7 @@ public class ResetPasswordRepository {
             }
 
             @Override
-            public void onError(CheckSendModeException e) {
+            public void onError(ResetPasswordException e) {
                 checkSendModeCallback.onError(e);
             }
         });
@@ -70,7 +66,7 @@ public class ResetPasswordRepository {
             }
 
             @Override
-            public void onError(SendVerificationCodeException e) {
+            public void onError(ResetPasswordException e) {
                 verificationCodeCallback.onError(e);
             }
         });
@@ -84,7 +80,7 @@ public class ResetPasswordRepository {
             }
 
             @Override
-            public void onError(VerifyCodeException e) {
+            public void onError(ResetPasswordException e) {
                 verifyCodeCallback.onError(e);
             }
         });

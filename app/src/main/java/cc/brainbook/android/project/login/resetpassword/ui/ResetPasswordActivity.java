@@ -1,8 +1,8 @@
 package cc.brainbook.android.project.login.resetpassword.ui;
 
+import android.os.Bundle;
 import android.support.annotation.StringRes;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.widget.Toast;
 
 import cc.brainbook.android.project.login.R;

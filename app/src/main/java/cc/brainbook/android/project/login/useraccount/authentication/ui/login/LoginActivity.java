@@ -141,6 +141,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         case R.string.login_error_invalid_password:
                             etPassword.requestFocus();
                             break;
+                        case R.string.error_invalid_oauth_network_and_openid:///[oAuth]
+                            etPassword.requestFocus();
+                            break;
                         default:    ///R.string.error_unknown
                     }
                     ///Display login failed
@@ -346,6 +349,25 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         Toast.makeText(getApplicationContext(), errorString, Toast.LENGTH_SHORT).show();
     }
 
+    private void updateUI() {
+        final StringBuilder content = new StringBuilder();
+        for (SocialNetwork socialNetwork : easyLogin.getInitializedSocialNetworks()) {
+            content.append(socialNetwork.getNetwork())
+                    .append(": ")
+                    .append(socialNetwork.isConnected())
+                    .append("\n");
+
+            socialNetwork.setButtonEnabled(!socialNetwork.isConnected());
+
+            if (socialNetwork.isConnected()) {
+                Log.d("TAG", "updateUI(): " + socialNetwork.getNetwork());
+            }
+
+        }
+
+        tvConnectedStatus.setText(content.toString());
+    }
+
 
     /* --------------------- ///[oAuth] --------------------- */
     private void initEasyLogin() {
@@ -408,7 +430,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     }
 
-    private void actionOAuthLogin(String network, String openId) {
+    private void actionOAuthLogin(SocialNetwork.Network network, String openId) {
         loginViewModel.oAuthLogin(network, openId);
     }
 
@@ -445,7 +467,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         });
 
         ///todo ... oAuthLogin()
-
+        actionOAuthLogin(network, accessToken.getUserId());
     }
 
     @Override
@@ -462,25 +484,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         Toast.LENGTH_SHORT).show();
             }
         });
-    }
-
-    private void updateUI() {
-        final StringBuilder content = new StringBuilder();
-        for (SocialNetwork socialNetwork : easyLogin.getInitializedSocialNetworks()) {
-            content.append(socialNetwork.getNetwork())
-                    .append(": ")
-                    .append(socialNetwork.isConnected())
-                    .append("\n");
-
-            socialNetwork.setButtonEnabled(!socialNetwork.isConnected());
-
-            if (socialNetwork.isConnected()) {
-                Log.d("TAG", "updateUI(): " + socialNetwork.getNetwork());
-            }
-
-        }
-
-        tvConnectedStatus.setText(content.toString());
     }
 
 }

@@ -5,15 +5,10 @@ import com.google.gson.Gson;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import cc.brainbook.android.project.login.oauth.networks.SocialNetwork;
 import cc.brainbook.android.project.login.useraccount.authentication.exception.LogoutException;
-import cc.brainbook.android.project.login.useraccount.modify.exception.ModifyEmailException;
-import cc.brainbook.android.project.login.useraccount.modify.exception.ModifyMobileException;
-import cc.brainbook.android.project.login.useraccount.modify.exception.ModifyPasswordException;
-import cc.brainbook.android.project.login.useraccount.modify.exception.ModifyUsernameException;
-import cc.brainbook.android.project.login.useraccount.modify.interfaces.ModifyEmailCallback;
-import cc.brainbook.android.project.login.useraccount.modify.interfaces.ModifyMobileCallback;
-import cc.brainbook.android.project.login.useraccount.modify.interfaces.ModifyPasswordCallback;
-import cc.brainbook.android.project.login.useraccount.modify.interfaces.ModifyUsernameCallback;
+import cc.brainbook.android.project.login.useraccount.modify.exception.ModifyException;
+import cc.brainbook.android.project.login.useraccount.modify.interfaces.ModifyCallback;
 import cc.brainbook.android.project.login.useraccount.authentication.exception.LoginException;
 import cc.brainbook.android.project.login.useraccount.authentication.exception.RegisterException;
 import cc.brainbook.android.project.login.useraccount.authentication.interfaces.RegisterCallback;
@@ -205,8 +200,366 @@ public class UserDataSource {
                 });
     }
 
-    ///[OAuth]
-    public void oAuthLogin(String network, String openId, final LoginCallback loginCallback) {
+    public void logout(LoggedInUser loggedInUser, final LogoutCallback logoutCallback) {
+        // 创建一个Request
+        final Request request = new Request.Builder()
+                .url(LOGOUT_URL)
+                .header(KEY_TOKEN, loggedInUser.getToken())
+                .build();
+
+        // 创建okHttpClient对象
+        final OkHttpClient mOkHttpClient = new OkHttpClient.Builder()
+                .connectTimeout(CONNECT_TIMEOUT, TimeUnit.SECONDS)
+                .readTimeout(CONNECT_TIMEOUT, TimeUnit.SECONDS)
+                .build();
+
+        // 请求加入调度
+        mOkHttpClient.newCall(request)
+                .enqueue(new Callback() {
+                    @Override
+                    public void onFailure(Call call, IOException e) {
+                        logoutCallback.onError(new LogoutException(LogoutException.EXCEPTION_IO_EXCEPTION, e.getCause()));
+                    }
+
+                    @Override
+                    public void onResponse(Call call, Response response) throws IOException {
+                        try {
+                            JSONObject jsonObject = null;
+                            if (response.body() != null) {
+                                jsonObject = new JSONObject(response.body().string());
+                            }
+
+                            if (jsonObject != null) {
+                                ///[返回结果及错误处理]
+                                switch (jsonObject.getInt(KEY_STATUS)) {
+                                    case -3:
+                                        logoutCallback.onError(new LogoutException(LogoutException.EXCEPTION_IO_EXCEPTION, jsonObject.getString(KEY_MESSAGE)));
+                                        break;
+                                    case -2:
+                                        logoutCallback.onError(new LogoutException(LogoutException.EXCEPTION_UNKNOWN, jsonObject.getString(KEY_MESSAGE)));
+                                        break;
+                                    case -1:
+                                        logoutCallback.onError(new LogoutException(LogoutException.EXCEPTION_TOKEN_IS_INVALID_OR_EXPIRED, jsonObject.getString(KEY_MESSAGE)));
+                                        break;
+                                    case 0:
+                                        logoutCallback.onSuccess();
+                                        break;
+                                    default:
+                                        logoutCallback.onError(new LogoutException(LogoutException.EXCEPTION_UNKNOWN));
+                                }
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+    }
+
+
+    /* --------------------- ///[Modify Account] --------------------- */
+    public void modifyUsername(LoggedInUser loggedInUser, String username, final ModifyCallback modifyCallback) {
+        ///https://stackoverflow.com/questions/34179922/okhttp-post-body-as-json
+        final JSONObject jsonObject = new JSONObject();
+        try {
+            //Populate the sendVerificationCode parameters
+            jsonObject.put(KEY_USERNAME, username);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        // 构建post的RequestBody
+        final RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), jsonObject.toString());
+
+        // 创建一个Request
+        final Request request = new Request.Builder()
+                .url(USER_ACCOUNT_MODIFY_USERNAME_URL)
+                .header(KEY_TOKEN, loggedInUser.getToken())
+                .post(requestBody)
+                .build();
+
+        // 创建okHttpClient对象
+        final OkHttpClient mOkHttpClient = new OkHttpClient.Builder()
+                .connectTimeout(CONNECT_TIMEOUT, TimeUnit.SECONDS)
+                .readTimeout(CONNECT_TIMEOUT, TimeUnit.SECONDS)
+                .build();
+
+        // 请求加入调度
+        mOkHttpClient.newCall(request)
+                .enqueue(new Callback() {
+                    @Override
+                    public void onFailure(Call call, IOException e) {
+                        ///[返回结果及错误处理]错误处理
+                        modifyCallback.onError(new ModifyException(ModifyException.EXCEPTION_IO_EXCEPTION, e.getCause()));
+                    }
+
+                    @Override
+                    public void onResponse(Call call, Response response) throws IOException {
+                        try {
+                            JSONObject jsonObject = null;
+                            if (response.body() != null) {
+                                jsonObject = new JSONObject(response.body().string());
+                            }
+
+                            if (jsonObject != null) {
+                                ///[返回结果及错误处理]
+                                switch (jsonObject.getInt(KEY_STATUS)) {
+                                    case -4:
+                                        modifyCallback.onError(new ModifyException(ModifyException.EXCEPTION_TOKEN_IS_INVALID_OR_EXPIRED, jsonObject.getString(KEY_MESSAGE)));
+                                        break;
+                                    case -3:
+                                        modifyCallback.onError(new ModifyException(ModifyException.EXCEPTION_IO_EXCEPTION, jsonObject.getString(KEY_MESSAGE)));
+                                        break;
+                                    case -2:
+                                        modifyCallback.onError(new ModifyException(ModifyException.EXCEPTION_UNKNOWN, jsonObject.getString(KEY_MESSAGE)));
+                                        break;
+                                    case -1:
+                                        modifyCallback.onError(new ModifyException(ModifyException.EXCEPTION_INVALID_PARAMETERS, jsonObject.getString(KEY_MESSAGE)));
+                                        break;
+                                    case 0:
+                                        modifyCallback.onSuccess();
+                                        break;
+                                    case 1:
+                                        modifyCallback.onError(new ModifyException(ModifyException.EXCEPTION_FAILED_TO_MODIFY_USERNAME, jsonObject.getString(KEY_MESSAGE)));
+                                        break;
+                                    default:
+                                        modifyCallback.onError(new ModifyException(ModifyException.EXCEPTION_UNKNOWN));
+                                }
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+    }
+
+    public void modifyPassword(LoggedInUser loggedInUser, String password, final ModifyCallback modifyCallback) {
+        ///https://stackoverflow.com/questions/34179922/okhttp-post-body-as-json
+        final JSONObject jsonObject = new JSONObject();
+        try {
+            //Populate the sendVerificationCode parameters
+            jsonObject.put(KEY_PASSWORD, password);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        // 构建post的RequestBody
+        final RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), jsonObject.toString());
+
+        // 创建一个Request
+        final Request request = new Request.Builder()
+                .url(USER_ACCOUNT_MODIFY_PASSWORD_URL)
+                .header(KEY_TOKEN, loggedInUser.getToken())
+                .post(requestBody)
+                .build();
+
+        // 创建okHttpClient对象
+        final OkHttpClient mOkHttpClient = new OkHttpClient.Builder()
+                .connectTimeout(CONNECT_TIMEOUT, TimeUnit.SECONDS)
+                .readTimeout(CONNECT_TIMEOUT, TimeUnit.SECONDS)
+                .build();
+
+        // 请求加入调度
+        mOkHttpClient.newCall(request)
+                .enqueue(new Callback() {
+                    @Override
+                    public void onFailure(Call call, IOException e) {
+                        ///[返回结果及错误处理]错误处理
+                        modifyCallback.onError(new ModifyException(ModifyException.EXCEPTION_IO_EXCEPTION, e.getCause()));
+                    }
+
+                    @Override
+                    public void onResponse(Call call, Response response) throws IOException {
+                        try {
+                            JSONObject jsonObject = null;
+                            if (response.body() != null) {
+                                jsonObject = new JSONObject(response.body().string());
+                            }
+
+                            if (jsonObject != null) {
+                                ///[返回结果及错误处理]
+                                switch (jsonObject.getInt(KEY_STATUS)) {
+                                    case -4:
+                                        modifyCallback.onError(new ModifyException(ModifyException.EXCEPTION_TOKEN_IS_INVALID_OR_EXPIRED, jsonObject.getString(KEY_MESSAGE)));
+                                        break;
+                                    case -3:
+                                        modifyCallback.onError(new ModifyException(ModifyException.EXCEPTION_IO_EXCEPTION, jsonObject.getString(KEY_MESSAGE)));
+                                        break;
+                                    case -2:
+                                        modifyCallback.onError(new ModifyException(ModifyException.EXCEPTION_UNKNOWN, jsonObject.getString(KEY_MESSAGE)));
+                                        break;
+                                    case -1:
+                                        modifyCallback.onError(new ModifyException(ModifyException.EXCEPTION_INVALID_PARAMETERS, jsonObject.getString(KEY_MESSAGE)));
+                                        break;
+                                    case 0:
+                                        modifyCallback.onSuccess();
+                                        break;
+                                    case 1:
+                                        modifyCallback.onError(new ModifyException(ModifyException.EXCEPTION_FAILED_TO_MODIFY_PASSWORD, jsonObject.getString(KEY_MESSAGE)));
+                                        break;
+                                    default:
+                                        modifyCallback.onError(new ModifyException(ModifyException.EXCEPTION_UNKNOWN));
+                                }
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+    }
+
+    public void modifyEmail(LoggedInUser loggedInUser, String email, final ModifyCallback modifyCallback) {
+        ///https://stackoverflow.com/questions/34179922/okhttp-post-body-as-json
+        final JSONObject jsonObject = new JSONObject();
+        try {
+            //Populate the sendVerificationCode parameters
+            jsonObject.put(KEY_EMAIL, email);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        // 构建post的RequestBody
+        final RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), jsonObject.toString());
+
+        // 创建一个Request
+        final Request request = new Request.Builder()
+                .url(USER_ACCOUNT_MODIFY_EMAIL_URL)
+                .header(KEY_TOKEN, loggedInUser.getToken())
+                .post(requestBody)
+                .build();
+
+        // 创建okHttpClient对象
+        final OkHttpClient mOkHttpClient = new OkHttpClient.Builder()
+                .connectTimeout(CONNECT_TIMEOUT, TimeUnit.SECONDS)
+                .readTimeout(CONNECT_TIMEOUT, TimeUnit.SECONDS)
+                .build();
+
+        // 请求加入调度
+        mOkHttpClient.newCall(request)
+                .enqueue(new Callback() {
+                    @Override
+                    public void onFailure(Call call, IOException e) {
+                        ///[返回结果及错误处理]错误处理
+                        modifyCallback.onError(new ModifyException(ModifyException.EXCEPTION_IO_EXCEPTION, e.getCause()));
+                    }
+
+                    @Override
+                    public void onResponse(Call call, Response response) throws IOException {
+                        try {
+                            JSONObject jsonObject = null;
+                            if (response.body() != null) {
+                                jsonObject = new JSONObject(response.body().string());
+                            }
+
+                            if (jsonObject != null) {
+                                ///[返回结果及错误处理]
+                                switch (jsonObject.getInt(KEY_STATUS)) {
+                                    case -4:
+                                        modifyCallback.onError(new ModifyException(ModifyException.EXCEPTION_TOKEN_IS_INVALID_OR_EXPIRED, jsonObject.getString(KEY_MESSAGE)));
+                                        break;
+                                    case -3:
+                                        modifyCallback.onError(new ModifyException(ModifyException.EXCEPTION_IO_EXCEPTION, jsonObject.getString(KEY_MESSAGE)));
+                                        break;
+                                    case -2:
+                                        modifyCallback.onError(new ModifyException(ModifyException.EXCEPTION_UNKNOWN, jsonObject.getString(KEY_MESSAGE)));
+                                        break;
+                                    case -1:
+                                        modifyCallback.onError(new ModifyException(ModifyException.EXCEPTION_INVALID_PARAMETERS, jsonObject.getString(KEY_MESSAGE)));
+                                        break;
+                                    case 0:
+                                        modifyCallback.onSuccess();
+                                        break;
+                                    case 1:
+                                        modifyCallback.onError(new ModifyException(ModifyException.EXCEPTION_FAILED_TO_MODIFY_EMAIL, jsonObject.getString(KEY_MESSAGE)));
+                                        break;
+                                    default:
+                                        modifyCallback.onError(new ModifyException(ModifyException.EXCEPTION_UNKNOWN));
+                                }
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+    }
+
+    public void modifyMobile(LoggedInUser loggedInUser, String mobile, final ModifyCallback modifyCallback) {
+        ///https://stackoverflow.com/questions/34179922/okhttp-post-body-as-json
+        final JSONObject jsonObject = new JSONObject();
+        try {
+            //Populate the sendVerificationCode parameters
+            jsonObject.put(KEY_MOBILE, mobile);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        // 构建post的RequestBody
+        final RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), jsonObject.toString());
+
+        // 创建一个Request
+        final Request request = new Request.Builder()
+                .url(USER_ACCOUNT_MODIFY_MOBILE_URL)
+                .header(KEY_TOKEN, loggedInUser.getToken())
+                .post(requestBody)
+                .build();
+
+        // 创建okHttpClient对象
+        final OkHttpClient mOkHttpClient = new OkHttpClient.Builder()
+                .connectTimeout(CONNECT_TIMEOUT, TimeUnit.SECONDS)
+                .readTimeout(CONNECT_TIMEOUT, TimeUnit.SECONDS)
+                .build();
+
+        // 请求加入调度
+        mOkHttpClient.newCall(request)
+                .enqueue(new Callback() {
+                    @Override
+                    public void onFailure(Call call, IOException e) {
+                        ///[返回结果及错误处理]错误处理
+                        modifyCallback.onError(new ModifyException(ModifyException.EXCEPTION_IO_EXCEPTION, e.getCause()));
+                    }
+
+                    @Override
+                    public void onResponse(Call call, Response response) throws IOException {
+                        try {
+                            JSONObject jsonObject = null;
+                            if (response.body() != null) {
+                                jsonObject = new JSONObject(response.body().string());
+                            }
+
+                            if (jsonObject != null) {
+                                ///[返回结果及错误处理]
+                                switch (jsonObject.getInt(KEY_STATUS)) {
+                                    case -4:
+                                        modifyCallback.onError(new ModifyException(ModifyException.EXCEPTION_TOKEN_IS_INVALID_OR_EXPIRED, jsonObject.getString(KEY_MESSAGE)));
+                                        break;
+                                    case -3:
+                                        modifyCallback.onError(new ModifyException(ModifyException.EXCEPTION_IO_EXCEPTION, jsonObject.getString(KEY_MESSAGE)));
+                                        break;
+                                    case -2:
+                                        modifyCallback.onError(new ModifyException(ModifyException.EXCEPTION_UNKNOWN, jsonObject.getString(KEY_MESSAGE)));
+                                        break;
+                                    case -1:
+                                        modifyCallback.onError(new ModifyException(ModifyException.EXCEPTION_INVALID_PARAMETERS, jsonObject.getString(KEY_MESSAGE)));
+                                        break;
+                                    case 0:
+                                        modifyCallback.onSuccess();
+                                        break;
+                                    case 1:
+                                        modifyCallback.onError(new ModifyException(ModifyException.EXCEPTION_FAILED_TO_MODIFY_MOBILE, jsonObject.getString(KEY_MESSAGE)));
+                                        break;
+                                    default:
+                                        modifyCallback.onError(new ModifyException(ModifyException.EXCEPTION_UNKNOWN));
+                                }
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+    }
+
+
+    /* --------------------- ///[oAuth] --------------------- */
+    public void oAuthLogin(SocialNetwork.Network network, String openId, final LoginCallback loginCallback) {
         ///https://stackoverflow.com/questions/34179922/okhttp-post-body-as-json
         final JSONObject jsonObject = new JSONObject();
         try {
@@ -265,364 +618,11 @@ public class UserDataSource {
                                         final LoggedInUser loggedInUser =  new Gson().fromJson(jsonObject.getString(KEY_USER), LoggedInUser.class);
                                         loginCallback.onSuccess(loggedInUser);
                                         break;
+                                    case 1:
+                                        loginCallback.onError(new LoginException(LoginException.EXCEPTION_INVALID_OAUTH_NETWORK_AND_OPENID, jsonObject.getString(KEY_MESSAGE)));
+                                        break;
                                     default:
                                         loginCallback.onError(new LoginException(LoginException.EXCEPTION_UNKNOWN));
-                                }
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                });
-    }
-
-    public void logout(LoggedInUser loggedInUser, final LogoutCallback logoutCallback) {
-        // 创建一个Request
-        final Request request = new Request.Builder()
-                .url(LOGOUT_URL)
-                .header(KEY_TOKEN, loggedInUser.getToken())
-                .build();
-
-        // 创建okHttpClient对象
-        final OkHttpClient mOkHttpClient = new OkHttpClient.Builder()
-                .connectTimeout(CONNECT_TIMEOUT, TimeUnit.SECONDS)
-                .readTimeout(CONNECT_TIMEOUT, TimeUnit.SECONDS)
-                .build();
-
-        // 请求加入调度
-        mOkHttpClient.newCall(request)
-                .enqueue(new Callback() {
-                    @Override
-                    public void onFailure(Call call, IOException e) {
-                        logoutCallback.onError(new LogoutException(LogoutException.EXCEPTION_IO_EXCEPTION, e.getCause()));
-                    }
-
-                    @Override
-                    public void onResponse(Call call, Response response) throws IOException {
-                        try {
-                            JSONObject jsonObject = null;
-                            if (response.body() != null) {
-                                jsonObject = new JSONObject(response.body().string());
-                            }
-
-                            if (jsonObject != null) {
-                                ///[返回结果及错误处理]
-                                switch (jsonObject.getInt(KEY_STATUS)) {
-                                    case -3:
-                                        logoutCallback.onError(new LogoutException(LogoutException.EXCEPTION_IO_EXCEPTION, jsonObject.getString(KEY_MESSAGE)));
-                                        break;
-                                    case -2:
-                                        logoutCallback.onError(new LogoutException(LogoutException.EXCEPTION_UNKNOWN, jsonObject.getString(KEY_MESSAGE)));
-                                        break;
-                                    case -1:
-                                        logoutCallback.onError(new LogoutException(LogoutException.EXCEPTION_TOKEN_IS_INVALID_OR_EXPIRED, jsonObject.getString(KEY_MESSAGE)));
-                                        break;
-                                    case 0:
-                                        logoutCallback.onSuccess();
-                                        break;
-                                    default:
-                                        logoutCallback.onError(new LogoutException(LogoutException.EXCEPTION_UNKNOWN));
-                                }
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                });
-    }
-
-
-    public void modifyUsername(LoggedInUser loggedInUser, String username, final ModifyUsernameCallback modifyUsernameCallback) {
-        ///https://stackoverflow.com/questions/34179922/okhttp-post-body-as-json
-        final JSONObject jsonObject = new JSONObject();
-        try {
-            //Populate the sendVerificationCode parameters
-            jsonObject.put(KEY_USERNAME, username);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        // 构建post的RequestBody
-        final RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), jsonObject.toString());
-
-        // 创建一个Request
-        final Request request = new Request.Builder()
-                .url(USER_ACCOUNT_MODIFY_USERNAME_URL)
-                .header(KEY_TOKEN, loggedInUser.getToken())
-                .post(requestBody)
-                .build();
-
-        // 创建okHttpClient对象
-        final OkHttpClient mOkHttpClient = new OkHttpClient.Builder()
-                .connectTimeout(CONNECT_TIMEOUT, TimeUnit.SECONDS)
-                .readTimeout(CONNECT_TIMEOUT, TimeUnit.SECONDS)
-                .build();
-
-        // 请求加入调度
-        mOkHttpClient.newCall(request)
-                .enqueue(new Callback() {
-                    @Override
-                    public void onFailure(Call call, IOException e) {
-                        ///[返回结果及错误处理]错误处理
-                        modifyUsernameCallback.onError(new ModifyUsernameException(ModifyUsernameException.EXCEPTION_IO_EXCEPTION, e.getCause()));
-                    }
-
-                    @Override
-                    public void onResponse(Call call, Response response) throws IOException {
-                        try {
-                            JSONObject jsonObject = null;
-                            if (response.body() != null) {
-                                jsonObject = new JSONObject(response.body().string());
-                            }
-
-                            if (jsonObject != null) {
-                                ///[返回结果及错误处理]
-                                switch (jsonObject.getInt(KEY_STATUS)) {
-                                    case -4:
-                                        modifyUsernameCallback.onError(new ModifyUsernameException(ModifyUsernameException.EXCEPTION_TOKEN_IS_INVALID_OR_EXPIRED, jsonObject.getString(KEY_MESSAGE)));
-                                        break;
-                                    case -3:
-                                        modifyUsernameCallback.onError(new ModifyUsernameException(ModifyUsernameException.EXCEPTION_IO_EXCEPTION, jsonObject.getString(KEY_MESSAGE)));
-                                        break;
-                                    case -2:
-                                        modifyUsernameCallback.onError(new ModifyUsernameException(ModifyUsernameException.EXCEPTION_UNKNOWN, jsonObject.getString(KEY_MESSAGE)));
-                                        break;
-                                    case -1:
-                                        modifyUsernameCallback.onError(new ModifyUsernameException(ModifyUsernameException.EXCEPTION_INVALID_PARAMETERS, jsonObject.getString(KEY_MESSAGE)));
-                                        break;
-                                    case 0:
-                                        modifyUsernameCallback.onSuccess();
-                                        break;
-                                    case 1:
-                                        modifyUsernameCallback.onError(new ModifyUsernameException(ModifyUsernameException.EXCEPTION_FAILED_TO_MODIFY_USERNAME, jsonObject.getString(KEY_MESSAGE)));
-                                        break;
-                                    default:
-                                        modifyUsernameCallback.onError(new ModifyUsernameException(ModifyUsernameException.EXCEPTION_UNKNOWN));
-                                }
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                });
-    }
-
-    public void modifyPassword(LoggedInUser loggedInUser, String password, final ModifyPasswordCallback modifyPasswordCallback) {
-        ///https://stackoverflow.com/questions/34179922/okhttp-post-body-as-json
-        final JSONObject jsonObject = new JSONObject();
-        try {
-            //Populate the sendVerificationCode parameters
-            jsonObject.put(KEY_PASSWORD, password);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        // 构建post的RequestBody
-        final RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), jsonObject.toString());
-
-        // 创建一个Request
-        final Request request = new Request.Builder()
-                .url(USER_ACCOUNT_MODIFY_PASSWORD_URL)
-                .header(KEY_TOKEN, loggedInUser.getToken())
-                .post(requestBody)
-                .build();
-
-        // 创建okHttpClient对象
-        final OkHttpClient mOkHttpClient = new OkHttpClient.Builder()
-                .connectTimeout(CONNECT_TIMEOUT, TimeUnit.SECONDS)
-                .readTimeout(CONNECT_TIMEOUT, TimeUnit.SECONDS)
-                .build();
-
-        // 请求加入调度
-        mOkHttpClient.newCall(request)
-                .enqueue(new Callback() {
-                    @Override
-                    public void onFailure(Call call, IOException e) {
-                        ///[返回结果及错误处理]错误处理
-                        modifyPasswordCallback.onError(new ModifyPasswordException(ModifyPasswordException.EXCEPTION_IO_EXCEPTION, e.getCause()));
-                    }
-
-                    @Override
-                    public void onResponse(Call call, Response response) throws IOException {
-                        try {
-                            JSONObject jsonObject = null;
-                            if (response.body() != null) {
-                                jsonObject = new JSONObject(response.body().string());
-                            }
-
-                            if (jsonObject != null) {
-                                ///[返回结果及错误处理]
-                                switch (jsonObject.getInt(KEY_STATUS)) {
-                                    case -4:
-                                        modifyPasswordCallback.onError(new ModifyPasswordException(ModifyPasswordException.EXCEPTION_TOKEN_IS_INVALID_OR_EXPIRED, jsonObject.getString(KEY_MESSAGE)));
-                                        break;
-                                    case -3:
-                                        modifyPasswordCallback.onError(new ModifyPasswordException(ModifyPasswordException.EXCEPTION_IO_EXCEPTION, jsonObject.getString(KEY_MESSAGE)));
-                                        break;
-                                    case -2:
-                                        modifyPasswordCallback.onError(new ModifyPasswordException(ModifyPasswordException.EXCEPTION_UNKNOWN, jsonObject.getString(KEY_MESSAGE)));
-                                        break;
-                                    case -1:
-                                        modifyPasswordCallback.onError(new ModifyPasswordException(ModifyPasswordException.EXCEPTION_INVALID_PARAMETERS, jsonObject.getString(KEY_MESSAGE)));
-                                        break;
-                                    case 0:
-                                        modifyPasswordCallback.onSuccess();
-                                        break;
-                                    case 1:
-                                        modifyPasswordCallback.onError(new ModifyPasswordException(ModifyPasswordException.EXCEPTION_FAILED_TO_MODIFY_PASSWORD, jsonObject.getString(KEY_MESSAGE)));
-                                        break;
-                                    default:
-                                        modifyPasswordCallback.onError(new ModifyPasswordException(ModifyPasswordException.EXCEPTION_UNKNOWN));
-                                }
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                });
-    }
-
-    public void modifyEmail(LoggedInUser loggedInUser, String email, final ModifyEmailCallback modifyEmailCallback) {
-        ///https://stackoverflow.com/questions/34179922/okhttp-post-body-as-json
-        final JSONObject jsonObject = new JSONObject();
-        try {
-            //Populate the sendVerificationCode parameters
-            jsonObject.put(KEY_EMAIL, email);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        // 构建post的RequestBody
-        final RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), jsonObject.toString());
-
-        // 创建一个Request
-        final Request request = new Request.Builder()
-                .url(USER_ACCOUNT_MODIFY_EMAIL_URL)
-                .header(KEY_TOKEN, loggedInUser.getToken())
-                .post(requestBody)
-                .build();
-
-        // 创建okHttpClient对象
-        final OkHttpClient mOkHttpClient = new OkHttpClient.Builder()
-                .connectTimeout(CONNECT_TIMEOUT, TimeUnit.SECONDS)
-                .readTimeout(CONNECT_TIMEOUT, TimeUnit.SECONDS)
-                .build();
-
-        // 请求加入调度
-        mOkHttpClient.newCall(request)
-                .enqueue(new Callback() {
-                    @Override
-                    public void onFailure(Call call, IOException e) {
-                        ///[返回结果及错误处理]错误处理
-                        modifyEmailCallback.onError(new ModifyEmailException(ModifyEmailException.EXCEPTION_IO_EXCEPTION, e.getCause()));
-                    }
-
-                    @Override
-                    public void onResponse(Call call, Response response) throws IOException {
-                        try {
-                            JSONObject jsonObject = null;
-                            if (response.body() != null) {
-                                jsonObject = new JSONObject(response.body().string());
-                            }
-
-                            if (jsonObject != null) {
-                                ///[返回结果及错误处理]
-                                switch (jsonObject.getInt(KEY_STATUS)) {
-                                    case -4:
-                                        modifyEmailCallback.onError(new ModifyEmailException(ModifyEmailException.EXCEPTION_TOKEN_IS_INVALID_OR_EXPIRED, jsonObject.getString(KEY_MESSAGE)));
-                                        break;
-                                    case -3:
-                                        modifyEmailCallback.onError(new ModifyEmailException(ModifyEmailException.EXCEPTION_IO_EXCEPTION, jsonObject.getString(KEY_MESSAGE)));
-                                        break;
-                                    case -2:
-                                        modifyEmailCallback.onError(new ModifyEmailException(ModifyEmailException.EXCEPTION_UNKNOWN, jsonObject.getString(KEY_MESSAGE)));
-                                        break;
-                                    case -1:
-                                        modifyEmailCallback.onError(new ModifyEmailException(ModifyEmailException.EXCEPTION_INVALID_PARAMETERS, jsonObject.getString(KEY_MESSAGE)));
-                                        break;
-                                    case 0:
-                                        modifyEmailCallback.onSuccess();
-                                        break;
-                                    case 1:
-                                        modifyEmailCallback.onError(new ModifyEmailException(ModifyEmailException.EXCEPTION_FAILED_TO_MODIFY_EMAIL, jsonObject.getString(KEY_MESSAGE)));
-                                        break;
-                                    default:
-                                        modifyEmailCallback.onError(new ModifyEmailException(ModifyEmailException.EXCEPTION_UNKNOWN));
-                                }
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                });
-    }
-
-    public void modifyMobile(LoggedInUser loggedInUser, String mobile, final ModifyMobileCallback modifyMobileCallback) {
-        ///https://stackoverflow.com/questions/34179922/okhttp-post-body-as-json
-        final JSONObject jsonObject = new JSONObject();
-        try {
-            //Populate the sendVerificationCode parameters
-            jsonObject.put(KEY_MOBILE, mobile);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        // 构建post的RequestBody
-        final RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), jsonObject.toString());
-
-        // 创建一个Request
-        final Request request = new Request.Builder()
-                .url(USER_ACCOUNT_MODIFY_MOBILE_URL)
-                .header(KEY_TOKEN, loggedInUser.getToken())
-                .post(requestBody)
-                .build();
-
-        // 创建okHttpClient对象
-        final OkHttpClient mOkHttpClient = new OkHttpClient.Builder()
-                .connectTimeout(CONNECT_TIMEOUT, TimeUnit.SECONDS)
-                .readTimeout(CONNECT_TIMEOUT, TimeUnit.SECONDS)
-                .build();
-
-        // 请求加入调度
-        mOkHttpClient.newCall(request)
-                .enqueue(new Callback() {
-                    @Override
-                    public void onFailure(Call call, IOException e) {
-                        ///[返回结果及错误处理]错误处理
-                        modifyMobileCallback.onError(new ModifyMobileException(ModifyMobileException.EXCEPTION_IO_EXCEPTION, e.getCause()));
-                    }
-
-                    @Override
-                    public void onResponse(Call call, Response response) throws IOException {
-                        try {
-                            JSONObject jsonObject = null;
-                            if (response.body() != null) {
-                                jsonObject = new JSONObject(response.body().string());
-                            }
-
-                            if (jsonObject != null) {
-                                ///[返回结果及错误处理]
-                                switch (jsonObject.getInt(KEY_STATUS)) {
-                                    case -4:
-                                        modifyMobileCallback.onError(new ModifyMobileException(ModifyMobileException.EXCEPTION_TOKEN_IS_INVALID_OR_EXPIRED, jsonObject.getString(KEY_MESSAGE)));
-                                        break;
-                                    case -3:
-                                        modifyMobileCallback.onError(new ModifyMobileException(ModifyMobileException.EXCEPTION_IO_EXCEPTION, jsonObject.getString(KEY_MESSAGE)));
-                                        break;
-                                    case -2:
-                                        modifyMobileCallback.onError(new ModifyMobileException(ModifyMobileException.EXCEPTION_UNKNOWN, jsonObject.getString(KEY_MESSAGE)));
-                                        break;
-                                    case -1:
-                                        modifyMobileCallback.onError(new ModifyMobileException(ModifyMobileException.EXCEPTION_INVALID_PARAMETERS, jsonObject.getString(KEY_MESSAGE)));
-                                        break;
-                                    case 0:
-                                        modifyMobileCallback.onSuccess();
-                                        break;
-                                    case 1:
-                                        modifyMobileCallback.onError(new ModifyMobileException(ModifyMobileException.EXCEPTION_FAILED_TO_MODIFY_MOBILE, jsonObject.getString(KEY_MESSAGE)));
-                                        break;
-                                    default:
-                                        modifyMobileCallback.onError(new ModifyMobileException(ModifyMobileException.EXCEPTION_UNKNOWN));
                                 }
                             }
                         } catch (JSONException e) {

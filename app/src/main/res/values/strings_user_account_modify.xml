@@ -8,6 +8,7 @@
     <string name="btn_save">Save</string>
 
     <string name="result_success_saved">Successfully saved</string>
+    <string name="result_error_token_is_invalid_or_expired">Token is invalid or expired</string>
     <string name="result_error_failed_to_modify_username">Failed to modify username</string>
     <string name="result_error_failed_to_modify_password">Failed to modify password</string>
     <string name="result_error_failed_to_modify_email">Failed to modify email</string>

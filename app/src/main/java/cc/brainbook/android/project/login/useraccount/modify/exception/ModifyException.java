@@ -5,30 +5,33 @@ import android.support.annotation.IntDef;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
-public class ModifyEmailException extends RuntimeException {
+public class ModifyException extends RuntimeException {
     public static final int EXCEPTION_TOKEN_IS_INVALID_OR_EXPIRED = -4;
     public static final int EXCEPTION_IO_EXCEPTION = -3;
     public static final int EXCEPTION_UNKNOWN = -2;
     public static final int EXCEPTION_INVALID_PARAMETERS = -1;
-    public static final int EXCEPTION_FAILED_TO_MODIFY_EMAIL = 1;
+    public static final int EXCEPTION_FAILED_TO_MODIFY_USERNAME = 1;
+    public static final int EXCEPTION_FAILED_TO_MODIFY_PASSWORD = 2;
+    public static final int EXCEPTION_FAILED_TO_MODIFY_EMAIL = 3;
+    public static final int EXCEPTION_FAILED_TO_MODIFY_MOBILE = 4;
 
     private int code;
 
-    public ModifyEmailException(@ExceptionType int code) {
+    public ModifyException(@ExceptionType int code) {
         this.code = code;
     }
 
-    public ModifyEmailException(@ExceptionType int code, String message) {
+    public ModifyException(@ExceptionType int code, String message) {
         super(message);
         this.code = code;
     }
 
-    public ModifyEmailException(@ExceptionType int code, String message, Throwable cause) {
+    public ModifyException(@ExceptionType int code, String message, Throwable cause) {
         super(message, cause);
         this.code = code;
     }
 
-    public ModifyEmailException(@ExceptionType int code, Throwable cause) {
+    public ModifyException(@ExceptionType int code, Throwable cause) {
         super(cause);
         this.code = code;
     }
@@ -49,7 +52,10 @@ public class ModifyEmailException extends RuntimeException {
             EXCEPTION_IO_EXCEPTION,
             EXCEPTION_UNKNOWN,
             EXCEPTION_INVALID_PARAMETERS,
-            EXCEPTION_FAILED_TO_MODIFY_EMAIL
+            EXCEPTION_FAILED_TO_MODIFY_USERNAME,
+            EXCEPTION_FAILED_TO_MODIFY_PASSWORD,
+            EXCEPTION_FAILED_TO_MODIFY_EMAIL,
+            EXCEPTION_FAILED_TO_MODIFY_MOBILE
     })
     @Retention(RetentionPolicy.SOURCE)
     public @interface ExceptionType {}

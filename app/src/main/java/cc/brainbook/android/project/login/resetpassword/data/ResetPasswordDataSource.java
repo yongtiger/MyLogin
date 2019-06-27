@@ -9,12 +9,7 @@ import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 import cc.brainbook.android.project.login.resetpassword.data.model.ResetPasswordUser;
-import cc.brainbook.android.project.login.resetpassword.exception.CheckSendModeException;
-import cc.brainbook.android.project.login.resetpassword.exception.FindUserException;
-import cc.brainbook.android.project.login.resetpassword.exception.SendVerificationCodeException;
 import cc.brainbook.android.project.login.resetpassword.exception.ResetPasswordException;
-import cc.brainbook.android.project.login.resetpassword.exception.VerifyCodeException;
-
 import cc.brainbook.android.project.login.resetpassword.interfaces.CheckSendModeCallback;
 import cc.brainbook.android.project.login.resetpassword.interfaces.FindUserCallback;
 import cc.brainbook.android.project.login.resetpassword.interfaces.ResetPasswordCallback;
@@ -79,7 +74,7 @@ public class ResetPasswordDataSource {
                     @Override
                     public void onFailure(Call call, IOException e) {
                         ///[返回结果及错误处理]错误处理
-                        findUserCallback.onError(new FindUserException(FindUserException.EXCEPTION_IO_EXCEPTION, e.getCause()));
+                        findUserCallback.onError(new ResetPasswordException(ResetPasswordException.EXCEPTION_IO_EXCEPTION, e.getCause()));
                     }
 
                     @Override
@@ -94,20 +89,20 @@ public class ResetPasswordDataSource {
                                 ///[返回结果及错误处理]
                                 switch (jsonObject.getInt(KEY_STATUS)) {
                                     case -1:
-                                        findUserCallback.onError(new FindUserException(FindUserException.EXCEPTION_INVALID_PARAMETERS, jsonObject.getString(KEY_MESSAGE)));
+                                        findUserCallback.onError(new ResetPasswordException(ResetPasswordException.EXCEPTION_INVALID_PARAMETERS, jsonObject.getString(KEY_MESSAGE)));
                                         break;
                                     case 0:
                                         final ResetPasswordUser resetPasswordUser =  new Gson().fromJson(jsonObject.getString(KEY_RESET_PASSWORD_USER), ResetPasswordUser.class);
                                         findUserCallback.onSuccess(resetPasswordUser);
                                         break;
                                     case 1:
-                                        findUserCallback.onError(new FindUserException(FindUserException.EXCEPTION_INVALID_USERNAME, jsonObject.getString(KEY_MESSAGE)));
+                                        findUserCallback.onError(new ResetPasswordException(ResetPasswordException.EXCEPTION_INVALID_USERNAME, jsonObject.getString(KEY_MESSAGE)));
                                         break;
                                     case 2:
-                                        findUserCallback.onError(new FindUserException(FindUserException.EXCEPTION_CANNOT_RESET_PASSWORD, jsonObject.getString(KEY_MESSAGE)));
+                                        findUserCallback.onError(new ResetPasswordException(ResetPasswordException.EXCEPTION_CANNOT_RESET_PASSWORD, jsonObject.getString(KEY_MESSAGE)));
                                         break;
                                     default:
-                                        findUserCallback.onError(new FindUserException(FindUserException.EXCEPTION_UNKNOWN));
+                                        findUserCallback.onError(new ResetPasswordException(ResetPasswordException.EXCEPTION_UNKNOWN));
                                 }
                             }
                         } catch (JSONException e) {
@@ -150,7 +145,7 @@ public class ResetPasswordDataSource {
                     @Override
                     public void onFailure(Call call, IOException e) {
                         ///[返回结果及错误处理]错误处理
-                        checkSendModeCallback.onError(new CheckSendModeException(CheckSendModeException.EXCEPTION_IO_EXCEPTION, e.getCause()));
+                        checkSendModeCallback.onError(new ResetPasswordException(ResetPasswordException.EXCEPTION_IO_EXCEPTION, e.getCause()));
                     }
 
                     @Override
@@ -165,29 +160,29 @@ public class ResetPasswordDataSource {
                                 ///[返回结果及错误处理]
                                 switch (jsonObject.getInt(KEY_STATUS)) {
                                     case -1:
-                                        checkSendModeCallback.onError(new CheckSendModeException(CheckSendModeException.EXCEPTION_INVALID_PARAMETERS, jsonObject.getString(KEY_MESSAGE)));
+                                        checkSendModeCallback.onError(new ResetPasswordException(ResetPasswordException.EXCEPTION_INVALID_PARAMETERS, jsonObject.getString(KEY_MESSAGE)));
                                         break;
                                     case 0:
                                         final int sendMode = jsonObject.getInt(KEY_SEND_MODE);
                                         checkSendModeCallback.onSuccess(sendMode);
                                         break;
                                     case 1:
-                                        checkSendModeCallback.onError(new CheckSendModeException(CheckSendModeException.EXCEPTION_INVALID_USER_ID, jsonObject.getString(KEY_MESSAGE)));
+                                        checkSendModeCallback.onError(new ResetPasswordException(ResetPasswordException.EXCEPTION_INVALID_USER_ID, jsonObject.getString(KEY_MESSAGE)));
                                         break;
                                     case 2:
-                                        checkSendModeCallback.onError(new CheckSendModeException(CheckSendModeException.EXCEPTION_CANNOT_RESET_PASSWORD, jsonObject.getString(KEY_MESSAGE)));
+                                        checkSendModeCallback.onError(new ResetPasswordException(ResetPasswordException.EXCEPTION_CANNOT_RESET_PASSWORD, jsonObject.getString(KEY_MESSAGE)));
                                         break;
                                     case 3:
-                                        checkSendModeCallback.onError(new CheckSendModeException(CheckSendModeException.EXCEPTION_NO_MATCH_EMAIL, jsonObject.getString(KEY_MESSAGE)));
+                                        checkSendModeCallback.onError(new ResetPasswordException(ResetPasswordException.EXCEPTION_NO_MATCH_EMAIL, jsonObject.getString(KEY_MESSAGE)));
                                         break;
                                     case 4:
-                                        checkSendModeCallback.onError(new CheckSendModeException(CheckSendModeException.EXCEPTION_NO_MATCH_MOBILE, jsonObject.getString(KEY_MESSAGE)));
+                                        checkSendModeCallback.onError(new ResetPasswordException(ResetPasswordException.EXCEPTION_NO_MATCH_MOBILE, jsonObject.getString(KEY_MESSAGE)));
                                         break;
                                     case 5:
-                                        checkSendModeCallback.onError(new CheckSendModeException(CheckSendModeException.EXCEPTION_NO_MATCH_EMAIL_OR_MOBILE, jsonObject.getString(KEY_MESSAGE)));
+                                        checkSendModeCallback.onError(new ResetPasswordException(ResetPasswordException.EXCEPTION_NO_MATCH_EMAIL_OR_MOBILE, jsonObject.getString(KEY_MESSAGE)));
                                         break;
                                     default:
-                                        checkSendModeCallback.onError(new CheckSendModeException(CheckSendModeException.EXCEPTION_UNKNOWN));
+                                        checkSendModeCallback.onError(new ResetPasswordException(ResetPasswordException.EXCEPTION_UNKNOWN));
                                 }
                             }
                         } catch (JSONException e) {
@@ -229,7 +224,7 @@ public class ResetPasswordDataSource {
                     @Override
                     public void onFailure(Call call, IOException e) {
                         ///[返回结果及错误处理]错误处理
-                        sendVerificationCodeCallback.onError(new SendVerificationCodeException(SendVerificationCodeException.EXCEPTION_IO_EXCEPTION, e.getCause()));
+                        sendVerificationCodeCallback.onError(new ResetPasswordException(ResetPasswordException.EXCEPTION_IO_EXCEPTION, e.getCause()));
                     }
 
                     @Override
@@ -244,28 +239,28 @@ public class ResetPasswordDataSource {
                                 ///[返回结果及错误处理]
                                 switch (jsonObject.getInt(KEY_STATUS)) {
                                     case -1:
-                                        sendVerificationCodeCallback.onError(new SendVerificationCodeException(SendVerificationCodeException.EXCEPTION_INVALID_PARAMETERS, jsonObject.getString(KEY_MESSAGE)));
+                                        sendVerificationCodeCallback.onError(new ResetPasswordException(ResetPasswordException.EXCEPTION_INVALID_PARAMETERS, jsonObject.getString(KEY_MESSAGE)));
                                         break;
                                     case 0:
                                         sendVerificationCodeCallback.onSuccess(jsonObject.getString(KEY_SESSION_ID));
                                         break;
                                     case 1:
-                                        sendVerificationCodeCallback.onError(new SendVerificationCodeException(SendVerificationCodeException.EXCEPTION_INVALID_USER_ID, jsonObject.getString(KEY_MESSAGE)));
+                                        sendVerificationCodeCallback.onError(new ResetPasswordException(ResetPasswordException.EXCEPTION_INVALID_USER_ID, jsonObject.getString(KEY_MESSAGE)));
                                         break;
                                     case 2:
-                                        sendVerificationCodeCallback.onError(new SendVerificationCodeException(SendVerificationCodeException.EXCEPTION_CANNOT_RESET_PASSWORD, jsonObject.getString(KEY_MESSAGE)));
+                                        sendVerificationCodeCallback.onError(new ResetPasswordException(ResetPasswordException.EXCEPTION_CANNOT_RESET_PASSWORD, jsonObject.getString(KEY_MESSAGE)));
                                         break;
                                     case 3:
-                                        sendVerificationCodeCallback.onError(new SendVerificationCodeException(SendVerificationCodeException.EXCEPTION_FAILED_TO_SEND_EMAIL, jsonObject.getString(KEY_MESSAGE)));
+                                        sendVerificationCodeCallback.onError(new ResetPasswordException(ResetPasswordException.EXCEPTION_FAILED_TO_SEND_EMAIL, jsonObject.getString(KEY_MESSAGE)));
                                         break;
                                     case 4:
-                                        sendVerificationCodeCallback.onError(new SendVerificationCodeException(SendVerificationCodeException.EXCEPTION_FAILED_TO_SEND_MOBILE, jsonObject.getString(KEY_MESSAGE)));
+                                        sendVerificationCodeCallback.onError(new ResetPasswordException(ResetPasswordException.EXCEPTION_FAILED_TO_SEND_MOBILE, jsonObject.getString(KEY_MESSAGE)));
                                         break;
                                     case 5:
-                                        sendVerificationCodeCallback.onError(new SendVerificationCodeException(SendVerificationCodeException.EXCEPTION_FAILED_TO_SEND_EMAIL_AND_MOBILE, jsonObject.getString(KEY_MESSAGE)));
+                                        sendVerificationCodeCallback.onError(new ResetPasswordException(ResetPasswordException.EXCEPTION_FAILED_TO_SEND_EMAIL_AND_MOBILE, jsonObject.getString(KEY_MESSAGE)));
                                         break;
                                     default:
-                                        sendVerificationCodeCallback.onError(new SendVerificationCodeException(SendVerificationCodeException.EXCEPTION_UNKNOWN));
+                                        sendVerificationCodeCallback.onError(new ResetPasswordException(ResetPasswordException.EXCEPTION_UNKNOWN));
                                 }
                             }
                         } catch (JSONException e) {
@@ -307,7 +302,7 @@ public class ResetPasswordDataSource {
                     @Override
                     public void onFailure(Call call, IOException e) {
                         ///[返回结果及错误处理]错误处理
-                        verifyCodeCallback.onError(new VerifyCodeException(VerifyCodeException.EXCEPTION_IO_EXCEPTION, e.getCause()));
+                        verifyCodeCallback.onError(new ResetPasswordException(ResetPasswordException.EXCEPTION_IO_EXCEPTION, e.getCause()));
                     }
 
                     @Override
@@ -322,16 +317,16 @@ public class ResetPasswordDataSource {
                                 ///[返回结果及错误处理]
                                 switch (jsonObject.getInt(KEY_STATUS)) {
                                     case -1:
-                                        verifyCodeCallback.onError(new VerifyCodeException(VerifyCodeException.EXCEPTION_INVALID_PARAMETERS, jsonObject.getString(KEY_MESSAGE)));
+                                        verifyCodeCallback.onError(new ResetPasswordException(ResetPasswordException.EXCEPTION_INVALID_PARAMETERS, jsonObject.getString(KEY_MESSAGE)));
                                         break;
                                     case 0:
                                         verifyCodeCallback.onSuccess();
                                         break;
                                     case 1:
-                                        verifyCodeCallback.onError(new VerifyCodeException(VerifyCodeException.EXCEPTION_INVALID_VERIFICATION_CODE, jsonObject.getString(KEY_MESSAGE)));
+                                        verifyCodeCallback.onError(new ResetPasswordException(ResetPasswordException.EXCEPTION_INVALID_VERIFICATION_CODE, jsonObject.getString(KEY_MESSAGE)));
                                         break;
                                     default:
-                                        verifyCodeCallback.onError(new VerifyCodeException(VerifyCodeException.EXCEPTION_UNKNOWN));
+                                        verifyCodeCallback.onError(new ResetPasswordException(ResetPasswordException.EXCEPTION_UNKNOWN));
                                 }
                             }
                         } catch (JSONException e) {

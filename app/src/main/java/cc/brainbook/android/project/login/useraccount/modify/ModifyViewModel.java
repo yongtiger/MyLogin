@@ -10,18 +10,20 @@ import java.util.regex.Pattern;
 
 import cc.brainbook.android.project.login.R;
 import cc.brainbook.android.project.login.result.Result;
-import cc.brainbook.android.project.login.useraccount.modify.exception.ModifyEmailException;
-import cc.brainbook.android.project.login.useraccount.modify.exception.ModifyMobileException;
-import cc.brainbook.android.project.login.useraccount.modify.exception.ModifyPasswordException;
-import cc.brainbook.android.project.login.useraccount.modify.exception.ModifyUsernameException;
-import cc.brainbook.android.project.login.useraccount.modify.interfaces.ModifyEmailCallback;
-import cc.brainbook.android.project.login.useraccount.modify.interfaces.ModifyMobileCallback;
-import cc.brainbook.android.project.login.useraccount.modify.interfaces.ModifyPasswordCallback;
-import cc.brainbook.android.project.login.useraccount.modify.interfaces.ModifyUsernameCallback;
+import cc.brainbook.android.project.login.useraccount.modify.exception.ModifyException;
+import cc.brainbook.android.project.login.useraccount.modify.interfaces.ModifyCallback;
 import cc.brainbook.android.project.login.useraccount.data.UserRepository;
 
 import static cc.brainbook.android.project.login.config.Config.REGEXP_PASSWORD;
 import static cc.brainbook.android.project.login.config.Config.REGEXP_USERNAME;
+import static cc.brainbook.android.project.login.useraccount.modify.exception.ModifyException.EXCEPTION_FAILED_TO_MODIFY_EMAIL;
+import static cc.brainbook.android.project.login.useraccount.modify.exception.ModifyException.EXCEPTION_FAILED_TO_MODIFY_MOBILE;
+import static cc.brainbook.android.project.login.useraccount.modify.exception.ModifyException.EXCEPTION_FAILED_TO_MODIFY_PASSWORD;
+import static cc.brainbook.android.project.login.useraccount.modify.exception.ModifyException.EXCEPTION_FAILED_TO_MODIFY_USERNAME;
+import static cc.brainbook.android.project.login.useraccount.modify.exception.ModifyException.EXCEPTION_INVALID_PARAMETERS;
+import static cc.brainbook.android.project.login.useraccount.modify.exception.ModifyException.EXCEPTION_IO_EXCEPTION;
+import static cc.brainbook.android.project.login.useraccount.modify.exception.ModifyException.EXCEPTION_TOKEN_IS_INVALID_OR_EXPIRED;
+import static cc.brainbook.android.project.login.useraccount.modify.exception.ModifyException.EXCEPTION_UNKNOWN;
 
 public class ModifyViewModel extends ViewModel {
     private MutableLiveData<ModifyUsernameFormState> modifyUsernameFormState = new MutableLiveData<>();
@@ -84,7 +86,7 @@ public class ModifyViewModel extends ViewModel {
 
     public void modifyUsername(String username) {
         // can be launched in a separate asynchronous job
-        userRepository.modifyUsername(username, new ModifyUsernameCallback() {
+        userRepository.modifyUsername(username, new ModifyCallback() {
             @Override
             public void onSuccess() {
                 ///[返回结果及错误处理]返回结果
@@ -92,34 +94,16 @@ public class ModifyViewModel extends ViewModel {
             }
 
             @Override
-            public void onError(ModifyUsernameException e) {
-                ///[返回结果及错误处理]错误处理
-                int error;
-                switch (e.getCode()) {
-                    case -3:
-                        error = R.string.error_network_error;
-                        break;
-                    case -2:
-                        error = R.string.error_unknown;
-                        break;
-                    case -1:
-                        error = R.string.error_invalid_parameters;
-                        break;
-                    case 1:
-                        error = R.string.result_error_failed_to_modify_username;
-                        break;
-                    default:
-                        error = R.string.error_unknown;
-                }
+            public void onError(ModifyException e) {
                 ///use live data's postValue(..) method from background thread.
-                result.postValue(new Result(null, error));
+                result.postValue(new Result(null, getErrorIntegerRes(e)));
             }
         });
     }
 
     public void modifyPassword(String password) {
         // can be launched in a separate asynchronous job
-        userRepository.modifyPassword(password, new ModifyPasswordCallback() {
+        userRepository.modifyPassword(password, new ModifyCallback() {
             @Override
             public void onSuccess() {
                 ///[返回结果及错误处理]返回结果
@@ -127,34 +111,16 @@ public class ModifyViewModel extends ViewModel {
             }
 
             @Override
-            public void onError(ModifyPasswordException e) {
-                ///[返回结果及错误处理]错误处理
-                int error;
-                switch (e.getCode()) {
-                    case -3:
-                        error = R.string.error_network_error;
-                        break;
-                    case -2:
-                        error = R.string.error_unknown;
-                        break;
-                    case -1:
-                        error = R.string.error_invalid_parameters;
-                        break;
-                    case 1:
-                        error = R.string.result_error_failed_to_modify_username;
-                        break;
-                    default:
-                        error = R.string.error_unknown;
-                }
+            public void onError(ModifyException e) {
                 ///use live data's postValue(..) method from background thread.
-                result.postValue(new Result(null, error));
+                result.postValue(new Result(null, getErrorIntegerRes(e)));
             }
         });
     }
 
     public void modifyEmail(String email) {
         // can be launched in a separate asynchronous job
-        userRepository.modifyEmail(email, new ModifyEmailCallback() {
+        userRepository.modifyEmail(email, new ModifyCallback() {
             @Override
             public void onSuccess() {
                 ///[返回结果及错误处理]返回结果
@@ -162,34 +128,16 @@ public class ModifyViewModel extends ViewModel {
             }
 
             @Override
-            public void onError(ModifyEmailException e) {
-                ///[返回结果及错误处理]错误处理
-                int error;
-                switch (e.getCode()) {
-                    case -3:
-                        error = R.string.error_network_error;
-                        break;
-                    case -2:
-                        error = R.string.error_unknown;
-                        break;
-                    case -1:
-                        error = R.string.error_invalid_parameters;
-                        break;
-                    case 1:
-                        error = R.string.result_error_failed_to_modify_username;
-                        break;
-                    default:
-                        error = R.string.error_unknown;
-                }
+            public void onError(ModifyException e) {
                 ///use live data's postValue(..) method from background thread.
-                result.postValue(new Result(null, error));
+                result.postValue(new Result(null, getErrorIntegerRes(e)));
             }
         });
     }
 
     public void modifyMobile(String mobile) {
         // can be launched in a separate asynchronous job
-        userRepository.modifyMobile(mobile, new ModifyMobileCallback() {
+        userRepository.modifyMobile(mobile, new ModifyCallback() {
             @Override
             public void onSuccess() {
                 ///[返回结果及错误处理]返回结果
@@ -197,27 +145,9 @@ public class ModifyViewModel extends ViewModel {
             }
 
             @Override
-            public void onError(ModifyMobileException e) {
-                ///[返回结果及错误处理]错误处理
-                int error;
-                switch (e.getCode()) {
-                    case -3:
-                        error = R.string.error_network_error;
-                        break;
-                    case -2:
-                        error = R.string.error_unknown;
-                        break;
-                    case -1:
-                        error = R.string.error_invalid_parameters;
-                        break;
-                    case 1:
-                        error = R.string.result_error_failed_to_modify_username;
-                        break;
-                    default:
-                        error = R.string.error_unknown;
-                }
+            public void onError(ModifyException e) {
                 ///use live data's postValue(..) method from background thread.
-                result.postValue(new Result(null, error));
+                result.postValue(new Result(null, getErrorIntegerRes(e)));
             }
         });
     }
@@ -263,6 +193,39 @@ public class ModifyViewModel extends ViewModel {
     // A placeholder mobile validation
     private boolean isMobileValid(String mobile) {
         return TextUtils.isEmpty(mobile) || Patterns.PHONE.matcher(mobile).matches();
+    }
+
+    private int getErrorIntegerRes(ModifyException e) {
+        int error;
+        switch (e.getCode()) {
+            case EXCEPTION_TOKEN_IS_INVALID_OR_EXPIRED:
+                error = R.string.result_error_token_is_invalid_or_expired;
+                break;
+            case EXCEPTION_IO_EXCEPTION:
+                error = R.string.error_network_error;
+                break;
+            case EXCEPTION_UNKNOWN:
+                error = R.string.error_unknown;
+                break;
+            case EXCEPTION_INVALID_PARAMETERS:
+                error = R.string.error_invalid_parameters;
+                break;
+            case EXCEPTION_FAILED_TO_MODIFY_USERNAME:
+                error = R.string.result_error_failed_to_modify_username;
+                break;
+            case EXCEPTION_FAILED_TO_MODIFY_PASSWORD:
+                error = R.string.result_error_failed_to_modify_password;
+                break;
+            case EXCEPTION_FAILED_TO_MODIFY_EMAIL:
+                error = R.string.result_error_failed_to_modify_email;
+                break;
+            case EXCEPTION_FAILED_TO_MODIFY_MOBILE:
+                error = R.string.result_error_failed_to_modify_mobile;
+                break;
+            default:
+                error = R.string.error_unknown;
+        }
+        return  error;
     }
 
 }

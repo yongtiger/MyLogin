@@ -15,6 +15,10 @@ import cc.brainbook.android.project.login.useraccount.authentication.interfaces.
 
 import static cc.brainbook.android.project.login.config.Config.REGEXP_PASSWORD;
 import static cc.brainbook.android.project.login.config.Config.REGEXP_USERNAME;
+import static cc.brainbook.android.project.login.useraccount.authentication.exception.RegisterException.EXCEPTION_INVALID_PARAMETERS;
+import static cc.brainbook.android.project.login.useraccount.authentication.exception.RegisterException.EXCEPTION_IO_EXCEPTION;
+import static cc.brainbook.android.project.login.useraccount.authentication.exception.RegisterException.EXCEPTION_UNKNOWN;
+import static cc.brainbook.android.project.login.useraccount.authentication.exception.RegisterException.EXCEPTION_USER_EXISTS;
 
 public class RegisterViewModel extends ViewModel {
     private MutableLiveData<RegisterFormState> registerFormState = new MutableLiveData<>();
@@ -65,26 +69,8 @@ public class RegisterViewModel extends ViewModel {
 
             @Override
             public void onError(RegisterException e) {
-                ///[返回结果及错误处理]错误处理
-                int error;
-                switch (e.getCode()) {
-                    case -3:
-                        error = R.string.error_network_error;
-                        break;
-                    case -2:
-                        error = R.string.error_unknown;
-                        break;
-                    case -1:
-                        error = R.string.error_invalid_parameters;
-                        break;
-                    case 1:
-                        error = R.string.register_error_user_exists;
-                        break;
-                    default:
-                        error = R.string.error_unknown;
-                }
                 ///use live data's postValue(..) method from background thread.
-                result.postValue(new Result(null, error));
+                result.postValue(new Result(null, getErrorIntegerRes(e)));
             }
         });
     }
@@ -113,4 +99,24 @@ public class RegisterViewModel extends ViewModel {
         return !TextUtils.isEmpty(password) && password.equals(repeatPassword);
     }
 
+    private int getErrorIntegerRes(RegisterException e) {
+        int error;
+        switch (e.getCode()) {
+            case EXCEPTION_IO_EXCEPTION:
+                error = R.string.error_network_error;
+                break;
+            case EXCEPTION_UNKNOWN:
+                error = R.string.error_unknown;
+                break;
+            case EXCEPTION_INVALID_PARAMETERS:
+                error = R.string.error_invalid_parameters;
+                break;
+            case EXCEPTION_USER_EXISTS:
+                error = R.string.register_error_user_exists;
+                break;
+            default:
+                error = R.string.error_unknown;
+        }
+        return error;
+    }
 }
