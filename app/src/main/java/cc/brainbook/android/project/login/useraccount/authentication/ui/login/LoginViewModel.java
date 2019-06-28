@@ -62,6 +62,7 @@ public class LoginViewModel extends ViewModel {
     }
 
     public void login(String username, String password) {
+        ///[oAuth#NetworkAccessTokenMap]
         final HashMap<SocialNetwork.Network, AccessToken> networkAccessTokenMap = getNetworkAccessTokenMapLiveData().getValue();
         // can be launched in a separate asynchronous job
         loginRepository.login(username, password, networkAccessTokenMap, new LoginCallback() {
@@ -141,6 +142,12 @@ public class LoginViewModel extends ViewModel {
             networkAccessTokenMapLiveData.getValue().put(network, accessToken); ///注意：不能触发onChange
         }
         networkAccessTokenMapLiveData.setValue(networkAccessTokenMapLiveData.getValue());   ///触发onChange
+    }
+
+    public void clearNetworkAccessTokenMap() {
+        if (networkAccessTokenMapLiveData.getValue() != null) {
+            networkAccessTokenMapLiveData.getValue().clear();
+        }
     }
 
     ///[oAuth#oAuthLogin]

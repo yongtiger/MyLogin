@@ -1,5 +1,6 @@
 package cc.brainbook.android.project.login.useraccount.authentication.ui.register;
 
+import android.app.Activity;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
@@ -22,7 +23,13 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+
 import cc.brainbook.android.project.login.R;
+import cc.brainbook.android.project.login.oauth.AccessToken;
+import cc.brainbook.android.project.login.oauth.networks.SocialNetwork;
 import cc.brainbook.android.project.login.result.Result;
 import cc.brainbook.android.project.login.useraccount.authentication.ui.login.LoginActivity;
 
@@ -43,10 +50,18 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
     private ProgressBar pbLoading;
 
+    ///[oAuth#NetworkAccessTokenMap]
+    private HashMap<SocialNetwork.Network, AccessToken> networkAccessTokenMap;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
+
+        ///[oAuth#NetworkAccessTokenMap]
+        if (getIntent() != null) {
+            networkAccessTokenMap = (HashMap<SocialNetwork.Network, AccessToken>) getIntent().getSerializableExtra("networkAccessTokenMap");
+        }
 
         initView();
         initListener();
@@ -107,8 +122,22 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                     ///Display register failed
                     showRegisterFailed(result.getError());
                 } else {
-                    if (result.getSuccess() != null)
-                        updateUI(result.getSuccess());
+                    ///[oAuth#NetworkAccessTokenMap]
+                    if (networkAccessTokenMap.isEmpty()) {
+                        Toast.makeText(getApplicationContext(), getString(R.string.result_success_register), Toast.LENGTH_LONG).show();
+                    } else {
+                        ///[oAuth#NetworkAccessTokenMap]返回账户注册成功、绑定的network列表
+                        final StringBuilder content = new StringBuilder();
+                        for (Map.Entry<SocialNetwork.Network, AccessToken> networkAccessTokenEntry : networkAccessTokenMap.entrySet()) {
+                            final SocialNetwork.Network network = (SocialNetwork.Network) ((HashMap.Entry) networkAccessTokenEntry).getKey();
+//                            AccessToken accessToken = (AccessToken) entry.getValue();
+                            content.append(", ").append(network);
+                        }
+                        Toast.makeText(getApplicationContext(), getString(R.string.result_success_oauth_bind_register)
+                                + content, Toast.LENGTH_LONG).show();
+                    }
+
+                    setResult(Activity.RESULT_OK);
 
                     //Complete and destroy register activity once successful
                     finish();
@@ -312,12 +341,8 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         if (registerViewModel.getRegisterFormStateLiveData().getValue() != null
                 && registerViewModel.getRegisterFormStateLiveData().getValue().isDataValid()) {
             registerViewModel.register(etUsername.getText().toString(),
-                    etPassword.getText().toString());
+                    etPassword.getText().toString(), networkAccessTokenMap);
         }
-    }
-
-    public void updateUI(@StringRes Integer successString) {
-        Toast.makeText(getApplicationContext(), successString, Toast.LENGTH_LONG).show();
     }
 
     private void showRegisterFailed(@StringRes Integer errorString) {

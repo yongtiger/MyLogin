@@ -64,9 +64,11 @@ public class UserRepository {
         return getLoggedInUser() != null && System.currentTimeMillis() < getLoggedInUser().getTokenExpiredAt() * 1000;
     }
 
-    public void register(String username, String password, final RegisterCallback registerCallback) {
+    ///[oAuth#NetworkAccessTokenMap]
+    public void register(String username, String password,
+                         HashMap<SocialNetwork.Network, AccessToken> networkAccessTokenMap, final RegisterCallback registerCallback) {
         // handle login
-        mDataSource.register(username, password, new RegisterCallback(){
+        mDataSource.register(username, password, networkAccessTokenMap, new RegisterCallback(){
             @Override
             public void onSuccess() {
                 registerCallback.onSuccess();
@@ -79,6 +81,7 @@ public class UserRepository {
         });
     }
 
+    ///[oAuth#NetworkAccessTokenMap]
     public void login(String username, String password,
                       HashMap<SocialNetwork.Network, AccessToken> networkAccessTokenMap, final LoginCallback loginCallback) {
         // handle login
@@ -182,6 +185,7 @@ public class UserRepository {
 
     /* --------------------- ///[oAuth] --------------------- */
     ///[oAuth#oAuthLogin]
+    ///[oAuth#NetworkAccessTokenMap]
     public void oAuthLogin(SocialNetwork.Network network, AccessToken accessToken,
                            HashMap<SocialNetwork.Network, AccessToken> networkAccessTokenMap, final LoginCallback loginCallback) {
         // handle login

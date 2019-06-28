@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.view.View;
-import android.widget.Button;
 
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
@@ -19,7 +18,7 @@ import cn.sharesdk.framework.ShareSDK;
 ///https://github.com/maksim88/EasyLogin
 ///https://developers.google.com/identity/sign-in/android/start
 public abstract class MobBaseNetwork extends SocialNetwork implements PlatformActionListener {
-    protected Platform plat;
+    private Platform plat;
 
     public MobBaseNetwork(Activity activity, View button, OnOauthCompleteListener onOauthCompleteListener, Platform plat) {
         this.activity = new WeakReference<>(activity);
@@ -33,6 +32,9 @@ public abstract class MobBaseNetwork extends SocialNetwork implements PlatformAc
                 if (!isConnected()) {
                     setButtonEnabled(false);
                     plat.showUser(null);    //要数据不要功能，主要体现在不会重复出现授权界面
+
+                    ///[FIX BUG]从RegisterActivity返回到LoginActivity后，Mob按钮点击后无onComplete状态！
+                    plat.setPlatformActionListener(MobBaseNetwork.this);
                 }
             }
         });

@@ -44,7 +44,7 @@ public class MyApplication extends Application {
                 .build();
         Twitter.initialize(config);
 
-        ///[oAuth#MobService]
+        ///[oAuth#MobService]初始化
         ///http://www.mob.com
         ///http://wiki.mob.com/sdk-share-android-3-0-0/
         MobSDK.init(this);

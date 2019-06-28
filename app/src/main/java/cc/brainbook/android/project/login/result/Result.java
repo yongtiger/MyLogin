@@ -15,6 +15,7 @@ public class Result {
     @Nullable @StringRes
     private Integer error;
 
+    ///[oAuth#oAuthLogin]
     private SocialNetwork.Network network;
     private AccessToken accessToken;
 
@@ -23,6 +24,7 @@ public class Result {
         this.error = error;
     }
 
+    ///[oAuth#oAuthLogin]
     public Result(@Nullable @StringRes Integer success, @Nullable @StringRes Integer error, SocialNetwork.Network network, AccessToken accessToken) {
         this.success = success;
         this.error = error;
@@ -43,6 +45,8 @@ public class Result {
     public Object getNetwork() {
         return network;
     }
+
+    ///[oAuth#oAuthLogin]
     public Object getAccessToken() {
         return accessToken;
     }

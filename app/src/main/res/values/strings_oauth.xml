@@ -15,4 +15,6 @@
     <string name="error_invalid_oauth_network_and_openid">Not valid network and openid</string>
     <string name="oauth_bind_login">Oauth Bind Login</string>
     <string name="oauth_bind_register">Oauth Bind Register</string>
+
+    <string name="result_success_oauth_bind_register">Successfully register and oauth bind</string>
 </resources>

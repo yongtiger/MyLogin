@@ -1,8 +1,10 @@
 package cc.brainbook.android.project.login.oauth;
 
-///https://github.com/maksim88/EasyLogin
-public class AccessToken {
+import android.os.Parcel;
+import android.os.Parcelable;
 
+///https://github.com/maksim88/EasyLogin
+public class AccessToken implements Parcelable {    ///[oAuth#NetworkAccessTokenMap]actionRegister()
     private final String token;
     private final String secret;
     private final String userId;
@@ -18,6 +20,27 @@ public class AccessToken {
         email = builder.email;
         photoUrl = builder.photoUrl;///[EasyLogin#photoUrl]
     }
+
+    protected AccessToken(Parcel in) {
+        token = in.readString();
+        secret = in.readString();
+        userId = in.readString();
+        userName = in.readString();
+        email = in.readString();
+        photoUrl = in.readString();
+    }
+
+    public static final Creator<AccessToken> CREATOR = new Creator<AccessToken>() {
+        @Override
+        public AccessToken createFromParcel(Parcel in) {
+            return new AccessToken(in);
+        }
+
+        @Override
+        public AccessToken[] newArray(int size) {
+            return new AccessToken[size];
+        }
+    };
 
     public String getToken() {
         return token;
@@ -41,6 +64,21 @@ public class AccessToken {
 
     public String getPhotoUrl() {
         return photoUrl;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(token);
+        dest.writeString(secret);
+        dest.writeString(userId);
+        dest.writeString(userName);
+        dest.writeString(email);
+        dest.writeString(photoUrl);
     }
 
     public static class Builder {

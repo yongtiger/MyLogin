@@ -53,6 +53,8 @@ import cc.brainbook.android.project.login.useraccount.authentication.ui.register
 import cc.brainbook.android.project.login.util.PrefsUtil;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener, OnOauthCompleteListener {
+    private static final int REQUEST_CODE_REGISTER = 1;
+
     private static final String KEY_REMEMBER_USERNAME = "remember_username";
     private static final String KEY_REMEMBER_PASSWORD = "remember_password";
 
@@ -317,15 +319,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 actionLogin();
                 break;
             case R.id.btn_register:
-                startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
+                actionRegister();
                 break;
             case R.id.btn_oauth_bind_login:
                 pbLoading.setVisibility(View.VISIBLE);
-                ///[oAuth#actionOauthBindLogin()]
                 actionLogin();
                 break;
             case R.id.btn_oauth_bind_register:
-//                startActivity(new Intent(LoginActivity.this, RegisterActivity.class));//////////////////
+                actionRegister();
                 break;
         }
     }
@@ -368,6 +369,16 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             loginViewModel.login(etUsername.getText().toString(),
                     etPassword.getText().toString());
         }
+    }
+
+    ///[oAuth#NetworkAccessTokenMap]actionRegister()
+    private void actionRegister() {
+        final Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
+        ///[oAuth#NetworkAccessTokenMap]
+        final HashMap<SocialNetwork.Network, AccessToken> networkAccessTokenMap =
+                loginViewModel.getNetworkAccessTokenMapLiveData().getValue();
+        intent.putExtra("networkAccessTokenMap", networkAccessTokenMap);
+        startActivityForResult(intent, REQUEST_CODE_REGISTER);
     }
 
     private void showLoginFailed(@StringRes Integer errorString) {
@@ -465,10 +476,20 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         updateUI();
     }
 
+    ///[oAuth#]
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        easyLogin.onActivityResult(requestCode, resultCode, data);
+
+        ///[oAuth#NetworkAccessTokenMap]
+        if (requestCode == REQUEST_CODE_REGISTER) {
+            if (resultCode == Activity.RESULT_OK) {
+                loginViewModel.clearNetworkAccessTokenMap();
+                easyLogin.logoutAllNetworks();
+            }
+        } else {
+            easyLogin.onActivityResult(requestCode, resultCode, data);
+        }
     }
 
     @Override
@@ -489,7 +510,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             }
         });
 
-        ///[oAuth#actionOAuthLogin()]
+        ///[oAuth#oAuthLogin]
         actionOAuthLogin(network, accessToken);
     }
 
@@ -509,7 +530,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         });
     }
 
-    ///[oAuth#actionOAuthLogin()]
+    ///[oAuth#oAuthLogin]
     private void actionOAuthLogin(SocialNetwork.Network network, AccessToken accessToken) {
         loginViewModel.oAuthLogin(network, accessToken);
     }
