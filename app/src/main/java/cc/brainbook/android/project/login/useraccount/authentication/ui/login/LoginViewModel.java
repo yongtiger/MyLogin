@@ -62,8 +62,9 @@ public class LoginViewModel extends ViewModel {
     }
 
     public void login(String username, String password) {
+        final HashMap<SocialNetwork.Network, AccessToken> networkAccessTokenMap = getNetworkAccessTokenMapLiveData().getValue();
         // can be launched in a separate asynchronous job
-        loginRepository.login(username, password, new LoginCallback() {
+        loginRepository.login(username, password, networkAccessTokenMap, new LoginCallback() {
             @Override
             public void onSuccess(LoggedInUser loggedInUser) {
                 ///[返回结果及错误处理]返回结果
@@ -127,23 +128,6 @@ public class LoginViewModel extends ViewModel {
 
 
     /* --------------------- ///[oAuth] --------------------- */
-    ///[oAuth]oAuthLogin
-    public void oAuthLogin(SocialNetwork.Network network, AccessToken accessToken) {
-        // can be launched in a separate asynchronous job
-        loginRepository.oAuthLogin(network, accessToken, new LoginCallback() {
-            @Override
-            public void onSuccess(LoggedInUser loggedInUser) {
-                ///[返回结果及错误处理]返回结果
-                resultLiveData.postValue(new Result(R.string.result_success_login, null));   ///use live data's postValue(..) method from background thread.
-            }
-
-            @Override
-            public void onError(LoginException e) {
-                ///use live data's postValue(..) method from background thread.
-                resultLiveData.postValue(new Result(null, getErrorIntegerRes(e), network, accessToken));
-            }
-        });
-    }
 
     ///[oAuth#NetworkAccessTokenMap]
     private MutableLiveData<HashMap<SocialNetwork.Network, AccessToken>> networkAccessTokenMapLiveData = new MutableLiveData<>();
@@ -157,6 +141,25 @@ public class LoginViewModel extends ViewModel {
             networkAccessTokenMapLiveData.getValue().put(network, accessToken); ///注意：不能触发onChange
         }
         networkAccessTokenMapLiveData.setValue(networkAccessTokenMapLiveData.getValue());   ///触发onChange
+    }
+
+    ///[oAuth#oAuthLogin]
+    public void oAuthLogin(SocialNetwork.Network network, AccessToken accessToken) {
+        final HashMap<SocialNetwork.Network, AccessToken> networkAccessTokenMap = getNetworkAccessTokenMapLiveData().getValue();
+        // can be launched in a separate asynchronous job
+        loginRepository.oAuthLogin(network, accessToken, networkAccessTokenMap, new LoginCallback() {
+            @Override
+            public void onSuccess(LoggedInUser loggedInUser) {
+                ///[返回结果及错误处理]返回结果
+                resultLiveData.postValue(new Result(R.string.result_success_login, null));   ///use live data's postValue(..) method from background thread.
+            }
+
+            @Override
+            public void onError(LoginException e) {
+                ///use live data's postValue(..) method from background thread.
+                resultLiveData.postValue(new Result(null, getErrorIntegerRes(e), network, accessToken));
+            }
+        });
     }
 
 }

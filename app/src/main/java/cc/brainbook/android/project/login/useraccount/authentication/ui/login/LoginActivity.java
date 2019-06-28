@@ -321,7 +321,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 break;
             case R.id.btn_oauth_bind_login:
                 pbLoading.setVisibility(View.VISIBLE);
-//                actionLogin();////////////////
+                ///[oAuth#actionOauthBindLogin()]
+                actionLogin();
                 break;
             case R.id.btn_oauth_bind_register:
 //                startActivity(new Intent(LoginActivity.this, RegisterActivity.class));//////////////////
@@ -452,6 +453,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         mobLinkedInNetwork = new MobLinkedInNetwork(this, btnLinkedInLogin, this);
         easyLogin.addSocialNetwork(mobLinkedInNetwork);
 
+        ///LoginActivity初始化时，保证所有network为logout
+        easyLogin.logoutAllNetworks();
     }
 
     @Override
@@ -486,7 +489,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             }
         });
 
-        ///[oAuth]oAuthLogin
+        ///[oAuth#actionOAuthLogin()]
         actionOAuthLogin(network, accessToken);
     }
 
@@ -506,7 +509,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         });
     }
 
-    ///[oAuth]oAuthLogin
+    ///[oAuth#actionOAuthLogin()]
     private void actionOAuthLogin(SocialNetwork.Network network, AccessToken accessToken) {
         loginViewModel.oAuthLogin(network, accessToken);
     }

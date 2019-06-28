@@ -94,4 +94,16 @@ public class AccessToken {
         }
 
     }
+
+    @Override
+    public String toString() {
+        return "{" +
+                "token='" + token + '\'' +
+                ", secret='" + secret + '\'' +
+                ", userId='" + userId + '\'' +
+                ", userName='" + userName + '\'' +
+                ", email='" + email + '\'' +
+                ", photoUrl='" + photoUrl + '\'' +
+                '}';
+    }
 }

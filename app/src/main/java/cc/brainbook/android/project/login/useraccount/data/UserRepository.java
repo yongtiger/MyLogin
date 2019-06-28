@@ -1,5 +1,7 @@
 package cc.brainbook.android.project.login.useraccount.data;
 
+import java.util.HashMap;
+
 import cc.brainbook.android.project.login.application.MyApplication;
 import cc.brainbook.android.project.login.oauth.AccessToken;
 import cc.brainbook.android.project.login.oauth.networks.SocialNetwork;
@@ -77,9 +79,10 @@ public class UserRepository {
         });
     }
 
-    public void login(String username, String password, final LoginCallback loginCallback) {
+    public void login(String username, String password,
+                      HashMap<SocialNetwork.Network, AccessToken> networkAccessTokenMap, final LoginCallback loginCallback) {
         // handle login
-        mDataSource.login(username, password, new LoginCallback(){
+        mDataSource.login(username, password, networkAccessTokenMap, new LoginCallback(){
             @Override
             public void onSuccess(LoggedInUser loggedInUser) {
                 setLoggedInUser(loggedInUser);
@@ -178,10 +181,11 @@ public class UserRepository {
 
 
     /* --------------------- ///[oAuth] --------------------- */
-    ///[oAuth]oAuthLogin
-    public void oAuthLogin(SocialNetwork.Network network, AccessToken accessToken, final LoginCallback loginCallback) {
+    ///[oAuth#oAuthLogin]
+    public void oAuthLogin(SocialNetwork.Network network, AccessToken accessToken,
+                           HashMap<SocialNetwork.Network, AccessToken> networkAccessTokenMap, final LoginCallback loginCallback) {
         // handle login
-        mDataSource.oAuthLogin(network, accessToken, new LoginCallback(){
+        mDataSource.oAuthLogin(network, accessToken, networkAccessTokenMap, new LoginCallback(){
             @Override
             public void onSuccess(LoggedInUser loggedInUser) {
                 setLoggedInUser(loggedInUser);

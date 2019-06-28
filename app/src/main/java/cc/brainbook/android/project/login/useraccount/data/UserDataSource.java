@@ -13,6 +13,7 @@ import cc.brainbook.android.project.login.useraccount.modify.interfaces.ModifyCa
 import cc.brainbook.android.project.login.useraccount.authentication.exception.LoginException;
 import cc.brainbook.android.project.login.useraccount.authentication.exception.RegisterException;
 import cc.brainbook.android.project.login.useraccount.authentication.interfaces.RegisterCallback;
+
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.MediaType;
@@ -22,6 +23,7 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
 import cc.brainbook.android.project.login.useraccount.authentication.interfaces.LoginCallback;
@@ -52,6 +54,7 @@ public class UserDataSource {
     private static final String KEY_MOBILE = "mobile";
     private static final String KEY_NETWORK = "network";
     private static final String KEY_OPEN_ID = "openId";
+    private static final String KEY_NETWORK_ACCESS_TOKEN_MAP = "networkAccessTokenMap";
 
     public void register(String username, String password, final RegisterCallback registerCallback) {
         ///https://stackoverflow.com/questions/34179922/okhttp-post-body-as-json
@@ -125,13 +128,15 @@ public class UserDataSource {
                 });
     }
 
-    public void login(String username, String password, final LoginCallback loginCallback) {
+    public void login(String username, String password,
+                      HashMap<SocialNetwork.Network, AccessToken> networkAccessTokenMap, final LoginCallback loginCallback) {
         ///https://stackoverflow.com/questions/34179922/okhttp-post-body-as-json
         final JSONObject jsonObject = new JSONObject();
         try {
             //Populate the sendVerificationCode parameters
             jsonObject.put(KEY_USERNAME, username);
             jsonObject.put(KEY_PASSWORD, password);
+            jsonObject.put(KEY_NETWORK_ACCESS_TOKEN_MAP, new Gson().toJson(networkAccessTokenMap)); ///using Gson to convert Map to Json
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -560,14 +565,16 @@ public class UserDataSource {
 
 
     /* --------------------- ///[oAuth] --------------------- */
-    ///[oAuth]oAuthLogin
-    public void oAuthLogin(SocialNetwork.Network network, AccessToken accessToken, final LoginCallback loginCallback) {
+    ///[oAuth#oAuthLogin()]
+    public void oAuthLogin(SocialNetwork.Network network, AccessToken accessToken,
+                           HashMap<SocialNetwork.Network, AccessToken> networkAccessTokenMap, final LoginCallback loginCallback) {
         ///https://stackoverflow.com/questions/34179922/okhttp-post-body-as-json
         final JSONObject jsonObject = new JSONObject();
         try {
             //Populate the sendVerificationCode parameters
             jsonObject.put(KEY_NETWORK, network);
             jsonObject.put(KEY_OPEN_ID, accessToken.getUserId());
+            jsonObject.put(KEY_NETWORK_ACCESS_TOKEN_MAP, new Gson().toJson(networkAccessTokenMap)); ///using Gson to convert Map to Json
         } catch (JSONException e) {
             e.printStackTrace();
         }
