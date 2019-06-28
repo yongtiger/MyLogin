@@ -1,6 +1,7 @@
 package cc.brainbook.android.project.login.useraccount.data;
 
 import cc.brainbook.android.project.login.application.MyApplication;
+import cc.brainbook.android.project.login.oauth.AccessToken;
 import cc.brainbook.android.project.login.oauth.networks.SocialNetwork;
 import cc.brainbook.android.project.login.useraccount.modify.exception.ModifyException;
 import cc.brainbook.android.project.login.useraccount.modify.interfaces.ModifyCallback;
@@ -177,9 +178,10 @@ public class UserRepository {
 
 
     /* --------------------- ///[oAuth] --------------------- */
-    public void oAuthLogin(SocialNetwork.Network network, String openId, final LoginCallback loginCallback) {
+    ///[oAuth]oAuthLogin
+    public void oAuthLogin(SocialNetwork.Network network, AccessToken accessToken, final LoginCallback loginCallback) {
         // handle login
-        mDataSource.oAuthLogin(network, openId, new LoginCallback(){
+        mDataSource.oAuthLogin(network, accessToken, new LoginCallback(){
             @Override
             public void onSuccess(LoggedInUser loggedInUser) {
                 setLoggedInUser(loggedInUser);

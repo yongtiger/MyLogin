@@ -58,7 +58,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         registerViewModel = ViewModelProviders.of(this, new RegisterViewModelFactory(false, false))  ///[EditText显示/隐藏Password]初始化
                 .get(RegisterViewModel.class);
 
-        registerViewModel.getRegisterFormState().observe(this, new Observer<RegisterFormState>() {
+        registerViewModel.getRegisterFormStateLiveData().observe(this, new Observer<RegisterFormState>() {
             @Override
             public void onChanged(@Nullable RegisterFormState registerFormState) {
                 if (registerFormState == null) {
@@ -85,7 +85,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             }
         });
 
-        registerViewModel.getResult().observe(this, new Observer<Result>() {
+        registerViewModel.getResultLiveData().observe(this, new Observer<Result>() {
             @Override
             public void onChanged(@Nullable Result result) {
                 if (result == null) {
@@ -116,7 +116,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             }
         });
 
-        registerViewModel.getPasswordVisibility().observe(this, new Observer<Boolean>() {
+        registerViewModel.getPasswordVisibilityLiveData().observe(this, new Observer<Boolean>() {
             @Override
             public void onChanged(@Nullable Boolean aBoolean) {
                 if (aBoolean == null) {
@@ -135,7 +135,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             }
         });
 
-        registerViewModel.getRepeatPasswordVisibility().observe(this, new Observer<Boolean>() {
+        registerViewModel.getRepeatPasswordVisibilityLiveData().observe(this, new Observer<Boolean>() {
             @Override
             public void onChanged(@Nullable Boolean aBoolean) {
                 if (aBoolean == null) {
@@ -169,7 +169,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             case R.id.iv_password_visibility:
                 ///[EditText显示/隐藏Password]
                 ///注意：因为初始化了，所以不会产生NullPointerException
-                registerViewModel.setPasswordVisibility(!registerViewModel.getPasswordVisibility().getValue());
+                registerViewModel.setPasswordVisibilityLiveData(!registerViewModel.getPasswordVisibilityLiveData().getValue());
                 break;
             case R.id.iv_clear_repeat_password:
                 ///[EditText清除输入框]
@@ -178,7 +178,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             case R.id.iv_repeat_password_visibility:
                 ///[EditText显示/隐藏Password]
                 ///注意：因为初始化了，所以不会产生NullPointerException
-                registerViewModel.setRepeatPasswordVisibility(!registerViewModel.getRepeatPasswordVisibility().getValue());
+                registerViewModel.setRepeatPasswordVisibilityLiveData(!registerViewModel.getRepeatPasswordVisibilityLiveData().getValue());
                 break;
             case R.id.btn_register:
                 pbLoading.setVisibility(View.VISIBLE);
@@ -309,8 +309,8 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
     private void actionRegister() {
         ///[FIX#IME_ACTION_DONE没检验form表单状态]
-        if (registerViewModel.getRegisterFormState().getValue() != null
-                && registerViewModel.getRegisterFormState().getValue().isDataValid()) {
+        if (registerViewModel.getRegisterFormStateLiveData().getValue() != null
+                && registerViewModel.getRegisterFormStateLiveData().getValue().isDataValid()) {
             registerViewModel.register(etUsername.getText().toString(),
                     etPassword.getText().toString());
         }

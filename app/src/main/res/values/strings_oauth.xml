@@ -13,4 +13,6 @@
     <string name="twitter_consumer_secret">WeuZkq08lXRMHU26JL0xc8gan2gKDmUn3U44A4ICgj95fBXnK1</string>
 
     <string name="error_invalid_oauth_network_and_openid">Not valid network and openid</string>
+    <string name="oauth_bind_login">Oauth Bind Login</string>
+    <string name="oauth_bind_register">Oauth Bind Register</string>
 </resources>

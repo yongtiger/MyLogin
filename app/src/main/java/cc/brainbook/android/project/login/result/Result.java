@@ -3,6 +3,9 @@ package cc.brainbook.android.project.login.result;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 
+import cc.brainbook.android.project.login.oauth.AccessToken;
+import cc.brainbook.android.project.login.oauth.networks.SocialNetwork;
+
 /**
  * Result : success or error message.
  */
@@ -12,9 +15,19 @@ public class Result {
     @Nullable @StringRes
     private Integer error;
 
+    private SocialNetwork.Network network;
+    private AccessToken accessToken;
+
     public Result(@Nullable @StringRes Integer success, @Nullable @StringRes Integer error) {
         this.success = success;
         this.error = error;
+    }
+
+    public Result(@Nullable @StringRes Integer success, @Nullable @StringRes Integer error, SocialNetwork.Network network, AccessToken accessToken) {
+        this.success = success;
+        this.error = error;
+        this.network = network;
+        this.accessToken = accessToken;
     }
 
     @Nullable @StringRes
@@ -25,5 +38,12 @@ public class Result {
     @Nullable @StringRes
     public Integer getError() {
         return error;
+    }
+
+    public Object getNetwork() {
+        return network;
+    }
+    public Object getAccessToken() {
+        return accessToken;
     }
 }

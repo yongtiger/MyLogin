@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import cc.brainbook.android.project.login.oauth.AccessToken;
 import cc.brainbook.android.project.login.oauth.networks.SocialNetwork;
 import cc.brainbook.android.project.login.useraccount.authentication.exception.LogoutException;
 import cc.brainbook.android.project.login.useraccount.modify.exception.ModifyException;
@@ -559,13 +560,14 @@ public class UserDataSource {
 
 
     /* --------------------- ///[oAuth] --------------------- */
-    public void oAuthLogin(SocialNetwork.Network network, String openId, final LoginCallback loginCallback) {
+    ///[oAuth]oAuthLogin
+    public void oAuthLogin(SocialNetwork.Network network, AccessToken accessToken, final LoginCallback loginCallback) {
         ///https://stackoverflow.com/questions/34179922/okhttp-post-body-as-json
         final JSONObject jsonObject = new JSONObject();
         try {
             //Populate the sendVerificationCode parameters
             jsonObject.put(KEY_NETWORK, network);
-            jsonObject.put(KEY_OPEN_ID, openId);
+            jsonObject.put(KEY_OPEN_ID, accessToken.getUserId());
         } catch (JSONException e) {
             e.printStackTrace();
         }

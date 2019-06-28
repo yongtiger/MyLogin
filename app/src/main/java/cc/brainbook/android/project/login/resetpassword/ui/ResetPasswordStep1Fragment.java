@@ -59,7 +59,7 @@ public class ResetPasswordStep1Fragment extends Fragment implements View.OnClick
         resetPasswordViewModel = ViewModelProviders.of(Objects.requireNonNull(getActivity()), new ResetPasswordViewModelFactory())
                 .get(ResetPasswordViewModel.class);
 
-        resetPasswordViewModel.getResetPasswordStep1FormState().observe(this, new Observer<ResetPasswordStep1FormState>() {
+        resetPasswordViewModel.getResetPasswordStep1FormStateLiveData().observe(this, new Observer<ResetPasswordStep1FormState>() {
             @Override
             public void onChanged(@Nullable ResetPasswordStep1FormState resetPasswordStep1FormState) {
                 if (resetPasswordStep1FormState == null) {
@@ -76,8 +76,8 @@ public class ResetPasswordStep1Fragment extends Fragment implements View.OnClick
             }
         });
 
-        resetPasswordViewModel.setResult();
-        resetPasswordViewModel.getResult().observe(this, new Observer<Result>() {
+        resetPasswordViewModel.setResultLiveData();
+        resetPasswordViewModel.getResultLiveData().observe(this, new Observer<Result>() {
             @Override
             public void onChanged(@Nullable Result result) {
                 if (result == null) {
@@ -187,8 +187,8 @@ public class ResetPasswordStep1Fragment extends Fragment implements View.OnClick
     }
 
     private void actionNext() {
-        if (resetPasswordViewModel.getResetPasswordStep1FormState().getValue() != null
-                && resetPasswordViewModel.getResetPasswordStep1FormState().getValue().isDataValid()) {
+        if (resetPasswordViewModel.getResetPasswordStep1FormStateLiveData().getValue() != null
+                && resetPasswordViewModel.getResetPasswordStep1FormStateLiveData().getValue().isDataValid()) {
             resetPasswordViewModel.findUser(etUsername.getText().toString());
         }
     }

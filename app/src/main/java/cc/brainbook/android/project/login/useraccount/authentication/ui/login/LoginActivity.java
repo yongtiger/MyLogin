@@ -30,6 +30,7 @@ import com.google.android.gms.common.SignInButton;
 import com.twitter.sdk.android.core.identity.TwitterLoginButton;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 import cc.brainbook.android.project.login.R;
@@ -70,7 +71,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     ///[oAuth#EasyLogin]
     private EasyLogin easyLogin;
-    private TextView tvConnectedStatus;
     private GoogleNetwork googlePlusNetwork;
     private FacebookNetwork facebookNetwork;
     private TwitterNetwork twitterNetwork;
@@ -83,6 +83,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private MobWechatNetwork mobWechatNetwork;
     private MobSinaWeiboNetwork mobSinaWeiboNetwork;
 
+    ///[oAuth#NetworkAccessTokenMap]
+    private Button btnOauthBindLogin;
+    private Button btnOauthBindRegister;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -99,7 +102,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         loginViewModel = ViewModelProviders.of(this, new LoginViewModelFactory(false))  ///[EditText显示/隐藏Password]初始化
                 .get(LoginViewModel.class);
 
-        loginViewModel.getLoginFormState().observe(this, new Observer<LoginFormState>() {
+        loginViewModel.getLoginFormStateLiveData().observe(this, new Observer<LoginFormState>() {
             @Override
             public void onChanged(@Nullable LoginFormState loginFormState) {
                 if (loginFormState == null) {
@@ -121,7 +124,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             }
         });
 
-        loginViewModel.getResult().observe(this, new Observer<Result>() {
+        loginViewModel.getResultLiveData().observe(this, new Observer<Result>() {
             @Override
             public void onChanged(@Nullable Result result) {
                 if (result == null) {
@@ -141,8 +144,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         case R.string.login_error_invalid_password:
                             etPassword.requestFocus();
                             break;
-                        case R.string.error_invalid_oauth_network_and_openid:///[oAuth]
-                            etPassword.requestFocus();
+                        case R.string.error_invalid_oauth_network_and_openid:   ///[oAuth#NetworkAccessTokenMap]
+                            final SocialNetwork.Network network = (SocialNetwork.Network) result.getNetwork();
+                            final AccessToken accessToken = (AccessToken) result.getAccessToken();
+                            loginViewModel.addNetworkAccessTokenMap(network, accessToken);
                             break;
                         default:    ///R.string.error_unknown
                     }
@@ -164,7 +169,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         });
 
         ///[EditText显示/隐藏Password]
-        loginViewModel.getPasswordVisibility().observe(this, new Observer<Boolean>() {
+        loginViewModel.getPasswordVisibilityLiveData().observe(this, new Observer<Boolean>() {
             @Override
             public void onChanged(@Nullable Boolean aBoolean) {
                 if (aBoolean == null) {
@@ -188,40 +193,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         ///[oAuth#EasyLogin]
         initEasyLogin();
-    }
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.iv_clear_username:
-                ///[EditText清除输入框]
-                etUsername.setText("");
-                break;
-            case R.id.iv_clear_password:
-                ///[EditText清除输入框]
-                etPassword.setText("");
-                break;
-            case R.id.iv_password_visibility:
-                ///[EditText显示/隐藏Password]
-                ///注意：因为初始化了，所以不会产生NullPointerException
-                loginViewModel.setPasswordVisibility(!loginViewModel.getPasswordVisibility().getValue());
-                break;
-            case R.id.btn_reset:
-                ///[ResetPassword]
-                startActivity(new Intent(LoginActivity.this, ResetPasswordActivity.class));
-                break;
-            case R.id.cb_remember_me:
-                ///[RememberMe]如果RememberMe未勾选，则保存SharedPreferences的用户名/密码为null
-                saveRememberMe(false);
-                break;
-            case R.id.btn_login:
-                pbLoading.setVisibility(View.VISIBLE);
-                actionLogin();
-                break;
-            case R.id.btn_register:
-                startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
-                break;
-        }
+        ///[oAuth#NetworkAccessTokenMap]
+        loginViewModel.getNetworkAccessTokenMapLiveData().observe(this, new Observer<HashMap<SocialNetwork.Network, AccessToken>>() {
+            @Override
+            public void onChanged(@Nullable HashMap<SocialNetwork.Network, AccessToken> networkAccessTokenMap) {
+                updateUI();
+            }
+        });
     }
 
     private void initView() {
@@ -236,6 +215,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         btnLogin = findViewById(R.id.btn_login);
         btnRegister = findViewById(R.id.btn_register);
+        btnOauthBindLogin = findViewById(R.id.btn_oauth_bind_login);
+        btnOauthBindRegister = findViewById(R.id.btn_oauth_bind_register);
 
         pbLoading = findViewById(R.id.pb_loading);
     }
@@ -250,6 +231,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         btnLogin.setOnClickListener(this);
         btnRegister.setOnClickListener(this);
+        btnOauthBindLogin.setOnClickListener(this);
+        btnOauthBindRegister.setOnClickListener(this);
 
         etUsername.addTextChangedListener(new TextWatcher() {
             @Override
@@ -305,6 +288,47 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         });
     }
 
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.iv_clear_username:
+                ///[EditText清除输入框]
+                etUsername.setText("");
+                break;
+            case R.id.iv_clear_password:
+                ///[EditText清除输入框]
+                etPassword.setText("");
+                break;
+            case R.id.iv_password_visibility:
+                ///[EditText显示/隐藏Password]
+                ///注意：因为初始化了，所以不会产生NullPointerException
+                loginViewModel.setPasswordVisibilityLiveData(!loginViewModel.getPasswordVisibilityLiveData().getValue());
+                break;
+            case R.id.btn_reset:
+                ///[ResetPassword]
+                startActivity(new Intent(LoginActivity.this, ResetPasswordActivity.class));
+                break;
+            case R.id.cb_remember_me:
+                ///[RememberMe]如果RememberMe未勾选，则保存SharedPreferences的用户名/密码为null
+                saveRememberMe(false);
+                break;
+            case R.id.btn_login:
+                pbLoading.setVisibility(View.VISIBLE);
+                actionLogin();
+                break;
+            case R.id.btn_register:
+                startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
+                break;
+            case R.id.btn_oauth_bind_login:
+                pbLoading.setVisibility(View.VISIBLE);
+//                actionLogin();////////////////
+                break;
+            case R.id.btn_oauth_bind_register:
+//                startActivity(new Intent(LoginActivity.this, RegisterActivity.class));//////////////////
+                break;
+        }
+    }
+
     /**
      * 根据SharedPreferences是否保存用户名/密码来设置RememberMe的初始选择状态
      *
@@ -338,8 +362,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     private void actionLogin() {
         ///[FIX#IME_ACTION_DONE没检验form表单状态]
-        if (loginViewModel.getLoginFormState().getValue() != null
-                && loginViewModel.getLoginFormState().getValue().isDataValid()) {
+        if (loginViewModel.getLoginFormStateLiveData().getValue() != null
+                && loginViewModel.getLoginFormStateLiveData().getValue().isDataValid()) {
             loginViewModel.login(etUsername.getText().toString(),
                     etPassword.getText().toString());
         }
@@ -350,29 +374,29 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void updateUI() {
-        final StringBuilder content = new StringBuilder();
         for (SocialNetwork socialNetwork : easyLogin.getInitializedSocialNetworks()) {
-            content.append(socialNetwork.getNetwork())
-                    .append(": ")
-                    .append(socialNetwork.isConnected())
-                    .append("\n");
-
             socialNetwork.setButtonEnabled(!socialNetwork.isConnected());
-
-            if (socialNetwork.isConnected()) {
-                Log.d("TAG", "updateUI(): " + socialNetwork.getNetwork());
-            }
-
         }
 
-        tvConnectedStatus.setText(content.toString());
+        ///[oAuth#NetworkAccessTokenMap]
+        if (loginViewModel.getNetworkAccessTokenMapLiveData() == null
+                || loginViewModel.getNetworkAccessTokenMapLiveData().getValue() == null
+                || loginViewModel.getNetworkAccessTokenMapLiveData().getValue().isEmpty()) {
+            btnLogin.setVisibility(View.VISIBLE);
+            btnRegister.setVisibility(View.VISIBLE);
+            btnOauthBindLogin.setVisibility(View.GONE);
+            btnOauthBindRegister.setVisibility(View.GONE);
+        } else {
+            btnLogin.setVisibility(View.GONE);
+            btnRegister.setVisibility(View.GONE);
+            btnOauthBindLogin.setVisibility(View.VISIBLE);
+            btnOauthBindRegister.setVisibility(View.VISIBLE);
+        }
     }
 
 
     /* --------------------- ///[oAuth] --------------------- */
     private void initEasyLogin() {
-        tvConnectedStatus = (TextView) findViewById(R.id.connected_status);
-
         easyLogin = EasyLogin.getInstance();
 
         ///[oAuth#EasyLogin#Google Sign In]
@@ -430,10 +454,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     }
 
-    private void actionOAuthLogin(SocialNetwork.Network network, String openId) {
-        loginViewModel.oAuthLogin(network, openId);
-    }
-
     @Override
     protected void onResume() {
         super.onResume();
@@ -466,8 +486,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             }
         });
 
-        ///todo ... oAuthLogin()
-        actionOAuthLogin(network, accessToken.getUserId());
+        ///[oAuth]oAuthLogin
+        actionOAuthLogin(network, accessToken);
     }
 
     @Override
@@ -484,6 +504,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    ///[oAuth]oAuthLogin
+    private void actionOAuthLogin(SocialNetwork.Network network, AccessToken accessToken) {
+        loginViewModel.oAuthLogin(network, accessToken);
     }
 
 }

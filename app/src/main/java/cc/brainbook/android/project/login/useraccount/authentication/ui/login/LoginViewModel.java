@@ -6,8 +6,10 @@ import android.arch.lifecycle.ViewModel;
 import android.text.TextUtils;
 import android.util.Patterns;
 
+import java.util.HashMap;
 import java.util.regex.Pattern;
 
+import cc.brainbook.android.project.login.oauth.AccessToken;
 import cc.brainbook.android.project.login.oauth.networks.SocialNetwork;
 import cc.brainbook.android.project.login.result.Result;
 import cc.brainbook.android.project.login.useraccount.authentication.exception.LoginException;
@@ -15,7 +17,6 @@ import cc.brainbook.android.project.login.useraccount.authentication.interfaces.
 import cc.brainbook.android.project.login.useraccount.data.UserRepository;
 import cc.brainbook.android.project.login.useraccount.data.model.LoggedInUser;
 import cc.brainbook.android.project.login.R;
-import cc.brainbook.android.project.login.useraccount.modify.exception.ModifyException;
 
 import static cc.brainbook.android.project.login.config.Config.REGEXP_PASSWORD;
 import static cc.brainbook.android.project.login.config.Config.REGEXP_USERNAME;
@@ -28,9 +29,9 @@ import static cc.brainbook.android.project.login.useraccount.authentication.exce
 
 public class LoginViewModel extends ViewModel {
 
-    private MutableLiveData<LoginFormState> loginFormState = new MutableLiveData<>();
-    private MutableLiveData<Result> loginResult = new MutableLiveData<>();
-    private MutableLiveData<Boolean> passwordVisibility = new MutableLiveData<>();
+    private MutableLiveData<LoginFormState> loginFormStateLiveData = new MutableLiveData<>();
+    private MutableLiveData<Result> resultLiveData = new MutableLiveData<>();
+    private MutableLiveData<Boolean> passwordVisibilityLiveData = new MutableLiveData<>();
 
     private UserRepository loginRepository; ///ViewModel should not be doing any data loading tasks. Use Repository instead.
 
@@ -38,23 +39,26 @@ public class LoginViewModel extends ViewModel {
         this.loginRepository = loginRepository;
 
         ///[EditText显示/隐藏Password]初始化
-        this.passwordVisibility.setValue(passwordVisibility);
+        passwordVisibilityLiveData.setValue(passwordVisibility);
+
+        ///[oAuth#NetworkAccessTokenMap]
+        networkAccessTokenMapLiveData.setValue(new HashMap<SocialNetwork.Network, AccessToken>());
     }
 
-    LiveData<LoginFormState> getLoginFormState() {
-        return loginFormState;
+    LiveData<LoginFormState> getLoginFormStateLiveData() {
+        return loginFormStateLiveData;
     }
 
-    LiveData<Result> getResult() {
-        return loginResult;
+    LiveData<Result> getResultLiveData() {
+        return resultLiveData;
     }
 
     ///[EditText显示/隐藏Password]
-    public LiveData<Boolean> getPasswordVisibility() {
-        return passwordVisibility;
+    public LiveData<Boolean> getPasswordVisibilityLiveData() {
+        return passwordVisibilityLiveData;
     }
-    public void setPasswordVisibility(boolean isVisible) {
-        passwordVisibility.setValue(isVisible);
+    public void setPasswordVisibilityLiveData(boolean isVisible) {
+        passwordVisibilityLiveData.setValue(isVisible);
     }
 
     public void login(String username, String password) {
@@ -63,13 +67,13 @@ public class LoginViewModel extends ViewModel {
             @Override
             public void onSuccess(LoggedInUser loggedInUser) {
                 ///[返回结果及错误处理]返回结果
-                loginResult.postValue(new Result(R.string.result_success_login, null));   ///use live data's postValue(..) method from background thread.
+                resultLiveData.postValue(new Result(R.string.result_success_login, null));   ///use live data's postValue(..) method from background thread.
             }
 
             @Override
             public void onError(LoginException e) {
                 ///use live data's postValue(..) method from background thread.
-                loginResult.postValue(new Result(null, getErrorIntegerRes(e)));
+                resultLiveData.postValue(new Result(null, getErrorIntegerRes(e)));
             }
         });
     }
@@ -77,7 +81,7 @@ public class LoginViewModel extends ViewModel {
     public void loginDataChanged(String username, String password) {
         ///[EditText错误提示]
         ///[FIX#只显示username或password其中一个错误提示！应该同时都显示]
-        loginFormState.setValue(new LoginFormState(
+        loginFormStateLiveData.setValue(new LoginFormState(
                 isUsernameValid(username) ? null : R.string.error_invalid_username,
                 isPasswordValid(password) ? null : R.string.error_invalid_password));
     }
@@ -121,22 +125,38 @@ public class LoginViewModel extends ViewModel {
         return error;
     }
 
+
     /* --------------------- ///[oAuth] --------------------- */
-    public void oAuthLogin(SocialNetwork.Network network, String openId) {
+    ///[oAuth]oAuthLogin
+    public void oAuthLogin(SocialNetwork.Network network, AccessToken accessToken) {
         // can be launched in a separate asynchronous job
-        loginRepository.oAuthLogin(network, openId, new LoginCallback() {
+        loginRepository.oAuthLogin(network, accessToken, new LoginCallback() {
             @Override
             public void onSuccess(LoggedInUser loggedInUser) {
                 ///[返回结果及错误处理]返回结果
-                loginResult.postValue(new Result(R.string.result_success_login, null));   ///use live data's postValue(..) method from background thread.
+                resultLiveData.postValue(new Result(R.string.result_success_login, null));   ///use live data's postValue(..) method from background thread.
             }
 
             @Override
             public void onError(LoginException e) {
                 ///use live data's postValue(..) method from background thread.
-                loginResult.postValue(new Result(null, getErrorIntegerRes(e)));
+                resultLiveData.postValue(new Result(null, getErrorIntegerRes(e), network, accessToken));
             }
         });
+    }
+
+    ///[oAuth#NetworkAccessTokenMap]
+    private MutableLiveData<HashMap<SocialNetwork.Network, AccessToken>> networkAccessTokenMapLiveData = new MutableLiveData<>();
+
+    LiveData<HashMap<SocialNetwork.Network, AccessToken>> getNetworkAccessTokenMapLiveData() {
+        return networkAccessTokenMapLiveData;
+    }
+
+    public void addNetworkAccessTokenMap(SocialNetwork.Network network, AccessToken accessToken) {
+        if (networkAccessTokenMapLiveData.getValue() != null) {
+            networkAccessTokenMapLiveData.getValue().put(network, accessToken); ///注意：不能触发onChange
+        }
+        networkAccessTokenMapLiveData.setValue(networkAccessTokenMapLiveData.getValue());   ///触发onChange
     }
 
 }

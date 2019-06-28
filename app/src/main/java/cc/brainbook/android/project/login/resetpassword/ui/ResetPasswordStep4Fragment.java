@@ -66,10 +66,10 @@ public class ResetPasswordStep4Fragment extends Fragment implements View.OnClick
                 .get(ResetPasswordViewModel.class);
 
         ///初始化
-        resetPasswordViewModel.setPasswordVisibility(false);
-        resetPasswordViewModel.setRepeatPasswordVisibility(false);
+        resetPasswordViewModel.setPasswordVisibilityLiveData(false);
+        resetPasswordViewModel.setRepeatPasswordVisibilityLiveData(false);
 
-        resetPasswordViewModel.getResetPasswordStep4FormState().observe(this, new Observer<ResetPasswordStep4FormState>() {
+        resetPasswordViewModel.getResetPasswordStep4FormStateLiveData().observe(this, new Observer<ResetPasswordStep4FormState>() {
             @Override
             public void onChanged(@Nullable ResetPasswordStep4FormState resetPasswordStep4FormState) {
                 if (resetPasswordStep4FormState == null) {
@@ -91,8 +91,8 @@ public class ResetPasswordStep4Fragment extends Fragment implements View.OnClick
             }
         });
 
-        resetPasswordViewModel.setResult();
-        resetPasswordViewModel.getResult().observe(this, new Observer<Result>() {
+        resetPasswordViewModel.setResultLiveData();
+        resetPasswordViewModel.getResultLiveData().observe(this, new Observer<Result>() {
             @Override
             public void onChanged(@Nullable Result result) {
                 if (result == null) {
@@ -129,7 +129,7 @@ public class ResetPasswordStep4Fragment extends Fragment implements View.OnClick
             }
         });
 
-        resetPasswordViewModel.getPasswordVisibility().observe(this, new Observer<Boolean>() {
+        resetPasswordViewModel.getPasswordVisibilityLiveData().observe(this, new Observer<Boolean>() {
             @Override
             public void onChanged(@Nullable Boolean aBoolean) {
                 if (aBoolean == null) {
@@ -148,7 +148,7 @@ public class ResetPasswordStep4Fragment extends Fragment implements View.OnClick
             }
         });
 
-        resetPasswordViewModel.getRepeatPasswordVisibility().observe(this, new Observer<Boolean>() {
+        resetPasswordViewModel.getRepeatPasswordVisibilityLiveData().observe(this, new Observer<Boolean>() {
             @Override
             public void onChanged(@Nullable Boolean aBoolean) {
                 if (aBoolean == null) {
@@ -189,7 +189,7 @@ public class ResetPasswordStep4Fragment extends Fragment implements View.OnClick
             case R.id.iv_password_visibility:
                 ///[EditText显示/隐藏Password]
                 ///注意：因为初始化了，所以不会产生NullPointerException
-                resetPasswordViewModel.setPasswordVisibility(!resetPasswordViewModel.getPasswordVisibility().getValue());
+                resetPasswordViewModel.setPasswordVisibilityLiveData(!resetPasswordViewModel.getPasswordVisibilityLiveData().getValue());
                 break;
             case R.id.iv_clear_repeat_password:
                 ///[EditText清除输入框]
@@ -198,7 +198,7 @@ public class ResetPasswordStep4Fragment extends Fragment implements View.OnClick
             case R.id.iv_repeat_password_visibility:
                 ///[EditText显示/隐藏Password]
                 ///注意：因为初始化了，所以不会产生NullPointerException
-                resetPasswordViewModel.setRepeatPasswordVisibility(!resetPasswordViewModel.getRepeatPasswordVisibility().getValue());
+                resetPasswordViewModel.setRepeatPasswordVisibilityLiveData(!resetPasswordViewModel.getRepeatPasswordVisibilityLiveData().getValue());
                 break;
             case R.id.btn_reset:
                 pbLoading.setVisibility(View.VISIBLE);
@@ -292,8 +292,8 @@ public class ResetPasswordStep4Fragment extends Fragment implements View.OnClick
 
     private void actionReset() {
         ///[FIX#IME_ACTION_DONE没检验form表单状态]
-        if (resetPasswordViewModel.getResetPasswordStep4FormState().getValue() != null
-                && resetPasswordViewModel.getResetPasswordStep4FormState().getValue().isDataValid()) {
+        if (resetPasswordViewModel.getResetPasswordStep4FormStateLiveData().getValue() != null
+                && resetPasswordViewModel.getResetPasswordStep4FormStateLiveData().getValue().isDataValid()) {
             resetPasswordViewModel.resetPassword(etPassword.getText().toString());
         }
     }
