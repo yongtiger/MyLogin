@@ -51,8 +51,9 @@ public class FacebookNetwork extends SocialNetwork {
             final String token = fbAccessToken.getToken();
             final String userId = fbAccessToken.getUserId();
             accessToken = new AccessToken.Builder(token)
-                    .userId(userId)
-                    .photoUrl("https://graph.facebook.com/" + userId+ "/picture?type=large")   ///[EasyLogin#photoUrl]
+                    .network(getNetwork().toString())
+                    .openId(userId)
+                    .avatar("https://graph.facebook.com/" + userId+ "/picture?type=large")   ///[EasyLogin#avatar]
                     .build();
             callOauthSuccess();
         }
@@ -99,7 +100,7 @@ public class FacebookNetwork extends SocialNetwork {
     public AccessToken getAccessToken() {
         if (com.facebook.AccessToken.getCurrentAccessToken() != null && accessToken == null) {
             final com.facebook.AccessToken facebookToken = com.facebook.AccessToken.getCurrentAccessToken();
-            accessToken = new AccessToken.Builder(facebookToken.getToken()).userId(facebookToken.getUserId()).build();
+            accessToken = new AccessToken.Builder(facebookToken.getToken()).openId(facebookToken.getUserId()).build();
         }
         return accessToken;
     }
@@ -146,8 +147,8 @@ public class FacebookNetwork extends SocialNetwork {
                         if (response.getError() != null) {
                             Log.e("FacebookNetwork", "Error occurred while fetching Facebook email");
                             accessToken = new AccessToken.Builder(token)
-                                    .userId(userId)
-                                    .photoUrl("https://graph.facebook.com/" + userId+ "/picture?type=large")   ///[EasyLogin#photoUrl]
+                                    .openId(userId)
+                                    .avatar("https://graph.facebook.com/" + userId+ "/picture?type=large")   ///[EasyLogin#avatar]
                                     .build();
                             callOauthSuccess();
                         } else {
@@ -157,10 +158,10 @@ public class FacebookNetwork extends SocialNetwork {
                                 Log.w("FacebookNetwork", "Email could not be fetched. The user might not have an email or have unchecked the checkbox while connecting.");
                             }
                             accessToken = new AccessToken.Builder(token)
-                                    .userId(userId)
+                                    .openId(userId)
                                     .email(email)
-                                    .userName(name)
-                                    .photoUrl("https://graph.facebook.com/" + userId+ "/picture?type=large")   ///[EasyLogin#photoUrl]
+                                    .username(name)
+                                    .avatar("https://graph.facebook.com/" + userId+ "/picture?type=large")   ///[EasyLogin#avatar]
                                     .build();
                             callOauthSuccess();
                         }

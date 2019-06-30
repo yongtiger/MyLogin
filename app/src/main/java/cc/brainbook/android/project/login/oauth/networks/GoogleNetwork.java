@@ -110,10 +110,11 @@ public class GoogleNetwork extends SocialNetwork {
 
             if (acct != null) {
                 accessToken = new AccessToken.Builder(acct.getIdToken())
-                        .userId(acct.getId())
-                        .userName(acct.getDisplayName())
+                        .network(getNetwork().toString())
+                        .openId(acct.getId())
+                        .username(acct.getDisplayName())
                         .email(acct.getEmail())
-                        .photoUrl((acct.getPhotoUrl() == null) ? null : acct.getPhotoUrl().toString())   ///[EasyLogin#photoUrl]
+                        .avatar((acct.getPhotoUrl() == null) ? null : acct.getPhotoUrl().toString())   ///[EasyLogin#avatar]
                         .build();
                 callOauthSuccess();
             }

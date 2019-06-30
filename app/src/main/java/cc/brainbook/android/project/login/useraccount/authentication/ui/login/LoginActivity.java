@@ -496,10 +496,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     @Override
     public void onOauthSuccess(Config.Network network, AccessToken accessToken) {
         Log.d("TAG", network + " Oauth successful: " + accessToken.getToken()
-                + "|||" + accessToken.getUserId()
-                + "|||" + accessToken.getUserName()
+                + "|||" + accessToken.getOpenId()
+                + "|||" + accessToken.getUsername()
                 + "|||" + accessToken.getEmail()
-                + "|||" + accessToken.getPhotoUrl());
+                + "|||" + accessToken.getAvatar());
 
         runOnUiThread(new Runnable() {
             @Override

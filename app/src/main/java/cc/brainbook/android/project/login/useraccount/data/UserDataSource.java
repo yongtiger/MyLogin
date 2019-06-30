@@ -57,11 +57,14 @@ public class UserDataSource {
     private static final String KEY_PASSWORD = "password";
     private static final String KEY_EMAIL = "email";
     private static final String KEY_MOBILE = "mobile";
-    private static final String KEY_NETWORK = "network";
-    private static final String KEY_OPEN_ID = "openId";
-    private static final String KEY_OAUTH_NETWORK_ACCESS_TOKEN_MAP = "networkAccessTokenMap";
-    private static final String KEY_OAUTH_UNBIND_NETWORKS = "unbindNetworks";
-    private static final String KEY_OAUTH_BIND_NETWORKS = "bindNetworks";
+    private static final String KEY_OAUTH_NETWORK = "oauth_network";
+    private static final String KEY_OAUTH_OPEN_ID = "oauth_open_id";
+    private static final String KEY_OAUTH_USERNAME = "oauth_username";
+    private static final String KEY_OAUTH_EMAIL = "oauth_email";
+    private static final String KEY_OAUTH_AVATAR = "oauth_avatar";
+    private static final String KEY_OAUTH_NETWORK_ACCESS_TOKEN_MAP = "oauth_network_access_token_map";
+    private static final String KEY_OAUTH_UNBIND_NETWORKS = "oauth_unbind_networks";
+    private static final String KEY_OAUTH_BIND_NETWORKS = "oauth_bind_networks";
 
     ///[oAuth#NetworkAccessTokenMap]
     public void register(String username, String password,
@@ -586,8 +589,11 @@ public class UserDataSource {
         final JSONObject jsonObject = new JSONObject();
         try {
             //Populate the sendVerificationCode parameters
-            jsonObject.put(KEY_NETWORK, network);
-            jsonObject.put(KEY_OPEN_ID, accessToken.getUserId());
+            jsonObject.put(KEY_OAUTH_NETWORK, network);
+            jsonObject.put(KEY_OAUTH_OPEN_ID, accessToken.getOpenId());
+            jsonObject.put(KEY_OAUTH_USERNAME, accessToken.getUsername());
+            jsonObject.put(KEY_OAUTH_EMAIL, accessToken.getEmail());
+            jsonObject.put(KEY_OAUTH_AVATAR, accessToken.getAvatar());
             ///[oAuth#NetworkAccessTokenMap]
             jsonObject.put(KEY_OAUTH_NETWORK_ACCESS_TOKEN_MAP, new Gson().toJson(networkAccessTokenMap)); ///using Gson to convert Map to Json
         } catch (JSONException e) {

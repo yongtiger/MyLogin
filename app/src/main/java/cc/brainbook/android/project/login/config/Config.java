@@ -65,7 +65,7 @@ public class Config {
 
 
     /* ---------------- oAuth ---------------- */
-    //    public static final String OAUTH_LOGIN_URL = HTTP_DOMAIN + "/_study/_login/MyLogin/member/oauth_login.php?start_debug=1&debug_stop=1&use_remote=1&debug_host=" + DEBUG_HOST;
+//        public static final String OAUTH_LOGIN_URL = HTTP_DOMAIN + "/_study/_login/MyLogin/member/oauth_login.php?start_debug=1&debug_stop=1&use_remote=1&debug_host=" + DEBUG_HOST;
     public static final String OAUTH_LOGIN_URL = HTTP_DOMAIN + "/_study/_login/MyLogin/member/oauth_login.php";
 
 //    public static final String OAUTH_UNBIND_URL = HTTP_DOMAIN + "/_study/_login/MyLogin/member/user_account/oauth_unbind.php?start_debug=1&debug_stop=1&use_remote=1&debug_host=" + DEBUG_HOST;

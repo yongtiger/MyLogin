@@ -92,10 +92,11 @@ public abstract class MobBaseNetwork extends SocialNetwork implements PlatformAc
             ///通过DB获取各种数据
             //////??????注意：无Email！
             accessToken = new AccessToken.Builder(platDB.getToken())
+                    .network(getNetwork().toString())
                     .secret(platDB.getTokenSecret())
-                    .userId(platDB.getUserId())
-                    .userName(platDB.getUserName())
-                    .photoUrl(platDB.getUserIcon())   ///[EasyLogin#photoUrl]
+                    .openId(platDB.getUserId())
+                    .username(platDB.getUserName())
+                    .avatar(platDB.getUserIcon())   ///[EasyLogin#avatar]
                     .build();
 
             addExtraData(hashMap);

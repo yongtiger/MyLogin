@@ -30,7 +30,7 @@ public class ResetPasswordDataSource {
     private static final String KEY_STATUS = "status";
     private static final String KEY_MESSAGE = "message";
     private static final String KEY_RESET_PASSWORD_USER = "resetPasswordUser";
-    private static final String KEY_USER_ID = "userId";
+    private static final String KEY_USER_ID = "openId";
     private static final String KEY_USERNAME = "username";
     private static final String KEY_PASSWORD = "password";
     private static final String KEY_EMAIL = "email";

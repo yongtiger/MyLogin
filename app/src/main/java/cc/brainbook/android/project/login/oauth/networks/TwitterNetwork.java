@@ -33,9 +33,10 @@ public class TwitterNetwork extends SocialNetwork {
             final String token = authToken.token;
             final String secret = authToken.secret;
             final AccessToken tempToken = new AccessToken.Builder(token)
+                    .network(getNetwork().toString())
                     .secret(secret)
-                    .userName(session.getUserName())
-                    .userId(String.valueOf(session.getUserId()))
+                    .username(session.getUserName())
+                    .openId(String.valueOf(session.getUserId()))
                     .build();
             requestUser(session, tempToken);
         }
@@ -108,8 +109,9 @@ public class TwitterNetwork extends SocialNetwork {
                     return;
                 }
                 accessToken = new AccessToken.Builder(tempToken)
+                        .network(getNetwork().toString())
                         .email(email)
-                        .photoUrl(result.data.profileImageUrl)
+                        .avatar(result.data.profileImageUrl)
                         .build();
                 callOauthSuccess();
             }

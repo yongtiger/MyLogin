@@ -7,27 +7,30 @@ import android.os.Parcelable;
 public class AccessToken implements Parcelable {    ///[oAuth#NetworkAccessTokenMap]actionRegister()
     private final String token;
     private final String secret;
-    private final String userId;
-    private final String userName;
+    private final String network;
+    private final String open_id;
+    private final String username;
     private final String email;
-    private final String photoUrl;///[EasyLogin#photoUrl]
+    private final String avatar;///[EasyLogin#avatar]
 
     private AccessToken(Builder builder) {
         token = builder.token;
         secret = builder.secret;
-        userId = builder.userId;
-        userName = builder.userName;
+        network = builder.network;
+        open_id = builder.open_id;
+        username = builder.username;
         email = builder.email;
-        photoUrl = builder.photoUrl;///[EasyLogin#photoUrl]
+        avatar = builder.avatar;///[EasyLogin#avatar]
     }
 
     protected AccessToken(Parcel in) {
         token = in.readString();
         secret = in.readString();
-        userId = in.readString();
-        userName = in.readString();
+        network = in.readString();
+        open_id = in.readString();
+        username = in.readString();
         email = in.readString();
-        photoUrl = in.readString();
+        avatar = in.readString();
     }
 
     public static final Creator<AccessToken> CREATOR = new Creator<AccessToken>() {
@@ -50,20 +53,24 @@ public class AccessToken implements Parcelable {    ///[oAuth#NetworkAccessToken
         return secret;
     }
 
-    public String getUserId() {
-        return userId;
+    public String getNetwork() {
+        return network;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getOpenId() {
+        return open_id;
+    }
+
+    public String getUsername() {
+        return username;
     }
 
     public String getEmail() {
         return email;
     }
 
-    public String getPhotoUrl() {
-        return photoUrl;
+    public String getAvatar() {
+        return avatar;
     }
 
     @Override
@@ -75,19 +82,21 @@ public class AccessToken implements Parcelable {    ///[oAuth#NetworkAccessToken
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(token);
         dest.writeString(secret);
-        dest.writeString(userId);
-        dest.writeString(userName);
+        dest.writeString(network);
+        dest.writeString(open_id);
+        dest.writeString(username);
         dest.writeString(email);
-        dest.writeString(photoUrl);
+        dest.writeString(avatar);
     }
 
     public static class Builder {
         private final String token;
         private String secret;
-        private String userId;
-        private String userName;
+        private String network;
+        private String open_id;
+        private String username;
         private String email;
-        private String photoUrl;///[EasyLogin#photoUrl]
+        private String avatar;///[EasyLogin#avatar]
 
         public Builder(String token) {
             this.token = token;
@@ -96,10 +105,11 @@ public class AccessToken implements Parcelable {    ///[oAuth#NetworkAccessToken
         public Builder(AccessToken oldToken) {
             token = oldToken.token;
             secret = oldToken.secret;
-            userId = oldToken.userId;
-            userName = oldToken.userName;
+            network = oldToken.network;
+            open_id = oldToken.open_id;
+            username = oldToken.username;
             email = oldToken.email;
-            photoUrl = oldToken.photoUrl;///[EasyLogin#photoUrl]
+            avatar = oldToken.avatar;///[EasyLogin#avatar]
         }
 
         public Builder secret(String secret) {
@@ -107,13 +117,18 @@ public class AccessToken implements Parcelable {    ///[oAuth#NetworkAccessToken
             return this;
         }
 
-        public Builder userId(String userId) {
-            this.userId = userId;
+        public Builder network(String network) {
+            this.network = network;
             return this;
         }
 
-        public Builder userName(String userName) {
-            this.userName = userName;
+        public Builder openId(String openId) {
+            this.open_id = openId;
+            return this;
+        }
+
+        public Builder username(String userName) {
+            this.username = userName;
             return this;
         }
 
@@ -121,9 +136,9 @@ public class AccessToken implements Parcelable {    ///[oAuth#NetworkAccessToken
             this.email = email;
             return this;
         }
-        ///[EasyLogin#photoUrl]
-        public Builder photoUrl(String photoUrl) {
-            this.photoUrl = photoUrl;
+        ///[EasyLogin#avatar]
+        public Builder avatar(String avatar) {
+            this.avatar = avatar;
             return this;
         }
 
@@ -138,10 +153,10 @@ public class AccessToken implements Parcelable {    ///[oAuth#NetworkAccessToken
         return "{" +
                 "token='" + token + '\'' +
                 ", secret='" + secret + '\'' +
-                ", userId='" + userId + '\'' +
-                ", userName='" + userName + '\'' +
+                ", open_id='" + open_id + '\'' +
+                ", username='" + username + '\'' +
                 ", email='" + email + '\'' +
-                ", photoUrl='" + photoUrl + '\'' +
+                ", avatar='" + avatar + '\'' +
                 '}';
     }
 }
