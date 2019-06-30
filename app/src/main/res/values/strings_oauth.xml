@@ -17,4 +17,5 @@
     <string name="oauth_bind_register">Oauth Bind Register</string>
 
     <string name="result_success_oauth_bind_register">Successfully register and oauth bind</string>
+    <string name="result_success_oauth_unbind">Successfully oauth unbind</string>
 </resources>

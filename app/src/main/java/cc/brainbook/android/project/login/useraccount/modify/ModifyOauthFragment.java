@@ -1,10 +1,11 @@
 package cc.brainbook.android.project.login.useraccount.modify;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
-import android.util.Log;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -97,10 +98,19 @@ public class ModifyOauthFragment extends ListFragment {
     public void onListItemClick(ListView listView, View view, int position, long id) {
         super.onListItemClick(listView, view, position, id);
 
-        final HashMap hashMap = (HashMap) listView.getAdapter().getItem(position);
-        final String network = (String) hashMap.get("network");
-        final String[] networks = new String[] {network};
-        actionOauthUnbind(networks);
+        new AlertDialog.Builder(getActivity())
+                .setTitle("Do you want to unbind?")
+                .setPositiveButton("Unbind", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        final HashMap hashMap = (HashMap) listView.getAdapter().getItem(position);
+                        final String network = (String) hashMap.get("network");
+                        final String[] networks = new String[] {network};
+                        actionOauthUnbind(networks);
+                    }
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
     }
 
     /**
@@ -120,6 +130,10 @@ public class ModifyOauthFragment extends ListFragment {
                         listItem.clear();
                         getData(networks);
                         ((SimpleAdapter) getListAdapter()).notifyDataSetChanged();
+
+                        if (unbindNetworks.length > 0) {
+                            Toast.makeText(getActivity().getApplicationContext(), getString(R.string.result_success_oauth_unbind), Toast.LENGTH_SHORT).show();
+                        }
                     }
                 });
 
