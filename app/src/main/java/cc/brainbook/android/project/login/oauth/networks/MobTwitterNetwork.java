@@ -5,6 +5,7 @@ import android.view.View;
 
 import java.util.HashMap;
 
+import cc.brainbook.android.project.login.oauth.config.Config;
 import cc.brainbook.android.project.login.oauth.listener.OnOauthCompleteListener;
 import cn.sharesdk.framework.ShareSDK;
 import cn.sharesdk.twitter.Twitter;
@@ -18,8 +19,8 @@ public class MobTwitterNetwork extends MobBaseNetwork {
     }
 
     @Override
-    public Network getNetwork() {
-        return Network.MOB_TWITTER;
+    public Config.Network getNetwork() {
+        return Config.Network.MOB_TWITTER;
     }
 
     @Override

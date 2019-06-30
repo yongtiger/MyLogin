@@ -74,6 +74,15 @@ public class ModifyActivity extends AppCompatActivity {
                 .commit();
     }
 
+    public void showModifyOauthFragment() {
+        final ModifyOauthFragment modifyOauthFragment = ModifyOauthFragment.newInstance();
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.container, modifyOauthFragment)
+                .addToBackStack(null)   ///[关闭其它fragment后回退显示ModifyFragment]
+                .setTransition(android.app.FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                .commit();
+    }
+
     public void updateUI(@StringRes Integer successString) {
         Toast.makeText(getApplicationContext(), successString, Toast.LENGTH_LONG).show();
     }

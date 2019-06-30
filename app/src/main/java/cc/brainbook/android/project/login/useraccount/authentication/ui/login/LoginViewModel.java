@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.regex.Pattern;
 
 import cc.brainbook.android.project.login.oauth.AccessToken;
-import cc.brainbook.android.project.login.oauth.networks.SocialNetwork;
+import cc.brainbook.android.project.login.oauth.config.Config;
 import cc.brainbook.android.project.login.result.Result;
 import cc.brainbook.android.project.login.useraccount.authentication.exception.LoginException;
 import cc.brainbook.android.project.login.useraccount.authentication.interfaces.LoginCallback;
@@ -42,7 +42,7 @@ public class LoginViewModel extends ViewModel {
         passwordVisibilityLiveData.setValue(passwordVisibility);
 
         ///[oAuth#NetworkAccessTokenMap]
-        networkAccessTokenMapLiveData.setValue(new HashMap<SocialNetwork.Network, AccessToken>());
+        networkAccessTokenMapLiveData.setValue(new HashMap<Config.Network, AccessToken>());
     }
 
     LiveData<LoginFormState> getLoginFormStateLiveData() {
@@ -63,7 +63,7 @@ public class LoginViewModel extends ViewModel {
 
     public void login(String username, String password) {
         ///[oAuth#NetworkAccessTokenMap]
-        final HashMap<SocialNetwork.Network, AccessToken> networkAccessTokenMap = getNetworkAccessTokenMapLiveData().getValue();
+        final HashMap<Config.Network, AccessToken> networkAccessTokenMap = getNetworkAccessTokenMapLiveData().getValue();
         // can be launched in a separate asynchronous job
         loginRepository.login(username, password, networkAccessTokenMap, new LoginCallback() {
             @Override
@@ -131,13 +131,13 @@ public class LoginViewModel extends ViewModel {
     /* --------------------- ///[oAuth] --------------------- */
 
     ///[oAuth#NetworkAccessTokenMap]
-    private MutableLiveData<HashMap<SocialNetwork.Network, AccessToken>> networkAccessTokenMapLiveData = new MutableLiveData<>();
+    private MutableLiveData<HashMap<Config.Network, AccessToken>> networkAccessTokenMapLiveData = new MutableLiveData<>();
 
-    LiveData<HashMap<SocialNetwork.Network, AccessToken>> getNetworkAccessTokenMapLiveData() {
+    LiveData<HashMap<Config.Network, AccessToken>> getNetworkAccessTokenMapLiveData() {
         return networkAccessTokenMapLiveData;
     }
 
-    public void addNetworkAccessTokenMap(SocialNetwork.Network network, AccessToken accessToken) {
+    public void addNetworkAccessTokenMap(Config.Network network, AccessToken accessToken) {
         if (networkAccessTokenMapLiveData.getValue() != null) {
             networkAccessTokenMapLiveData.getValue().put(network, accessToken); ///注意：不能触发onChange
         }
@@ -151,8 +151,8 @@ public class LoginViewModel extends ViewModel {
     }
 
     ///[oAuth#oAuthLogin]
-    public void oAuthLogin(SocialNetwork.Network network, AccessToken accessToken) {
-        final HashMap<SocialNetwork.Network, AccessToken> networkAccessTokenMap = getNetworkAccessTokenMapLiveData().getValue();
+    public void oAuthLogin(Config.Network network, AccessToken accessToken) {
+        final HashMap<Config.Network, AccessToken> networkAccessTokenMap = getNetworkAccessTokenMapLiveData().getValue();
         // can be launched in a separate asynchronous job
         loginRepository.oAuthLogin(network, accessToken, networkAccessTokenMap, new LoginCallback() {
             @Override

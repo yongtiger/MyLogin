@@ -56,6 +56,17 @@
             stv:sRightTextColor="@color/colorGray"
             stv:sRightIconRes="@drawable/arrow_right_red" />
 
+        <com.allen.library.SuperTextView
+            android:id="@+id/stv_oauth"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:layout_marginTop="20dp"
+            stv:sBackgroundDrawableRes="@color/colorWhite"
+            stv:sDividerLineType="both"
+            stv:sLeftTextString="@string/oauth"
+            stv:sRightTextColor="@color/colorGray"
+            stv:sRightIconRes="@drawable/arrow_right_red" />
+
     </LinearLayout>
 
 </ScrollView>

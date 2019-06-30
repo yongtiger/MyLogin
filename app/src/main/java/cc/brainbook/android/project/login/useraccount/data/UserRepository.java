@@ -4,8 +4,9 @@ import java.util.HashMap;
 
 import cc.brainbook.android.project.login.application.MyApplication;
 import cc.brainbook.android.project.login.oauth.AccessToken;
-import cc.brainbook.android.project.login.oauth.networks.SocialNetwork;
+import cc.brainbook.android.project.login.oauth.config.Config;
 import cc.brainbook.android.project.login.useraccount.modify.exception.ModifyException;
+import cc.brainbook.android.project.login.useraccount.modify.exception.OauthUnbindException;
 import cc.brainbook.android.project.login.useraccount.modify.interfaces.ModifyCallback;
 import cc.brainbook.android.project.login.useraccount.authentication.exception.LoginException;
 import cc.brainbook.android.project.login.useraccount.authentication.exception.LogoutException;
@@ -14,6 +15,7 @@ import cc.brainbook.android.project.login.useraccount.authentication.interfaces.
 import cc.brainbook.android.project.login.useraccount.authentication.interfaces.LogoutCallback;
 import cc.brainbook.android.project.login.useraccount.data.model.LoggedInUser;
 import cc.brainbook.android.project.login.useraccount.authentication.interfaces.RegisterCallback;
+import cc.brainbook.android.project.login.useraccount.modify.interfaces.OauthUnbindCallback;
 import cc.brainbook.android.project.login.util.PrefsUtil;
 
 /**
@@ -66,8 +68,7 @@ public class UserRepository {
 
     ///[oAuth#NetworkAccessTokenMap]
     public void register(String username, String password,
-                         HashMap<SocialNetwork.Network, AccessToken> networkAccessTokenMap, final RegisterCallback registerCallback) {
-        // handle login
+                         HashMap<Config.Network, AccessToken> networkAccessTokenMap, final RegisterCallback registerCallback) {
         mDataSource.register(username, password, networkAccessTokenMap, new RegisterCallback(){
             @Override
             public void onSuccess() {
@@ -83,8 +84,7 @@ public class UserRepository {
 
     ///[oAuth#NetworkAccessTokenMap]
     public void login(String username, String password,
-                      HashMap<SocialNetwork.Network, AccessToken> networkAccessTokenMap, final LoginCallback loginCallback) {
-        // handle login
+                      HashMap<Config.Network, AccessToken> networkAccessTokenMap, final LoginCallback loginCallback) {
         mDataSource.login(username, password, networkAccessTokenMap, new LoginCallback(){
             @Override
             public void onSuccess(LoggedInUser loggedInUser) {
@@ -186,9 +186,8 @@ public class UserRepository {
     /* --------------------- ///[oAuth] --------------------- */
     ///[oAuth#oAuthLogin]
     ///[oAuth#NetworkAccessTokenMap]
-    public void oAuthLogin(SocialNetwork.Network network, AccessToken accessToken,
-                           HashMap<SocialNetwork.Network, AccessToken> networkAccessTokenMap, final LoginCallback loginCallback) {
-        // handle login
+    public void oAuthLogin(Config.Network network, AccessToken accessToken,
+                           HashMap<Config.Network, AccessToken> networkAccessTokenMap, final LoginCallback loginCallback) {
         mDataSource.oAuthLogin(network, accessToken, networkAccessTokenMap, new LoginCallback(){
             @Override
             public void onSuccess(LoggedInUser loggedInUser) {
@@ -203,4 +202,18 @@ public class UserRepository {
         });
     }
 
+    ///[oAuth#unbind]
+    public void oAuthUnbind(LoggedInUser loggedInUser, String[] unbindNetworks, final OauthUnbindCallback oauthUnbindCallback) {
+        mDataSource.oAuthUnbind(loggedInUser, unbindNetworks, new OauthUnbindCallback(){
+            @Override
+            public void onSuccess(String[] networks) {
+                oauthUnbindCallback.onSuccess(networks);
+            }
+
+            @Override
+            public void onError(OauthUnbindException e) {
+                oauthUnbindCallback.onError(e);
+            }
+        });
+    }
 }

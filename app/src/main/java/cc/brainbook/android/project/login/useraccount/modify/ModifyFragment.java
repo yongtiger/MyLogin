@@ -23,6 +23,7 @@ public class ModifyFragment extends Fragment {
     private SuperTextView stvPassword;
     private SuperTextView stvEmail;
     private SuperTextView stvMobile;
+    private SuperTextView stvOauth;
 
     public ModifyFragment() {
         // Required empty public constructor
@@ -52,6 +53,7 @@ public class ModifyFragment extends Fragment {
         stvPassword = rootView.findViewById(R.id.stv_password);
         stvEmail = rootView.findViewById(R.id.stv_email);
         stvMobile = rootView.findViewById(R.id.stv_mobile);
+        stvOauth = rootView.findViewById(R.id.stv_oauth);
 
         final UserRepository userRepository = UserRepository.getInstance();
         final LoggedInUser loggedInUser = userRepository.getLoggedInUser();
@@ -93,6 +95,14 @@ public class ModifyFragment extends Fragment {
             public void onClickListener(SuperTextView superTextView) {
                 if (getActivity() != null) {
                     ((ModifyActivity)getActivity()).showModifyMobileFragment();
+                }
+            }
+        });
+        stvOauth.setOnSuperTextViewClickListener(new SuperTextView.OnSuperTextViewClickListener() {
+            @Override
+            public void onClickListener(SuperTextView superTextView) {
+                if (getActivity() != null) {
+                    ((ModifyActivity)getActivity()).showModifyOauthFragment();
                 }
             }
         });

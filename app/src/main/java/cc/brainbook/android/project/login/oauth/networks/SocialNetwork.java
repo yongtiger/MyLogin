@@ -7,16 +7,11 @@ import android.view.View;
 import java.lang.ref.WeakReference;
 
 import cc.brainbook.android.project.login.oauth.AccessToken;
+import cc.brainbook.android.project.login.oauth.config.Config;
 import cc.brainbook.android.project.login.oauth.listener.OnOauthCompleteListener;
 
 ///https://github.com/maksim88/EasyLogin
 public abstract class SocialNetwork {
-
-    public enum Network {
-        ///??????有待解决network重复问题！
-        GOOGLE, FACEBOOK, TWITTER, MOB_FACEBOOK, MOB_TWITTER, MOB_LINKEDIN, MOB_QQ, MOB_WECHAT, MOB_SINAWEIBO
-    }
-
     protected WeakReference<Activity> activity;
 
     protected WeakReference<View> button;
@@ -25,7 +20,7 @@ public abstract class SocialNetwork {
 
     protected AccessToken accessToken;
 
-    public abstract Network getNetwork();
+    public abstract Config.Network getNetwork();
 
     public abstract AccessToken getAccessToken();
 

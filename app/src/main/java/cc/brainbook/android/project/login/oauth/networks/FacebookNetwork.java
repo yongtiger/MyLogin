@@ -23,6 +23,7 @@ import java.lang.ref.WeakReference;
 import java.util.List;
 
 import cc.brainbook.android.project.login.oauth.AccessToken;
+import cc.brainbook.android.project.login.oauth.config.Config;
 import cc.brainbook.android.project.login.oauth.listener.OnOauthCompleteListener;
 
 ///https://github.com/maksim88/EasyLogin
@@ -104,8 +105,8 @@ public class FacebookNetwork extends SocialNetwork {
     }
 
     @Override
-    public Network getNetwork() {
-        return Network.FACEBOOK;
+    public Config.Network getNetwork() {
+        return Config.Network.FACEBOOK;
     }
 
     @Override

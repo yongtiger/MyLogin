@@ -11,6 +11,7 @@
     <string name="forgot_password">Forgot password?</string>
     <string name="email">Email</string>
     <string name="mobile">Mobile</string>
+    <string name="oauth">Oauth</string>
     <string name="email_optional">Email (optional)</string>
     <string name="mobile_optional">Mobile (optional)</string>
     <string name="register">Register</string>

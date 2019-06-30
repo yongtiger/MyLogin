@@ -24,12 +24,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 import cc.brainbook.android.project.login.R;
 import cc.brainbook.android.project.login.oauth.AccessToken;
-import cc.brainbook.android.project.login.oauth.networks.SocialNetwork;
+import cc.brainbook.android.project.login.oauth.config.Config;
 import cc.brainbook.android.project.login.result.Result;
 import cc.brainbook.android.project.login.useraccount.authentication.ui.login.LoginActivity;
 
@@ -51,7 +50,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     private ProgressBar pbLoading;
 
     ///[oAuth#NetworkAccessTokenMap]
-    private HashMap<SocialNetwork.Network, AccessToken> networkAccessTokenMap;
+    private HashMap<Config.Network, AccessToken> networkAccessTokenMap;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -60,7 +59,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
         ///[oAuth#NetworkAccessTokenMap]
         if (getIntent() != null) {
-            networkAccessTokenMap = (HashMap<SocialNetwork.Network, AccessToken>) getIntent().getSerializableExtra("networkAccessTokenMap");
+            networkAccessTokenMap = (HashMap<Config.Network, AccessToken>) getIntent().getSerializableExtra("networkAccessTokenMap");
         }
 
         initView();
@@ -128,8 +127,8 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                     } else {
                         ///[oAuth#NetworkAccessTokenMap]返回账户注册成功、绑定的network列表
                         final StringBuilder content = new StringBuilder();
-                        for (Map.Entry<SocialNetwork.Network, AccessToken> networkAccessTokenEntry : networkAccessTokenMap.entrySet()) {
-                            final SocialNetwork.Network network = (SocialNetwork.Network) ((HashMap.Entry) networkAccessTokenEntry).getKey();
+                        for (Map.Entry<Config.Network, AccessToken> networkAccessTokenEntry : networkAccessTokenMap.entrySet()) {
+                            final Config.Network network = (Config.Network) ((HashMap.Entry) networkAccessTokenEntry).getKey();
 //                            AccessToken accessToken = (AccessToken) entry.getValue();
                             content.append(", ").append(network);
                         }

@@ -10,7 +10,7 @@ import java.util.regex.Pattern;
 
 import cc.brainbook.android.project.login.R;
 import cc.brainbook.android.project.login.oauth.AccessToken;
-import cc.brainbook.android.project.login.oauth.networks.SocialNetwork;
+import cc.brainbook.android.project.login.oauth.config.Config;
 import cc.brainbook.android.project.login.result.Result;
 import cc.brainbook.android.project.login.useraccount.data.UserRepository;
 import cc.brainbook.android.project.login.useraccount.authentication.exception.RegisterException;
@@ -62,7 +62,7 @@ public class RegisterViewModel extends ViewModel {
     }
 
     public void register(String username, String password,
-                         HashMap<SocialNetwork.Network, AccessToken> networkAccessTokenMap) {
+                         HashMap<Config.Network, AccessToken> networkAccessTokenMap) {
         // can be launched in a separate asynchronous job
         registerRepository.register(username, password, networkAccessTokenMap, new RegisterCallback() {
             @Override

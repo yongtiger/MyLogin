@@ -18,6 +18,7 @@ import com.google.android.gms.tasks.Task;
 import java.lang.ref.WeakReference;
 
 import cc.brainbook.android.project.login.oauth.AccessToken;
+import cc.brainbook.android.project.login.oauth.config.Config;
 import cc.brainbook.android.project.login.oauth.listener.OnOauthCompleteListener;
 
 ///https://github.com/maksim88/EasyLogin
@@ -61,8 +62,8 @@ public class GoogleNetwork extends SocialNetwork {
     }
 
     @Override
-    public Network getNetwork() {
-        return Network.GOOGLE;
+    public Config.Network getNetwork() {
+        return Config.Network.GOOGLE;
     }
 
     @Override

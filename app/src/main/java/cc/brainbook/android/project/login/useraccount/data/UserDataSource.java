@@ -1,19 +1,22 @@
 package cc.brainbook.android.project.login.useraccount.data;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import cc.brainbook.android.project.login.oauth.AccessToken;
-import cc.brainbook.android.project.login.oauth.networks.SocialNetwork;
+import cc.brainbook.android.project.login.oauth.config.Config;
 import cc.brainbook.android.project.login.useraccount.authentication.exception.LogoutException;
 import cc.brainbook.android.project.login.useraccount.modify.exception.ModifyException;
+import cc.brainbook.android.project.login.useraccount.modify.exception.OauthUnbindException;
 import cc.brainbook.android.project.login.useraccount.modify.interfaces.ModifyCallback;
 import cc.brainbook.android.project.login.useraccount.authentication.exception.LoginException;
 import cc.brainbook.android.project.login.useraccount.authentication.exception.RegisterException;
 import cc.brainbook.android.project.login.useraccount.authentication.interfaces.RegisterCallback;
 
+import cc.brainbook.android.project.login.useraccount.modify.interfaces.OauthUnbindCallback;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.MediaType;
@@ -23,6 +26,7 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
@@ -34,6 +38,7 @@ import static cc.brainbook.android.project.login.config.Config.CONNECT_TIMEOUT;
 import static cc.brainbook.android.project.login.config.Config.LOGIN_URL;
 import static cc.brainbook.android.project.login.config.Config.LOGOUT_URL;
 import static cc.brainbook.android.project.login.config.Config.OAUTH_LOGIN_URL;
+import static cc.brainbook.android.project.login.config.Config.OAUTH_UNBIND_URL;
 import static cc.brainbook.android.project.login.config.Config.REGISTER_URL;
 import static cc.brainbook.android.project.login.config.Config.USER_ACCOUNT_MODIFY_EMAIL_URL;
 import static cc.brainbook.android.project.login.config.Config.USER_ACCOUNT_MODIFY_MOBILE_URL;
@@ -54,11 +59,13 @@ public class UserDataSource {
     private static final String KEY_MOBILE = "mobile";
     private static final String KEY_NETWORK = "network";
     private static final String KEY_OPEN_ID = "openId";
-    private static final String KEY_NETWORK_ACCESS_TOKEN_MAP = "networkAccessTokenMap";
+    private static final String KEY_OAUTH_NETWORK_ACCESS_TOKEN_MAP = "networkAccessTokenMap";
+    private static final String KEY_OAUTH_UNBIND_NETWORKS = "unbindNetworks";
+    private static final String KEY_OAUTH_BIND_NETWORKS = "bindNetworks";
 
     ///[oAuth#NetworkAccessTokenMap]
     public void register(String username, String password,
-                         HashMap<SocialNetwork.Network, AccessToken> networkAccessTokenMap, final RegisterCallback registerCallback) {
+                         HashMap<Config.Network, AccessToken> networkAccessTokenMap, final RegisterCallback registerCallback) {
         ///https://stackoverflow.com/questions/34179922/okhttp-post-body-as-json
         final JSONObject jsonObject = new JSONObject();
         try {
@@ -66,7 +73,7 @@ public class UserDataSource {
             jsonObject.put(KEY_USERNAME, username);
             jsonObject.put(KEY_PASSWORD, password);
             ///[oAuth#NetworkAccessTokenMap]
-            jsonObject.put(KEY_NETWORK_ACCESS_TOKEN_MAP, new Gson().toJson(networkAccessTokenMap)); ///using Gson to convert Map to Json
+            jsonObject.put(KEY_OAUTH_NETWORK_ACCESS_TOKEN_MAP, new Gson().toJson(networkAccessTokenMap)); ///using Gson to convert Map to Json
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -134,7 +141,7 @@ public class UserDataSource {
 
     ///[oAuth#NetworkAccessTokenMap]
     public void login(String username, String password,
-                      HashMap<SocialNetwork.Network, AccessToken> networkAccessTokenMap, final LoginCallback loginCallback) {
+                      HashMap<Config.Network, AccessToken> networkAccessTokenMap, final LoginCallback loginCallback) {
         ///https://stackoverflow.com/questions/34179922/okhttp-post-body-as-json
         final JSONObject jsonObject = new JSONObject();
         try {
@@ -142,7 +149,7 @@ public class UserDataSource {
             jsonObject.put(KEY_USERNAME, username);
             jsonObject.put(KEY_PASSWORD, password);
             ///[oAuth#NetworkAccessTokenMap]
-            jsonObject.put(KEY_NETWORK_ACCESS_TOKEN_MAP, new Gson().toJson(networkAccessTokenMap)); ///using Gson to convert Map to Json
+            jsonObject.put(KEY_OAUTH_NETWORK_ACCESS_TOKEN_MAP, new Gson().toJson(networkAccessTokenMap)); ///using Gson to convert Map to Json
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -573,8 +580,8 @@ public class UserDataSource {
     /* --------------------- ///[oAuth] --------------------- */
     ///[oAuth#oAuthLogin()]
     ///[oAuth#NetworkAccessTokenMap]
-    public void oAuthLogin(SocialNetwork.Network network, AccessToken accessToken,
-                           HashMap<SocialNetwork.Network, AccessToken> networkAccessTokenMap, final LoginCallback loginCallback) {
+    public void oAuthLogin(Config.Network network, AccessToken accessToken,
+                           HashMap<Config.Network, AccessToken> networkAccessTokenMap, final LoginCallback loginCallback) {
         ///https://stackoverflow.com/questions/34179922/okhttp-post-body-as-json
         final JSONObject jsonObject = new JSONObject();
         try {
@@ -582,7 +589,7 @@ public class UserDataSource {
             jsonObject.put(KEY_NETWORK, network);
             jsonObject.put(KEY_OPEN_ID, accessToken.getUserId());
             ///[oAuth#NetworkAccessTokenMap]
-            jsonObject.put(KEY_NETWORK_ACCESS_TOKEN_MAP, new Gson().toJson(networkAccessTokenMap)); ///using Gson to convert Map to Json
+            jsonObject.put(KEY_OAUTH_NETWORK_ACCESS_TOKEN_MAP, new Gson().toJson(networkAccessTokenMap)); ///using Gson to convert Map to Json
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -640,6 +647,78 @@ public class UserDataSource {
                                         break;
                                     default:
                                         loginCallback.onError(new LoginException(LoginException.EXCEPTION_UNKNOWN));
+                                }
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+    }
+
+    ///[oAuth#unbind]
+    public void oAuthUnbind(LoggedInUser loggedInUser, String[] unbindNetworks, final OauthUnbindCallback oauthUnbindCallback) {
+        ///https://stackoverflow.com/questions/34179922/okhttp-post-body-as-json
+        final JSONObject jsonObject = new JSONObject();
+        try {
+            //Populate the sendVerificationCode parameters
+            jsonObject.put(KEY_OAUTH_UNBIND_NETWORKS, new Gson().toJson(unbindNetworks)); ///using Gson to convert Map to Json
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        // 构建post的RequestBody
+        final RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), jsonObject.toString());
+
+        // 创建一个Request
+        final Request request = new Request.Builder()
+                .url(OAUTH_UNBIND_URL)
+                .header(KEY_TOKEN, loggedInUser.getToken())
+                .post(requestBody)
+                .build();
+
+        // 创建okHttpClient对象
+        final OkHttpClient mOkHttpClient = new OkHttpClient.Builder()
+                .connectTimeout(CONNECT_TIMEOUT, TimeUnit.SECONDS)
+                .readTimeout(CONNECT_TIMEOUT, TimeUnit.SECONDS)
+                .build();
+
+        // 请求加入调度
+        mOkHttpClient.newCall(request)
+                .enqueue(new Callback() {
+                    @Override
+                    public void onFailure(Call call, IOException e) {
+                        ///[返回结果及错误处理]错误处理
+                        oauthUnbindCallback.onError(new OauthUnbindException(OauthUnbindException.EXCEPTION_IO_EXCEPTION, e.getCause()));
+                    }
+
+                    @Override
+                    public void onResponse(Call call, Response response) throws IOException {
+                        try {
+                            JSONObject jsonObject = null;
+                            if (response.body() != null) {
+                                jsonObject = new JSONObject(response.body().string());
+                            }
+
+                            if (jsonObject != null) {
+                                ///[返回结果及错误处理]
+                                switch (jsonObject.getInt(KEY_STATUS)) {
+                                    case -3:
+                                        oauthUnbindCallback.onError(new OauthUnbindException(OauthUnbindException.EXCEPTION_IO_EXCEPTION, jsonObject.getString(KEY_MESSAGE)));
+                                        break;
+                                    case -2:
+                                        oauthUnbindCallback.onError(new OauthUnbindException(OauthUnbindException.EXCEPTION_UNKNOWN, jsonObject.getString(KEY_MESSAGE)));
+                                        break;
+                                    case -1:
+                                        oauthUnbindCallback.onError(new OauthUnbindException(OauthUnbindException.EXCEPTION_INVALID_PARAMETERS, jsonObject.getString(KEY_MESSAGE)));
+                                        break;
+                                    case 0:
+                                        final Type listType = new TypeToken<String[]>() {}.getType();
+                                        final String[] networks =  (String[]) new Gson().fromJson(jsonObject.getJSONArray(KEY_OAUTH_BIND_NETWORKS).toString(), listType);
+                                        oauthUnbindCallback.onSuccess(networks);
+                                        break;
+                                    default:
+                                        oauthUnbindCallback.onError(new OauthUnbindException(OauthUnbindException.EXCEPTION_UNKNOWN));
                                 }
                             }
                         } catch (JSONException e) {

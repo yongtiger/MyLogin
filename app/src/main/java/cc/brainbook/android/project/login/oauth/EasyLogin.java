@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
+import cc.brainbook.android.project.login.oauth.config.Config;
 import cc.brainbook.android.project.login.oauth.networks.SocialNetwork;
 
 ///https://github.com/maksim88/EasyLogin
@@ -14,7 +15,7 @@ public class EasyLogin {
 
     private static EasyLogin instance = null;
 
-    private HashMap<SocialNetwork.Network, SocialNetwork> socialNetworksMap = new HashMap<>();
+    private HashMap<Config.Network, SocialNetwork> socialNetworksMap = new HashMap<>();
 
     private EasyLogin() {}
 
@@ -35,11 +36,11 @@ public class EasyLogin {
         socialNetworksMap.put(socialNetwork.getNetwork(), socialNetwork);
     }
 
-    public boolean hasSocialNetwork(SocialNetwork.Network network) {
+    public boolean hasSocialNetwork(Config.Network network) {
         return socialNetworksMap.containsKey(network);
     }
 
-    public SocialNetwork getSocialNetwork(SocialNetwork.Network network) {
+    public SocialNetwork getSocialNetwork(Config.Network network) {
         return socialNetworksMap.get(network);
     }
 

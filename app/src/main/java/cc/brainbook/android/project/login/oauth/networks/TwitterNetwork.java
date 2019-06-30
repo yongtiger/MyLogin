@@ -18,6 +18,7 @@ import com.twitter.sdk.android.core.models.User;
 import java.lang.ref.WeakReference;
 
 import cc.brainbook.android.project.login.oauth.AccessToken;
+import cc.brainbook.android.project.login.oauth.config.Config;
 import cc.brainbook.android.project.login.oauth.listener.OnOauthCompleteListener;
 import retrofit2.Call;
 
@@ -54,8 +55,8 @@ public class TwitterNetwork extends SocialNetwork {
     }
 
     @Override
-    public Network getNetwork() {
-        return Network.TWITTER;
+    public Config.Network getNetwork() {
+        return Config.Network.TWITTER;
     }
 
     @Override

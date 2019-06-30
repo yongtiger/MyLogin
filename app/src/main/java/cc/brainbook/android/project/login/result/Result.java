@@ -4,7 +4,7 @@ import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 
 import cc.brainbook.android.project.login.oauth.AccessToken;
-import cc.brainbook.android.project.login.oauth.networks.SocialNetwork;
+import cc.brainbook.android.project.login.oauth.config.Config;
 
 /**
  * Result : success or error message.
@@ -16,7 +16,7 @@ public class Result {
     private Integer error;
 
     ///[oAuth#oAuthLogin]
-    private SocialNetwork.Network network;
+    private Config.Network network;
     private AccessToken accessToken;
 
     public Result(@Nullable @StringRes Integer success, @Nullable @StringRes Integer error) {
@@ -25,7 +25,7 @@ public class Result {
     }
 
     ///[oAuth#oAuthLogin]
-    public Result(@Nullable @StringRes Integer success, @Nullable @StringRes Integer error, SocialNetwork.Network network, AccessToken accessToken) {
+    public Result(@Nullable @StringRes Integer success, @Nullable @StringRes Integer error, Config.Network network, AccessToken accessToken) {
         this.success = success;
         this.error = error;
         this.network = network;

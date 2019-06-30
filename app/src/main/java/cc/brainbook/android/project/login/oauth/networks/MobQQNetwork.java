@@ -5,6 +5,7 @@ import android.view.View;
 
 import java.util.HashMap;
 
+import cc.brainbook.android.project.login.oauth.config.Config;
 import cc.brainbook.android.project.login.oauth.listener.OnOauthCompleteListener;
 import cn.sharesdk.framework.ShareSDK;
 import cn.sharesdk.tencent.qq.QQ;
@@ -18,8 +19,8 @@ public class MobQQNetwork extends MobBaseNetwork {
     }
 
     @Override
-    public Network getNetwork() {
-        return Network.MOB_QQ;
+    public Config.Network getNetwork() {
+        return Config.Network.MOB_QQ;
     }
 
     @Override

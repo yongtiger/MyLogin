@@ -36,6 +36,7 @@ import java.util.List;
 import cc.brainbook.android.project.login.R;
 import cc.brainbook.android.project.login.oauth.AccessToken;
 import cc.brainbook.android.project.login.oauth.EasyLogin;
+import cc.brainbook.android.project.login.oauth.config.Config;
 import cc.brainbook.android.project.login.oauth.listener.OnOauthCompleteListener;
 import cc.brainbook.android.project.login.oauth.networks.FacebookNetwork;
 import cc.brainbook.android.project.login.oauth.networks.GoogleNetwork;
@@ -147,7 +148,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                             etPassword.requestFocus();
                             break;
                         case R.string.error_invalid_oauth_network_and_openid:   ///[oAuth#NetworkAccessTokenMap]
-                            final SocialNetwork.Network network = (SocialNetwork.Network) result.getNetwork();
+                            final Config.Network network = (Config.Network) result.getNetwork();
                             final AccessToken accessToken = (AccessToken) result.getAccessToken();
                             loginViewModel.addNetworkAccessTokenMap(network, accessToken);
                             break;
@@ -197,9 +198,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         initEasyLogin();
 
         ///[oAuth#NetworkAccessTokenMap]
-        loginViewModel.getNetworkAccessTokenMapLiveData().observe(this, new Observer<HashMap<SocialNetwork.Network, AccessToken>>() {
+        loginViewModel.getNetworkAccessTokenMapLiveData().observe(this, new Observer<HashMap<Config.Network, AccessToken>>() {
             @Override
-            public void onChanged(@Nullable HashMap<SocialNetwork.Network, AccessToken> networkAccessTokenMap) {
+            public void onChanged(@Nullable HashMap<Config.Network, AccessToken> networkAccessTokenMap) {
                 updateUI();
             }
         });
@@ -375,7 +376,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private void actionRegister() {
         final Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
         ///[oAuth#NetworkAccessTokenMap]
-        final HashMap<SocialNetwork.Network, AccessToken> networkAccessTokenMap =
+        final HashMap<Config.Network, AccessToken> networkAccessTokenMap =
                 loginViewModel.getNetworkAccessTokenMapLiveData().getValue();
         intent.putExtra("networkAccessTokenMap", networkAccessTokenMap);
         startActivityForResult(intent, REQUEST_CODE_REGISTER);
@@ -493,7 +494,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     @Override
-    public void onOauthSuccess(SocialNetwork.Network network, AccessToken accessToken) {
+    public void onOauthSuccess(Config.Network network, AccessToken accessToken) {
         Log.d("TAG", network + " Oauth successful: " + accessToken.getToken()
                 + "|||" + accessToken.getUserId()
                 + "|||" + accessToken.getUserName()
@@ -515,7 +516,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     @Override
-    public void onOauthError(SocialNetwork.Network socialNetwork, String errorMessage) {
+    public void onOauthError(Config.Network socialNetwork, String errorMessage) {
         Log.e("TAG", "ERROR!" + socialNetwork + "|||" + errorMessage);
 
         runOnUiThread(new Runnable() {
@@ -531,7 +532,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     ///[oAuth#oAuthLogin]
-    private void actionOAuthLogin(SocialNetwork.Network network, AccessToken accessToken) {
+    private void actionOAuthLogin(Config.Network network, AccessToken accessToken) {
         loginViewModel.oAuthLogin(network, accessToken);
     }
 
