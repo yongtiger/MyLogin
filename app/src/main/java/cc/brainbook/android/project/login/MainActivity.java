@@ -6,10 +6,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.allen.library.SuperTextView;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CircleCrop;
+import com.bumptech.glide.request.RequestOptions;
 
 import cc.brainbook.android.project.login.oauth.EasyLogin;
 import cc.brainbook.android.project.login.useraccount.modify.ModifyActivity;
@@ -136,6 +140,16 @@ public class MainActivity extends AppCompatActivity {
             llLoggedIn.setVisibility(View.GONE);
             llLoggedOut.setVisibility(View.VISIBLE);
         }
+
+        ///Glide下载图片（使用已经缓存的图片）给imageView
+        ///https://muyangmin.github.io/glide-docs-cn/doc/getting-started.html
+        final RequestOptions options = RequestOptions.bitmapTransform(new CircleCrop()) ///裁剪圆形
+                .placeholder(R.drawable.avatar_default); ///   .placeholder(new ColorDrawable(Color.BLACK))   // 或者可以直接使用ColorDrawable
+        Glide.with(getApplicationContext())
+                .load(UserRepository.getInstance().getLoggedInUser() == null ?
+                        null : UserRepository.getInstance().getLoggedInUser().getAvatar())
+                .apply(options)
+                .into((ImageView) findViewById(R.id.iv_user_avatar));
     }
 
     private int getErrorIntegerRes(LogoutException e) {

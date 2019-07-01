@@ -4,11 +4,16 @@ package cc.brainbook.android.project.login.useraccount.modify;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.allen.library.SuperTextView;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CircleCrop;
+import com.bumptech.glide.request.RequestOptions;
 
 import cc.brainbook.android.project.login.R;
 import cc.brainbook.android.project.login.useraccount.data.UserRepository;
@@ -24,6 +29,8 @@ public class ModifyFragment extends Fragment {
     private SuperTextView stvEmail;
     private SuperTextView stvMobile;
     private SuperTextView stvOauth;
+    private ImageView ivUserAvatar;
+    private ImageView ivAvatarCamera;
 
     public ModifyFragment() {
         // Required empty public constructor
@@ -54,6 +61,17 @@ public class ModifyFragment extends Fragment {
         stvEmail = rootView.findViewById(R.id.stv_email);
         stvMobile = rootView.findViewById(R.id.stv_mobile);
         stvOauth = rootView.findViewById(R.id.stv_oauth);
+        ivUserAvatar = rootView.findViewById(R.id.iv_user_avatar);
+        ivAvatarCamera = rootView.findViewById(R.id.iv_avatar_camera);
+
+        ///Glide下载图片（使用已经缓存的图片）给imageView
+        ///https://muyangmin.github.io/glide-docs-cn/doc/getting-started.html
+        final RequestOptions options = RequestOptions.bitmapTransform(new CircleCrop()) ///裁剪圆形
+                .placeholder(R.drawable.avatar_default); ///   .placeholder(new ColorDrawable(Color.BLACK))   // 或者可以直接使用ColorDrawable
+        Glide.with(getActivity())
+                .load(UserRepository.getInstance().getLoggedInUser().getAvatar())
+                .apply(options)
+                .into(ivUserAvatar);
 
         final UserRepository userRepository = UserRepository.getInstance();
         final LoggedInUser loggedInUser = userRepository.getLoggedInUser();
@@ -104,6 +122,12 @@ public class ModifyFragment extends Fragment {
                 if (getActivity() != null) {
                     ((ModifyActivity)getActivity()).showModifyOauthFragment();
                 }
+            }
+        });
+        ivAvatarCamera.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d("TAG", "onClick: ----------------");
             }
         });
     }
