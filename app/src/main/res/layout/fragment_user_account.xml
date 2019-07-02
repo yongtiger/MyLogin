@@ -20,13 +20,14 @@
             android:layout_gravity="center_horizontal">
 
             <ImageView
-                android:id="@+id/iv_user_avatar"
+                android:id="@+id/iv_avatar"
                 android:layout_width="70dp"
                 android:layout_height="70dp"
-                android:background="@drawable/avatar_default" />
+                android:layout_gravity="center_horizontal"
+                android:background="@drawable/avatar_default"/>
 
             <ImageView
-                android:id="@+id/iv_avatar_camera"
+                android:id="@+id/iv_modify_avatar"
                 android:layout_width="70dp"
                 android:layout_height="70dp"
                 android:background="@drawable/camera_circle_bg"

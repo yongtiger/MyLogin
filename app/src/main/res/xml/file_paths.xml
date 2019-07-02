@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<paths xmlns:android="http://schemas.android.com/apk/res/android">
+    <!--///[avatar#图片选择器#手机拍照]适应Android 7.0-->
+    <!--https://developer.android.com/reference/android/support/v4/content/FileProvider.html#SpecifyFiles-->
+    <!--<cache-path name="cache_avatar_camera" path="." />-->
+    <external-cache-path name="cache_avatar_camera" path="." />
+</paths>

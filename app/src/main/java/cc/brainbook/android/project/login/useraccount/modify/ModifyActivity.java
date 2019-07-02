@@ -1,9 +1,13 @@
 package cc.brainbook.android.project.login.useraccount.modify;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.support.annotation.StringRes;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.Toast;
+
+import com.yalantis.ucrop.UCrop;
 
 import cc.brainbook.android.project.login.R;
 
@@ -90,4 +94,20 @@ public class ModifyActivity extends AppCompatActivity {
     public void showFailedMessage(@StringRes Integer errorString) {
         Toast.makeText(getApplicationContext(), errorString, Toast.LENGTH_SHORT).show();
     }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        ///[avatar#裁剪/压缩#Yalantis/uCrop]https://github.com/Yalantis/uCrop
+        if (requestCode == UCrop.REQUEST_CROP) {
+            if (resultCode == RESULT_OK) {
+                final Uri resultUri = UCrop.getOutput(data);
+                // todo ...
+            } else if (resultCode == UCrop.RESULT_ERROR) {
+                final Throwable cropError = UCrop.getError(data);
+                // todo ...
+            }
+        }
+    }
+
 }

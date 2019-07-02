@@ -15,11 +15,11 @@
         android:background="@color/colorDivider">
 
         <ImageView
-            android:id="@+id/iv_user_avatar"
+            android:id="@+id/iv_avatar"
             android:layout_width="70dp"
             android:layout_height="70dp"
-            android:background="@drawable/avatar_default"
-            android:layout_gravity="center_horizontal" />
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/avatar_default"/>
 
         <LinearLayout
             android:id="@+id/ll_logged_out"

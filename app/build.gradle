@@ -65,6 +65,10 @@ dependencies {
     implementation('com.twitter.sdk.android:twitter-core:3.1.1@aar') {
         transitive = true
     }
+
+    ///[头像#裁剪]https://github.com/Yalantis/uCrop
+    implementation 'com.github.yalantis:ucrop:2.2.3' ///lightweight general solution
+//    implementation 'com.github.yalantis:ucrop:2.2.3-native' ///get power of the native code to preserve image quality (+ about 1.5 MB to an apk size)
 }
 
 ///[oAuth#EasyLogin#Google Sign In]

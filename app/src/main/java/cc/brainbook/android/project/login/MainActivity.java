@@ -149,7 +149,7 @@ public class MainActivity extends AppCompatActivity {
                 .load(UserRepository.getInstance().getLoggedInUser() == null ?
                         null : UserRepository.getInstance().getLoggedInUser().getAvatar())
                 .apply(options)
-                .into((ImageView) findViewById(R.id.iv_user_avatar));
+                .into((ImageView) findViewById(R.id.iv_avatar));
     }
 
     private int getErrorIntegerRes(LogoutException e) {
