@@ -11,12 +11,14 @@ import com.amazonaws.mobileconnectors.s3.transferutility.TransferListener;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferState;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
+import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.bumptech.glide.request.RequestOptions;
 import com.yalantis.ucrop.UCrop;
 
 import java.io.File;
+import java.net.URL;
 
 import cc.brainbook.android.project.login.R;
 import cc.brainbook.android.project.login.config.Config;
@@ -167,7 +169,7 @@ public class ModifyActivity extends AppCompatActivity {
                 public void onStateChanged(int id, TransferState state) {
                     if (state == TransferState.COMPLETED) {
                         ///获得上传头像的下载Url
-                        final String avatarUrl = "";    // todo ...
+                        final String avatarUrl = s3TransferUitl.getSignatureUrl(ModifyActivity.this, key);
 
                         ///上传完成后的处理
                         onAvatarUploadComplete(avatarUrl);
