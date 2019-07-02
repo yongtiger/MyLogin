@@ -9,6 +9,8 @@ import android.widget.Toast;
 
 import com.yalantis.ucrop.UCrop;
 
+import java.io.File;
+
 import cc.brainbook.android.project.login.R;
 
 public class ModifyActivity extends AppCompatActivity {
@@ -101,11 +103,21 @@ public class ModifyActivity extends AppCompatActivity {
         ///[avatar#裁剪/压缩#Yalantis/uCrop]https://github.com/Yalantis/uCrop
         if (requestCode == UCrop.REQUEST_CROP) {
             if (resultCode == RESULT_OK) {
+                ///如果头像源文件存在（当Camera拍照会产生）则删除
+                final File photoFile =  new File(getExternalCacheDir(), "avatar_original.jpg");
+                if (photoFile.exists()) {
+                    photoFile.delete();
+                }
+
                 final Uri resultUri = UCrop.getOutput(data);
+
                 // todo ...
+
             } else if (resultCode == UCrop.RESULT_ERROR) {
                 final Throwable cropError = UCrop.getError(data);
-                // todo ...
+                if (cropError != null) {
+                    Toast.makeText(getApplicationContext(), cropError.getMessage(), Toast.LENGTH_SHORT).show();
+                }
             }
         }
     }

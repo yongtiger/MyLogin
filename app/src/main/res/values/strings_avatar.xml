@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <string name="label_setup_avatar">Setup Avatar</string>
     <string name="label_select_picture">Select Picture</string>
-    <string name="permission_title_rationale">Permission needed</string>
-    <string name="permission_read_storage_rationale">Storage read permission is needed to pick files.</string>
-    <string name="permission_write_storage_rationale">Storage write permission is needed to save the image.</string>
-    <string name="permission_camera_rationale">Camera permission is needed.</string>
+    <string name="label_pick_picture">Pick picture from gallery</string>
+    <string name="label_camera">Camera</string>
+
+    <string name="message_cannot_retrieve_selected_image">Cannot retrieve selected image</string>
+    <string name="message_cancelled_the_image_capture">Cancelled the image capture</string>
+    <string name="message_image_capture_failed">Image capture failed</string>
 
 </resources>

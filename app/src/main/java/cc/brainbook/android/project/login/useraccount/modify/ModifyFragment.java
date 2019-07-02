@@ -16,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.allen.library.SuperTextView;
 import com.bumptech.glide.Glide;
@@ -41,6 +42,7 @@ public class ModifyFragment extends Fragment {
     private static final int REQUEST_CODE_PICK_FROM_GALLERY = 1;
     private static final int REQUEST_CODE_PICK_FROM_CAMERA = 2;
 
+    private Uri photoURI;
     private SuperTextView stvUsername;
     private SuperTextView stvPassword;
     private SuperTextView stvEmail;
@@ -153,25 +155,25 @@ public class ModifyFragment extends Fragment {
 
 
     /* ------------------ ///[avatar] ------------------ */
-    private Uri photoURI;
-
     ///[avatar#相机或图库选择对话框]
     private void startCameraOrGallery() {
-        new AlertDialog.Builder(getActivity()).setTitle("设置头像")
-                .setItems(new String[] { "从相册中选取图片", "拍照" }, new DialogInterface.OnClickListener() {
-                    @Override public void onClick(DialogInterface dialog, int which) {
-                        if (which == 0) {
-                            pickFromGallery();
-                        } else {
-                            pickFromCamera();
-                        }
-                    }
-                })
-                .show()
-                .getWindow()
-                .setGravity(Gravity.BOTTOM);
+        new AlertDialog.Builder(getActivity()).setTitle(R.string.label_setup_avatar)
+                .setItems(new String[] { getString(R.string.label_pick_picture), getString(R.string.label_camera) },
+                        new DialogInterface.OnClickListener() {
+                            @Override public void onClick(DialogInterface dialog, int which) {
+                                if (which == 0) {
+                                    pickFromGallery();
+                                } else {
+                                    pickFromCamera();
+                                }
+                            }
+                        })
+                        .show()
+                        .getWindow()
+                        .setGravity(Gravity.BOTTOM);
     }
 
+    ///[avatar#图片选择器#相册图库]
     private void pickFromGallery() {
         final Intent intent = new Intent(Intent.ACTION_GET_CONTENT)
                 .setType("image/*")
@@ -182,18 +184,20 @@ public class ModifyFragment extends Fragment {
             intent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes);
         }
 
-        startActivityForResult(Intent.createChooser(intent, getString(R.string.label_select_picture)), REQUEST_CODE_PICK_FROM_GALLERY);
+        startActivityForResult(Intent.createChooser(intent, getString(R.string.label_select_picture)),
+                REQUEST_CODE_PICK_FROM_GALLERY);
     }
 
+    ///[avatar#图片选择器#相机拍照]
     private void pickFromCamera() {
-        final File photoFile =  new File(getActivity().getExternalCacheDir(), "avatar_org.jpg");
+        final File photoFile =  new File(getActivity().getExternalCacheDir(), "avatar_original.jpg");
 
         // create Intent to take a picture and return control to the calling application
         final Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
         // Ensure that there's a camera activity to handle the intent
         if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
-            ///[avatar#图片选择器#手机拍照]适应Android 7.0
+            ///[avatar#图片选择器#相机拍照]适应Android 7.0
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 photoURI = FileProvider.getUriForFile(getActivity(),
                         "cc.brainbook.android.project.login.fileProvider",
@@ -217,32 +221,26 @@ public class ModifyFragment extends Fragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        ///[avatar#图片选择器#相册图库]
         if (requestCode == REQUEST_CODE_PICK_FROM_GALLERY) {
             if (resultCode == RESULT_OK) {
                 final Uri selectedUri = data.getData();
                 if (selectedUri != null) {
-                    Drawable selectedDrawable;
-                    try {
-                        final InputStream inputStream = getActivity().getContentResolver().openInputStream(selectedUri);
-                        selectedDrawable = Drawable.createFromStream(inputStream, selectedUri.toString() );
-                    } catch (FileNotFoundException e) {
-                        selectedDrawable = getResources().getDrawable(R.drawable.avatar_default);
-                    }
-                    ivAvatar.setImageDrawable(selectedDrawable);  // 显示图片
                     startCrop(selectedUri);
                 } else {
-//                    Toast.makeText(SampleActivity.this, R.string.toast_cannot_retrieve_selected_image, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), R.string.message_cannot_retrieve_selected_image, Toast.LENGTH_SHORT).show();
                 }
             }
         }
 
+        ///[avatar#图片选择器#相机拍照]
         if (requestCode == REQUEST_CODE_PICK_FROM_CAMERA) {
             if (resultCode == RESULT_OK) {
                 startCrop(photoURI);
             } else if (resultCode == RESULT_CANCELED) {
-                // User cancelled the image capture
+                Toast.makeText(getActivity(), R.string.message_cancelled_the_image_capture, Toast.LENGTH_SHORT).show();
             } else {
-                // Image capture failed, advise user
+                Toast.makeText(getActivity(), R.string.message_image_capture_failed, Toast.LENGTH_SHORT).show();
             }
         }
     }
