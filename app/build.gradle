@@ -17,6 +17,8 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        multiDexEnabled true
     }
     buildTypes {
         release {
@@ -37,6 +39,8 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+
+    implementation 'com.android.support:multidex:1.0.3'
 
     implementation 'com.squareup.okhttp3:okhttp:3.13.1'
     implementation 'com.google.code.gson:gson:2.8.5'
@@ -69,6 +73,9 @@ dependencies {
     ///[头像#裁剪]https://github.com/Yalantis/uCrop
     implementation 'com.github.yalantis:ucrop:2.2.3' ///lightweight general solution
 //    implementation 'com.github.yalantis:ucrop:2.2.3-native' ///get power of the native code to preserve image quality (+ about 1.5 MB to an apk size)
+
+    ///[avatar#上传#AWS S3 Transfer Utility]
+    implementation 'com.amazonaws:aws-android-sdk-s3:2.7.7'
 }
 
 ///[oAuth#EasyLogin#Google Sign In]

@@ -1,5 +1,7 @@
 package cc.brainbook.android.project.login.config;
 
+import com.amazonaws.regions.Regions;
+
 public class Config {
     public static final String HTTP_DOMAIN = "http://192.168.1.104";
     public static final String DEBUG_HOST = "192.168.1.104";
@@ -70,6 +72,37 @@ public class Config {
 
 //    public static final String OAUTH_UNBIND_URL = HTTP_DOMAIN + "/_study/_login/MyLogin/member/user_account/oauth_unbind.php?start_debug=1&debug_stop=1&use_remote=1&debug_host=" + DEBUG_HOST;
     public static final String OAUTH_UNBIND_URL = HTTP_DOMAIN + "/_study/_login/MyLogin/member/user_account/oauth_unbind.php";
+
+
+    /* ---------------- ///[avatar#上传#AWS S3 Transfer Utility] ---------------- */
+    ///https://blog.csdn.net/codehxy/article/details/78105321
+    /*
+     * You should replace these values with your own. See the README for details
+     * on what to fill in.
+     */
+    ///https://docs.aws.amazon.com/cognito/latest/developerguide/identity-pools.html
+    ///https://console.aws.amazon.com/cognito/home
+    public static final String COGNITO_POOL_ID = "ap-northeast-1:bffb22a3-e53a-4797-abbf-fd7f5ab00c91";
+
+    /*
+     * Region of your Cognito identity pool ID.
+     */
+    public static final String COGNITO_POOL_REGION = "ap-northeast-1";
+//    public static final String COGNITO_POOL_REGION = Regions.AP_NORTHEAST_1.getName();
+
+    /*
+     * Note, you must first create a bucket using the S3 console before running
+     * the sample (https://console.aws.amazon.com/s3/). After creating a bucket,
+     * put it's name in the field below.
+     */
+    public static final String BUCKET_NAME = "androidlogin";
+
+    /*
+     * Region of your bucket.
+     * https://docs.aws.amazon.com/zh_cn/general/latest/gr/rande.html
+     */
+    public static final String BUCKET_REGION = "ap-northeast-1";
+//    public static final String BUCKET_REGION = Regions.AP_NORTHEAST_1.getName();
 
 
     private Config() {}

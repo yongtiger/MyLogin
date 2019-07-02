@@ -7,11 +7,21 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.Toast;
 
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferListener;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferState;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CircleCrop;
+import com.bumptech.glide.request.RequestOptions;
 import com.yalantis.ucrop.UCrop;
 
 import java.io.File;
 
 import cc.brainbook.android.project.login.R;
+import cc.brainbook.android.project.login.config.Config;
+import cc.brainbook.android.project.login.useraccount.data.UserRepository;
+import cc.brainbook.android.project.login.util.S3TransferUitl;
 
 public class ModifyActivity extends AppCompatActivity {
 
@@ -34,8 +44,9 @@ public class ModifyActivity extends AppCompatActivity {
         }
     }
 
+    private ModifyFragment modifyFragment;
     public void showModifyFragment() {
-        ModifyFragment modifyFragment = ModifyFragment.newInstance();
+        modifyFragment = ModifyFragment.newInstance();
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.container, modifyFragment)
 //                .addToBackStack(null)   ///[关闭其它fragment后回退显示ModifyFragment]注意：第一个Fragment不用添加addToBackStack()，就能解决空白页的问题
@@ -100,6 +111,7 @@ public class ModifyActivity extends AppCompatActivity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
         ///[avatar#裁剪/压缩#Yalantis/uCrop]https://github.com/Yalantis/uCrop
         if (requestCode == UCrop.REQUEST_CROP) {
             if (resultCode == RESULT_OK) {
@@ -110,8 +122,15 @@ public class ModifyActivity extends AppCompatActivity {
                 }
 
                 final Uri resultUri = UCrop.getOutput(data);
-
-                // todo ...
+                if (resultUri != null) {
+                    final File file = new File(resultUri.getPath());
+                    final String userId = UserRepository.getInstance().getLoggedInUser().getUserId();
+                    final String key = userId + "/" + file.getName();
+                    ///[avatar#上传#AWS S3 Transfer Utility]
+                    https://stackoverflow.com/questions/5657411/android-getting-a-file-uri-from-a-content-uri
+//                    awsS3Upload(new File(resultUri.toString()));
+                    awsS3Upload(file, key);
+                }
 
             } else if (resultCode == UCrop.RESULT_ERROR) {
                 final Throwable cropError = UCrop.getError(data);
@@ -122,4 +141,70 @@ public class ModifyActivity extends AppCompatActivity {
         }
     }
 
+    ///[avatar#上传#AWS S3 Transfer Utility]
+    ///https://blog.csdn.net/codehxy/article/details/78105321
+    private S3TransferUitl s3TransferUitl = new S3TransferUitl();
+    private void awsS3Upload(File file, String key) {
+        if (file == null || file.isDirectory() || !file.exists()) {
+            Toast.makeText(getApplicationContext(), "Could not find the selected file", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        try {
+            TransferUtility transferUtility = s3TransferUitl.getTransferUtility(this);
+            TransferObserver observer =
+                    transferUtility.upload(Config.BUCKET_NAME, key, file);
+
+            /*
+             * Note that usually we set the transfer listener after initializing the
+             * transfer. However it isn't required in this sample app. The flow is
+             * click upload button -> start an activity for image selection
+             * startActivityForResult -> onActivityResult -> beginUpload -> onResume
+             * -> set listeners to in progress transfers.
+             */
+            observer.setTransferListener(new TransferListener() {
+                @Override
+                public void onStateChanged(int id, TransferState state) {
+                    if (state == TransferState.COMPLETED) {
+                        ///获得上传头像的下载Url
+                        final String avatarUrl = "";    // todo ...
+
+                        ///上传完成后的处理
+                        onAvatarUploadComplete(avatarUrl);
+                    }
+                }
+
+                @Override
+                public void onProgressChanged(int id, long bytesCurrent, long bytesTotal) {}
+
+                @Override
+                public void onError(int id, Exception e) {
+                    e.printStackTrace();
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    /**
+     * 上传完成后的处理
+     *
+     * @param avatarUrl
+     */
+    private void onAvatarUploadComplete(String avatarUrl) {
+        ///修改数据库中user的avatar
+        // todo ...
+
+        ///更新头像
+        ///Glide下载图片（使用已经缓存的图片）给imageView
+        ///https://muyangmin.github.io/glide-docs-cn/doc/getting-started.html
+        final RequestOptions options = RequestOptions.bitmapTransform(new CircleCrop()) ///裁剪圆形
+                .placeholder(R.drawable.avatar_default); ///   .placeholder(new ColorDrawable(Color.BLACK))   // 或者可以直接使用ColorDrawable
+        Glide.with(ModifyActivity.this)
+                .load(UserRepository.getInstance().getLoggedInUser().getAvatar())
+                .apply(options)
+                .into(modifyFragment.getIvAvatar());
+    }
 }

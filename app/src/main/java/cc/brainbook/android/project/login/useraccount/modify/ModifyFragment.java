@@ -11,6 +11,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +20,10 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.allen.library.SuperTextView;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferListener;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferState;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.bumptech.glide.request.RequestOptions;
@@ -29,8 +34,10 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 
 import cc.brainbook.android.project.login.R;
+import cc.brainbook.android.project.login.config.Config;
 import cc.brainbook.android.project.login.useraccount.data.UserRepository;
 import cc.brainbook.android.project.login.useraccount.data.model.LoggedInUser;
+import cc.brainbook.android.project.login.util.S3TransferUitl;
 
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
@@ -61,7 +68,6 @@ public class ModifyFragment extends Fragment {
     public static ModifyFragment newInstance() {
         return new ModifyFragment();
     }
-
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -153,6 +159,9 @@ public class ModifyFragment extends Fragment {
         });
     }
 
+    ImageView getIvAvatar() {
+        return ivAvatar;
+    }
 
     /* ------------------ ///[avatar] ------------------ */
     ///[avatar#相机或图库选择对话框]
