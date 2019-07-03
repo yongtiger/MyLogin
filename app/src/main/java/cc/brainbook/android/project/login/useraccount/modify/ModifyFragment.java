@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
@@ -20,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.allen.library.SuperTextView;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.bumptech.glide.request.RequestOptions;
@@ -30,17 +30,9 @@ import java.io.File;
 import cc.brainbook.android.project.login.R;
 import cc.brainbook.android.project.login.useraccount.data.UserRepository;
 import cc.brainbook.android.project.login.useraccount.data.model.LoggedInUser;
-import cc.brainbook.android.project.login.useraccount.modify.exception.ModifyException;
-import cc.brainbook.android.project.login.useraccount.modify.interfaces.ModifyCallback;
 
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
-import static cc.brainbook.android.project.login.useraccount.modify.exception.ModifyException.EXCEPTION_FAILED_TO_MODIFY_AVATAR;
-import static cc.brainbook.android.project.login.useraccount.modify.exception.ModifyException.EXCEPTION_INVALID_PARAMETERS;
-import static cc.brainbook.android.project.login.useraccount.modify.exception.ModifyException.EXCEPTION_IO_EXCEPTION;
-import static cc.brainbook.android.project.login.useraccount.modify.exception.ModifyException.EXCEPTION_TOKEN_IS_INVALID_OR_EXPIRED;
-import static cc.brainbook.android.project.login.useraccount.modify.exception.ModifyException.EXCEPTION_UNKNOWN;
-import static com.facebook.FacebookSdk.getApplicationContext;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -76,11 +68,21 @@ public class ModifyFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        if (savedInstanceState != null) {
+            photoURI = Uri.parse((String) savedInstanceState.get("photo_uri"));
+        }
+
         avatarOriginalFile = new File(getActivity().getExternalCacheDir(), "avatar_original.jpg");
         avatarFile = new File(getActivity().getExternalCacheDir(), "avatar.jpg");
+    }
 
-        ///删除头像文件（当Camera拍照会产生）
-        removeAvatarFiles();
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        if (photoURI != null) {
+            outState.putString("photo_uri", photoURI.toString());
+        }
     }
 
     @Override
@@ -173,6 +175,7 @@ public class ModifyFragment extends Fragment {
         });
     }
 
+
     /* ------------------ ///[avatar] ------------------ */
     ///[avatar#相机或图库选择对话框]
     private void startCameraOrGallery() {
@@ -230,7 +233,7 @@ public class ModifyFragment extends Fragment {
 
     ///[avatar#裁剪/压缩#Yalantis/uCrop]https://github.com/Yalantis/uCrop
     private void startCrop(@NonNull Uri uri) {
-        UCrop uCrop = UCrop.of(uri, Uri.fromFile(avatarFile))
+        final UCrop uCrop = UCrop.of(uri, Uri.fromFile(avatarFile))
                 .withAspectRatio(1, 1);
 
         uCrop.start(getActivity());
@@ -262,43 +265,8 @@ public class ModifyFragment extends Fragment {
         }
     }
 
-    ///[avatar#上传完成后的处理]
-    void onAvatarUploadComplete(String avatarUrl) {
-        ///修改数据库中user的avatar
-        final UserRepository userRepository = UserRepository.getInstance();
-        userRepository.modifyAvatar(avatarUrl, new ModifyCallback() {
-            @Override
-            public void onSuccess() {
-                ///删除头像文件（当Camera拍照会产生）
-                removeAvatarFiles();
-
-                if (getActivity() != null) {
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            ///更新头像
-                            ///Glide下载图片（使用已经缓存的图片）给imageView
-                            ///https://muyangmin.github.io/glide-docs-cn/doc/getting-started.html
-                            final RequestOptions options = RequestOptions.bitmapTransform(new CircleCrop()) ///裁剪圆形
-                                    .placeholder(R.drawable.avatar_default); ///   .placeholder(new ColorDrawable(Color.BLACK))   // 或者可以直接使用ColorDrawable
-                            Glide.with(getActivity())
-                                    .load(UserRepository.getInstance().getLoggedInUser().getAvatar())
-                                    .apply(options)
-                                    .into(ivAvatar);
-                        }
-                    });
-                }
-            }
-
-            @Override
-            public void onError(ModifyException e) {
-                Toast.makeText(getApplicationContext(), getErrorIntegerRes(e), Toast.LENGTH_LONG).show();
-            }
-        });
-    }
-
-    ///删除头像文件（当Camera拍照会产生）
-    void removeAvatarFiles() {
+    //////??????删除头像文件（当Camera拍照会产生）
+    private void removeAvatarFiles() {
         if (avatarOriginalFile != null && avatarOriginalFile.exists()) {
             avatarOriginalFile.delete();
         }
@@ -307,27 +275,4 @@ public class ModifyFragment extends Fragment {
         }
     }
 
-    private @StringRes int getErrorIntegerRes(ModifyException e) {
-        @StringRes final int error;
-        switch (e.getCode()) {
-            case EXCEPTION_TOKEN_IS_INVALID_OR_EXPIRED:
-                error = R.string.result_error_token_is_invalid_or_expired;
-                break;
-            case EXCEPTION_IO_EXCEPTION:
-                error = R.string.error_network_error;
-                break;
-            case EXCEPTION_UNKNOWN:
-                error = R.string.error_unknown;
-                break;
-            case EXCEPTION_INVALID_PARAMETERS:
-                error = R.string.error_invalid_parameters;
-                break;
-            case EXCEPTION_FAILED_TO_MODIFY_AVATAR:
-                error = R.string.result_error_failed_to_modify_username;
-                break;
-            default:
-                error = R.string.error_unknown;
-        }
-        return  error;
-    }
 }

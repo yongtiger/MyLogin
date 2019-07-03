@@ -11,6 +11,7 @@ import com.amazonaws.mobileconnectors.s3.transferutility.TransferListener;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferState;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
+
 import com.yalantis.ucrop.UCrop;
 
 import java.io.File;
@@ -18,11 +19,17 @@ import java.io.File;
 import cc.brainbook.android.project.login.R;
 import cc.brainbook.android.project.login.config.Config;
 import cc.brainbook.android.project.login.useraccount.data.UserRepository;
+import cc.brainbook.android.project.login.useraccount.modify.exception.ModifyException;
+import cc.brainbook.android.project.login.useraccount.modify.interfaces.ModifyCallback;
 import cc.brainbook.android.project.login.util.S3TransferUitl;
 
-public class ModifyActivity extends AppCompatActivity {
-    private ModifyFragment modifyFragment;
+import static cc.brainbook.android.project.login.useraccount.modify.exception.ModifyException.EXCEPTION_FAILED_TO_MODIFY_AVATAR;
+import static cc.brainbook.android.project.login.useraccount.modify.exception.ModifyException.EXCEPTION_INVALID_PARAMETERS;
+import static cc.brainbook.android.project.login.useraccount.modify.exception.ModifyException.EXCEPTION_IO_EXCEPTION;
+import static cc.brainbook.android.project.login.useraccount.modify.exception.ModifyException.EXCEPTION_TOKEN_IS_INVALID_OR_EXPIRED;
+import static cc.brainbook.android.project.login.useraccount.modify.exception.ModifyException.EXCEPTION_UNKNOWN;
 
+public class ModifyActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,9 +50,9 @@ public class ModifyActivity extends AppCompatActivity {
     }
 
     public void showModifyFragment() {
-        modifyFragment = ModifyFragment.newInstance();
+        final ModifyFragment modifyFragment = ModifyFragment.newInstance();
         getSupportFragmentManager().beginTransaction()
-                .add(R.id.container, modifyFragment)
+                .replace(R.id.container, modifyFragment)
 //                .addToBackStack(null)   ///[关闭其它fragment后回退显示ModifyFragment]注意：第一个Fragment不用添加addToBackStack()，就能解决空白页的问题
                 .setTransition(android.app.FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                 .commit();
@@ -109,23 +116,19 @@ public class ModifyActivity extends AppCompatActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        ///[avatar#裁剪/压缩#Yalantis/uCrop]https://github.com/Yalantis/uCrop
+        ///[avatar#裁剪/压缩#Yalantis/uCrop]fragment中onActivityResult()方法不会被调用！
         if (requestCode == UCrop.REQUEST_CROP) {
             if (resultCode == RESULT_OK) {
-                ///删除头像文件（当Camera拍照会产生）
-                modifyFragment.removeAvatarFiles();
-
                 final Uri resultUri = UCrop.getOutput(data);
                 if (resultUri != null) {
                     final File file = new File(resultUri.getPath());
                     final String userId = UserRepository.getInstance().getLoggedInUser().getUserId();
                     final String key = userId + "/" + file.getName();
                     ///[avatar#上传#AWS S3 Transfer Utility]
-                    https://stackoverflow.com/questions/5657411/android-getting-a-file-uri-from-a-content-uri
+                    //https://stackoverflow.com/questions/5657411/android-getting-a-file-uri-from-a-content-uri
 //                    awsS3Upload(new File(resultUri.toString()));
                     awsS3Upload(file, key);
                 }
-
             } else if (resultCode == UCrop.RESULT_ERROR) {
                 final Throwable cropError = UCrop.getError(data);
                 if (cropError != null) {
@@ -164,7 +167,7 @@ public class ModifyActivity extends AppCompatActivity {
                         final String avatarUrl = s3TransferUitl.getSignatureUrl(ModifyActivity.this, key);
 
                         ///[avatar#上传完成后的处理]
-                        modifyFragment.onAvatarUploadComplete(avatarUrl);
+                        onAvatarUploadComplete(avatarUrl);
                     }
                 }
 
@@ -182,4 +185,44 @@ public class ModifyActivity extends AppCompatActivity {
 
     }
 
+    ///[avatar#上传完成后的处理]
+    private void onAvatarUploadComplete(String avatarUrl) {
+        ///修改数据库中user的avatar
+        final UserRepository userRepository = UserRepository.getInstance();
+        userRepository.modifyAvatar(avatarUrl, new ModifyCallback() {
+            @Override
+            public void onSuccess() {
+                showModifyFragment();
+            }
+
+            @Override
+            public void onError(ModifyException e) {
+                Toast.makeText(getApplicationContext(), getErrorIntegerRes(e), Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    private @StringRes int getErrorIntegerRes(ModifyException e) {
+        @StringRes final int error;
+        switch (e.getCode()) {
+            case EXCEPTION_TOKEN_IS_INVALID_OR_EXPIRED:
+                error = R.string.result_error_token_is_invalid_or_expired;
+                break;
+            case EXCEPTION_IO_EXCEPTION:
+                error = R.string.error_network_error;
+                break;
+            case EXCEPTION_UNKNOWN:
+                error = R.string.error_unknown;
+                break;
+            case EXCEPTION_INVALID_PARAMETERS:
+                error = R.string.error_invalid_parameters;
+                break;
+            case EXCEPTION_FAILED_TO_MODIFY_AVATAR:
+                error = R.string.result_error_failed_to_modify_username;
+                break;
+            default:
+                error = R.string.error_unknown;
+        }
+        return  error;
+    }
 }

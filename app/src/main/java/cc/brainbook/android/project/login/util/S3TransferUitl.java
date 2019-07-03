@@ -6,14 +6,13 @@ import com.amazonaws.auth.CognitoCachingCredentialsProvider;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
 import com.amazonaws.regions.Region;
 import com.amazonaws.regions.Regions;
-import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
 
 import java.net.URL;
+import java.util.UUID;
 
 import cc.brainbook.android.project.login.config.Config;
-import cc.brainbook.android.project.login.useraccount.modify.ModifyActivity;
 
 /*
  * Handles basic helper functions used throughout the app.
@@ -86,27 +85,27 @@ public class S3TransferUitl {
         return sTransferUtility;
     }
 
-    /**
-     * 生成预签名对象 URL
-     *
-     * @param key
-     * @return
-     */
     public String getSignatureUrl(Context context, String key) {
         //获取一个request
         final GeneratePresignedUrlRequest urlRequest =
                 new GeneratePresignedUrlRequest(Config.BUCKET_NAME, key);
-//                        Date expirationDate = null;
-//                        try {
-//                            expirationDate = new SimpleDateFormat("yyyy-MM-dd").parse("2020-12-31");
-//                        } catch (Exception e) {
-//                            e.printStackTrace();
-//                        }
-//                        //设置过期时间
-//                        urlRequest.setExpiration(expirationDate);
+
+//                Date expirationDate = null;
+//                try {
+//                    expirationDate = new SimpleDateFormat("yyyy-MM-dd").parse("2020-12-31");
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//                //设置过期时间
+//                urlRequest.setExpiration(expirationDate);
 
         //生成公用的url
         final URL url = getS3Client(context).generatePresignedUrl(urlRequest);
-        return url.toString();
+
+        ///预签名的有效最长期限为不能超过7天
+        ///解决：AWS的URL截取？之前的网址
+        //https://blog.csdn.net/qq_21108099/article/details/84548849
+        final String[] strs = url.toString().split("\\?");
+        return strs[0] + "?" + UUID.randomUUID().toString();    ///注意：但会不更新！有缓存！需要在网址后面加随机数
     }
 }
