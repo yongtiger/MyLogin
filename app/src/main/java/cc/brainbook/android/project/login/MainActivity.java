@@ -2,6 +2,7 @@ package cc.brainbook.android.project.login;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.support.annotation.StringRes;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -152,8 +153,8 @@ public class MainActivity extends AppCompatActivity {
                 .into((ImageView) findViewById(R.id.iv_avatar));
     }
 
-    private int getErrorIntegerRes(LogoutException e) {
-        final int error;
+    private @StringRes int getErrorIntegerRes(LogoutException e) {
+        @StringRes final int error;
         switch (e.getCode()) {
             case EXCEPTION_TOKEN_IS_INVALID_OR_EXPIRED:
                 error = R.string.error_token_is_invalid_or_expired;

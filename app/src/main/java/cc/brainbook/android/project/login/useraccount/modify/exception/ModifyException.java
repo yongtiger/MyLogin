@@ -14,6 +14,7 @@ public class ModifyException extends RuntimeException {
     public static final int EXCEPTION_FAILED_TO_MODIFY_PASSWORD = 2;
     public static final int EXCEPTION_FAILED_TO_MODIFY_EMAIL = 3;
     public static final int EXCEPTION_FAILED_TO_MODIFY_MOBILE = 4;
+    public static final int EXCEPTION_FAILED_TO_MODIFY_AVATAR = 5;
 
     private int code;
 
@@ -55,7 +56,8 @@ public class ModifyException extends RuntimeException {
             EXCEPTION_FAILED_TO_MODIFY_USERNAME,
             EXCEPTION_FAILED_TO_MODIFY_PASSWORD,
             EXCEPTION_FAILED_TO_MODIFY_EMAIL,
-            EXCEPTION_FAILED_TO_MODIFY_MOBILE
+            EXCEPTION_FAILED_TO_MODIFY_MOBILE,
+            EXCEPTION_FAILED_TO_MODIFY_AVATAR
     })
     @Retention(RetentionPolicy.SOURCE)
     public @interface ExceptionType {}

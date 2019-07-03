@@ -3,6 +3,7 @@ package cc.brainbook.android.project.login.useraccount.authentication.ui.registe
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
+import android.support.annotation.StringRes;
 import android.text.TextUtils;
 
 import java.util.HashMap;
@@ -103,8 +104,8 @@ public class RegisterViewModel extends ViewModel {
         return !TextUtils.isEmpty(password) && password.equals(repeatPassword);
     }
 
-    private int getErrorIntegerRes(RegisterException e) {
-        int error;
+    private @StringRes int getErrorIntegerRes(RegisterException e) {
+        @StringRes final int error;
         switch (e.getCode()) {
             case EXCEPTION_IO_EXCEPTION:
                 error = R.string.error_network_error;

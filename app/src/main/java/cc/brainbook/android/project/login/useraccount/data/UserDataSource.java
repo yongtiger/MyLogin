@@ -40,6 +40,7 @@ import static cc.brainbook.android.project.login.config.Config.LOGOUT_URL;
 import static cc.brainbook.android.project.login.config.Config.OAUTH_LOGIN_URL;
 import static cc.brainbook.android.project.login.config.Config.OAUTH_UNBIND_URL;
 import static cc.brainbook.android.project.login.config.Config.REGISTER_URL;
+import static cc.brainbook.android.project.login.config.Config.USER_ACCOUNT_MODIFY_AVATAR_URL;
 import static cc.brainbook.android.project.login.config.Config.USER_ACCOUNT_MODIFY_EMAIL_URL;
 import static cc.brainbook.android.project.login.config.Config.USER_ACCOUNT_MODIFY_MOBILE_URL;
 import static cc.brainbook.android.project.login.config.Config.USER_ACCOUNT_MODIFY_PASSWORD_URL;
@@ -57,6 +58,7 @@ public class UserDataSource {
     private static final String KEY_PASSWORD = "password";
     private static final String KEY_EMAIL = "email";
     private static final String KEY_MOBILE = "mobile";
+    private static final String KEY_AVATAR = "avatar";
     private static final String KEY_OAUTH_NETWORK = "oauth_network";
     private static final String KEY_OAUTH_OPEN_ID = "oauth_open_id";
     private static final String KEY_OAUTH_USERNAME = "oauth_username";
@@ -567,6 +569,83 @@ public class UserDataSource {
                                         break;
                                     case 1:
                                         modifyCallback.onError(new ModifyException(ModifyException.EXCEPTION_FAILED_TO_MODIFY_MOBILE, jsonObject.getString(KEY_MESSAGE)));
+                                        break;
+                                    default:
+                                        modifyCallback.onError(new ModifyException(ModifyException.EXCEPTION_UNKNOWN));
+                                }
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+    }
+
+
+    /* --------------------- ///[Modify Avatar] --------------------- */
+    public void modifyAvatar(LoggedInUser loggedInUser, String avatar, final ModifyCallback modifyCallback) {
+        ///https://stackoverflow.com/questions/34179922/okhttp-post-body-as-json
+        final JSONObject jsonObject = new JSONObject();
+        try {
+            //Populate the sendVerificationCode parameters
+            jsonObject.put(KEY_AVATAR, avatar);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        // 构建post的RequestBody
+        final RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), jsonObject.toString());
+
+        // 创建一个Request
+        final Request request = new Request.Builder()
+                .url(USER_ACCOUNT_MODIFY_AVATAR_URL)
+                .header(KEY_TOKEN, loggedInUser.getToken())
+                .post(requestBody)
+                .build();
+
+        // 创建okHttpClient对象
+        final OkHttpClient mOkHttpClient = new OkHttpClient.Builder()
+                .connectTimeout(CONNECT_TIMEOUT, TimeUnit.SECONDS)
+                .readTimeout(CONNECT_TIMEOUT, TimeUnit.SECONDS)
+                .build();
+
+        // 请求加入调度
+        mOkHttpClient.newCall(request)
+                .enqueue(new Callback() {
+                    @Override
+                    public void onFailure(Call call, IOException e) {
+                        ///[返回结果及错误处理]错误处理
+                        modifyCallback.onError(new ModifyException(ModifyException.EXCEPTION_IO_EXCEPTION, e.getCause()));
+                    }
+
+                    @Override
+                    public void onResponse(Call call, Response response) throws IOException {
+                        try {
+                            JSONObject jsonObject = null;
+                            if (response.body() != null) {
+                                jsonObject = new JSONObject(response.body().string());
+                            }
+
+                            if (jsonObject != null) {
+                                ///[返回结果及错误处理]
+                                switch (jsonObject.getInt(KEY_STATUS)) {
+                                    case -4:
+                                        modifyCallback.onError(new ModifyException(ModifyException.EXCEPTION_TOKEN_IS_INVALID_OR_EXPIRED, jsonObject.getString(KEY_MESSAGE)));
+                                        break;
+                                    case -3:
+                                        modifyCallback.onError(new ModifyException(ModifyException.EXCEPTION_IO_EXCEPTION, jsonObject.getString(KEY_MESSAGE)));
+                                        break;
+                                    case -2:
+                                        modifyCallback.onError(new ModifyException(ModifyException.EXCEPTION_UNKNOWN, jsonObject.getString(KEY_MESSAGE)));
+                                        break;
+                                    case -1:
+                                        modifyCallback.onError(new ModifyException(ModifyException.EXCEPTION_INVALID_PARAMETERS, jsonObject.getString(KEY_MESSAGE)));
+                                        break;
+                                    case 0:
+                                        modifyCallback.onSuccess();
+                                        break;
+                                    case 1:
+                                        modifyCallback.onError(new ModifyException(ModifyException.EXCEPTION_FAILED_TO_MODIFY_AVATAR, jsonObject.getString(KEY_MESSAGE)));
                                         break;
                                     default:
                                         modifyCallback.onError(new ModifyException(ModifyException.EXCEPTION_UNKNOWN));

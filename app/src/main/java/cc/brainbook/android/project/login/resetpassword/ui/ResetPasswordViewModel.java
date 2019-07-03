@@ -3,6 +3,7 @@ package cc.brainbook.android.project.login.resetpassword.ui;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
+import android.support.annotation.StringRes;
 import android.text.TextUtils;
 import android.util.Patterns;
 
@@ -245,8 +246,8 @@ public class ResetPasswordViewModel extends ViewModel {
         return !TextUtils.isEmpty(password) && password.equals(repeatPassword);
     }
 
-    private int getErrorIntegerRes(ResetPasswordException e) {
-        int error;
+    private @StringRes int getErrorIntegerRes(ResetPasswordException e) {
+        @StringRes int error;
         switch (e.getCode()) {
             case -3:
                 error = R.string.error_network_error;

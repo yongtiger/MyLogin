@@ -65,6 +65,9 @@ public class Config {
 //    public static final String USER_ACCOUNT_MODIFY_MOBILE_URL = HTTP_DOMAIN + "/_study/_login/MyLogin/member/user_account/modify_mobile.php?start_debug=1&debug_stop=1&use_remote=1&debug_host=" + DEBUG_HOST;
     public static final String USER_ACCOUNT_MODIFY_MOBILE_URL = HTTP_DOMAIN + "/_study/_login/MyLogin/member/user_account/modify_mobile.php";
 
+//        public static final String USER_ACCOUNT_MODIFY_AVATAR_URL = HTTP_DOMAIN + "/_study/_login/MyLogin/member/user_account/modify_avatar.php?start_debug=1&debug_stop=1&use_remote=1&debug_host=" + DEBUG_HOST;
+    public static final String USER_ACCOUNT_MODIFY_AVATAR_URL = HTTP_DOMAIN + "/_study/_login/MyLogin/member/user_account/modify_avatar.php";
+
 
     /* ---------------- oAuth ---------------- */
 //        public static final String OAUTH_LOGIN_URL = HTTP_DOMAIN + "/_study/_login/MyLogin/member/oauth_login.php?start_debug=1&debug_stop=1&use_remote=1&debug_host=" + DEBUG_HOST;

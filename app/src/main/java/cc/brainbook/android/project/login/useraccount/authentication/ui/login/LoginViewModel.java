@@ -3,6 +3,7 @@ package cc.brainbook.android.project.login.useraccount.authentication.ui.login;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
+import android.support.annotation.StringRes;
 import android.text.TextUtils;
 import android.util.Patterns;
 
@@ -100,8 +101,8 @@ public class LoginViewModel extends ViewModel {
         return !TextUtils.isEmpty(password) && Pattern.matches(REGEXP_PASSWORD, password);
     }
 
-    private int getErrorIntegerRes(LoginException e) {
-        int error;
+    private @StringRes int getErrorIntegerRes(LoginException e) {
+        @StringRes final int error;
         switch (e.getCode()) {
             case EXCEPTION_IO_EXCEPTION:
                 error = R.string.error_network_error;

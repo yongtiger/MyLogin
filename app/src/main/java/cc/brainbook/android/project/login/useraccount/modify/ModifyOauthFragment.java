@@ -3,6 +3,7 @@ package cc.brainbook.android.project.login.useraccount.modify;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
 import android.support.v7.app.AlertDialog;
@@ -151,8 +152,8 @@ public class ModifyOauthFragment extends ListFragment {
         });
     }
 
-    private int getErrorIntegerRes(OauthUnbindException e) {
-        final int error;
+    private @StringRes int getErrorIntegerRes(OauthUnbindException e) {
+        @StringRes final int error;
         switch (e.getCode()) {
             case EXCEPTION_TOKEN_IS_INVALID_OR_EXPIRED:
                 error = R.string.error_token_is_invalid_or_expired;

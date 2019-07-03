@@ -3,6 +3,7 @@ package cc.brainbook.android.project.login.useraccount.modify;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
+import android.support.annotation.StringRes;
 import android.text.TextUtils;
 import android.util.Patterns;
 
@@ -195,8 +196,8 @@ public class ModifyViewModel extends ViewModel {
         return TextUtils.isEmpty(mobile) || Patterns.PHONE.matcher(mobile).matches();
     }
 
-    private int getErrorIntegerRes(ModifyException e) {
-        int error;
+    private @StringRes int getErrorIntegerRes(ModifyException e) {
+        @StringRes final int error;
         switch (e.getCode()) {
             case EXCEPTION_TOKEN_IS_INVALID_OR_EXPIRED:
                 error = R.string.result_error_token_is_invalid_or_expired;

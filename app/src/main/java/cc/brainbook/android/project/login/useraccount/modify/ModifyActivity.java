@@ -11,14 +11,9 @@ import com.amazonaws.mobileconnectors.s3.transferutility.TransferListener;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferState;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
-import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.bitmap.CircleCrop;
-import com.bumptech.glide.request.RequestOptions;
 import com.yalantis.ucrop.UCrop;
 
 import java.io.File;
-import java.net.URL;
 
 import cc.brainbook.android.project.login.R;
 import cc.brainbook.android.project.login.config.Config;
@@ -26,6 +21,7 @@ import cc.brainbook.android.project.login.useraccount.data.UserRepository;
 import cc.brainbook.android.project.login.util.S3TransferUitl;
 
 public class ModifyActivity extends AppCompatActivity {
+    private ModifyFragment modifyFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +42,6 @@ public class ModifyActivity extends AppCompatActivity {
         }
     }
 
-    private ModifyFragment modifyFragment;
     public void showModifyFragment() {
         modifyFragment = ModifyFragment.newInstance();
         getSupportFragmentManager().beginTransaction()
@@ -171,8 +166,8 @@ public class ModifyActivity extends AppCompatActivity {
                         ///获得上传头像的下载Url
                         final String avatarUrl = s3TransferUitl.getSignatureUrl(ModifyActivity.this, key);
 
-                        ///上传完成后的处理
-                        onAvatarUploadComplete(avatarUrl);
+                        ///[avatar#上传完成后的处理]
+                        modifyFragment.onAvatarUploadComplete(avatarUrl);
                     }
                 }
 
@@ -190,23 +185,4 @@ public class ModifyActivity extends AppCompatActivity {
 
     }
 
-    /**
-     * 上传完成后的处理
-     *
-     * @param avatarUrl
-     */
-    private void onAvatarUploadComplete(String avatarUrl) {
-        ///修改数据库中user的avatar
-        // todo ...
-
-        ///更新头像
-        ///Glide下载图片（使用已经缓存的图片）给imageView
-        ///https://muyangmin.github.io/glide-docs-cn/doc/getting-started.html
-        final RequestOptions options = RequestOptions.bitmapTransform(new CircleCrop()) ///裁剪圆形
-                .placeholder(R.drawable.avatar_default); ///   .placeholder(new ColorDrawable(Color.BLACK))   // 或者可以直接使用ColorDrawable
-        Glide.with(ModifyActivity.this)
-                .load(UserRepository.getInstance().getLoggedInUser().getAvatar())
-                .apply(options)
-                .into(modifyFragment.getIvAvatar());
-    }
 }

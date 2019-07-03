@@ -183,6 +183,24 @@ public class UserRepository {
     }
 
 
+    /* --------------------- ///[Modify Avatar] --------------------- */
+    public void modifyAvatar(final String avatar, final ModifyCallback modifyCallback) {
+        mDataSource.modifyAvatar(getLoggedInUser(), avatar, new ModifyCallback(){
+            @Override
+            public void onSuccess() {
+                getLoggedInUser().setAvatar(avatar);
+                setLoggedInUser(getLoggedInUser());
+                modifyCallback.onSuccess();
+            }
+
+            @Override
+            public void onError(ModifyException e) {
+                modifyCallback.onError(e);
+            }
+        });
+    }
+
+
     /* --------------------- ///[oAuth] --------------------- */
     ///[oAuth#oAuthLogin]
     ///[oAuth#NetworkAccessTokenMap]
