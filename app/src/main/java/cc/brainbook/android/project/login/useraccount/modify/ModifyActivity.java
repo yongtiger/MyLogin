@@ -112,11 +112,8 @@ public class ModifyActivity extends AppCompatActivity {
         ///[avatar#裁剪/压缩#Yalantis/uCrop]https://github.com/Yalantis/uCrop
         if (requestCode == UCrop.REQUEST_CROP) {
             if (resultCode == RESULT_OK) {
-                ///如果头像源文件存在（当Camera拍照会产生）则删除
-                final File photoFile =  new File(getExternalCacheDir(), "avatar_original.jpg");
-                if (photoFile.exists()) {
-                    photoFile.delete();
-                }
+                ///删除头像文件（当Camera拍照会产生）
+                modifyFragment.removeAvatarFiles();
 
                 final Uri resultUri = UCrop.getOutput(data);
                 if (resultUri != null) {

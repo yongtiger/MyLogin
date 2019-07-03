@@ -7,11 +7,11 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -58,6 +58,9 @@ public class ModifyFragment extends Fragment {
     private ImageView ivAvatar;
     private ImageView ivModifyAvatar;
 
+    private File avatarOriginalFile;
+    private File avatarFile;
+
     public ModifyFragment() {
         // Required empty public constructor
     }
@@ -67,6 +70,17 @@ public class ModifyFragment extends Fragment {
      */
     public static ModifyFragment newInstance() {
         return new ModifyFragment();
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        avatarOriginalFile = new File(getActivity().getExternalCacheDir(), "avatar_original.jpg");
+        avatarFile = new File(getActivity().getExternalCacheDir(), "avatar.jpg");
+
+        ///删除头像文件（当Camera拍照会产生）
+        removeAvatarFiles();
     }
 
     @Override
@@ -195,8 +209,6 @@ public class ModifyFragment extends Fragment {
 
     ///[avatar#图片选择器#相机拍照]
     private void pickFromCamera() {
-        final File photoFile =  new File(getActivity().getExternalCacheDir(), "avatar_original.jpg");
-
         // create Intent to take a picture and return control to the calling application
         final Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
@@ -206,9 +218,9 @@ public class ModifyFragment extends Fragment {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 photoURI = FileProvider.getUriForFile(getActivity(),
                         "cc.brainbook.android.project.login.fileProvider",
-                        photoFile);
+                        avatarOriginalFile);
             } else {
-                photoURI = Uri.fromFile(photoFile);
+                photoURI = Uri.fromFile(avatarOriginalFile);
             }
 
             intent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
@@ -218,7 +230,7 @@ public class ModifyFragment extends Fragment {
 
     ///[avatar#裁剪/压缩#Yalantis/uCrop]https://github.com/Yalantis/uCrop
     private void startCrop(@NonNull Uri uri) {
-        UCrop uCrop = UCrop.of(uri, Uri.fromFile(new File(getActivity().getExternalCacheDir(), "avatar.jpg")))
+        UCrop uCrop = UCrop.of(uri, Uri.fromFile(avatarFile))
                 .withAspectRatio(1, 1);
 
         uCrop.start(getActivity());
@@ -257,6 +269,9 @@ public class ModifyFragment extends Fragment {
         userRepository.modifyAvatar(avatarUrl, new ModifyCallback() {
             @Override
             public void onSuccess() {
+                ///删除头像文件（当Camera拍照会产生）
+                removeAvatarFiles();
+
                 if (getActivity() != null) {
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
@@ -280,6 +295,16 @@ public class ModifyFragment extends Fragment {
                 Toast.makeText(getApplicationContext(), getErrorIntegerRes(e), Toast.LENGTH_LONG).show();
             }
         });
+    }
+
+    ///删除头像文件（当Camera拍照会产生）
+    void removeAvatarFiles() {
+        if (avatarOriginalFile != null && avatarOriginalFile.exists()) {
+            avatarOriginalFile.delete();
+        }
+        if (avatarFile != null && avatarFile.exists()) {
+            avatarFile.delete();
+        }
     }
 
     private @StringRes int getErrorIntegerRes(ModifyException e) {
