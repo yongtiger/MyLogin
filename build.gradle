@@ -16,7 +16,7 @@ buildscript {
 
         ///[oAuth#EasyLogin#Google Sign In]
         ///https://developers.google.com/identity/sign-in/android/start-integrating
-        classpath 'com.google.gms:google-services:4.2.0'
+        classpath 'com.google.gms:google-services:4.3.0'
 
         ///[oAuth#MobService]注册MobSDK
         ///http://www.mob.com
