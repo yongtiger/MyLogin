@@ -1,6 +1,6 @@
 package cc.brainbook.android.project.login.resetpassword.ui;
 
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 /**
  * Data validation state.

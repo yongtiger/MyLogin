@@ -7,7 +7,9 @@
     <string name="label_camera">Camera</string>
 
     <string name="message_cannot_retrieve_selected_image">Cannot retrieve selected image</string>
-    <string name="message_cancelled_the_image_capture">Cancelled the image capture</string>
+    <string name="message_image_select_cancelled">Image select cancelled</string>
+    <string name="message_image_select_failed">Image select failed</string>
+    <string name="message_image_capture_cancelled">Image capture cancelled</string>
     <string name="message_image_capture_failed">Image capture failed</string>
 
 </resources>

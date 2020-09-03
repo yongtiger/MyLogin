@@ -1,6 +1,6 @@
 package cc.brainbook.android.project.login.useraccount.authentication.ui.register;
 
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 /**
  * Data validation state of the register form.

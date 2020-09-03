@@ -1,7 +1,7 @@
 package cc.brainbook.android.project.login.result;
 
-import android.support.annotation.Nullable;
-import android.support.annotation.StringRes;
+import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
 
 import cc.brainbook.android.project.login.oauth.AccessToken;
 import cc.brainbook.android.project.login.oauth.config.Config;

@@ -11,12 +11,13 @@ buildscript {
 //        maven { url 'https://maven.google.com'  }
 
     }
+
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.4.1'
+        classpath 'com.android.tools.build:gradle:4.0.1'
 
         ///[oAuth#EasyLogin#Google Sign In]
         ///https://developers.google.com/identity/sign-in/android/start-integrating
-        classpath 'com.google.gms:google-services:4.3.0'
+        classpath 'com.google.gms:google-services:4.3.3'
 
         ///[oAuth#MobService]注册MobSDK
         ///http://www.mob.com

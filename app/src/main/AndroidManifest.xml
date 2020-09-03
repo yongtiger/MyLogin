@@ -74,8 +74,8 @@
 
         <!--///[avatar#图片选择器#手机拍照]适应Android 7.0-->
         <provider
-            android:name="android.support.v4.content.FileProvider"
-            android:authorities="cc.brainbook.android.project.login.fileProvider"
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.android7.fileprovider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data

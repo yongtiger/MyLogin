@@ -1,16 +1,17 @@
 package cc.brainbook.android.project.login.useraccount.modify;
 
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.content.FileProvider;
-import android.support.v7.app.AlertDialog;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.core.content.FileProvider;
+import androidx.appcompat.app.AlertDialog;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,6 +31,7 @@ import java.io.File;
 import cc.brainbook.android.project.login.R;
 import cc.brainbook.android.project.login.useraccount.data.UserRepository;
 import cc.brainbook.android.project.login.useraccount.data.model.LoggedInUser;
+import cc.brainbook.android.project.login.util.FileUtil;
 
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
@@ -41,7 +43,7 @@ public class ModifyFragment extends Fragment {
     private static final int REQUEST_CODE_PICK_FROM_GALLERY = 1;
     private static final int REQUEST_CODE_PICK_FROM_CAMERA = 2;
 
-    private Uri photoURI;
+    private Uri photoUri;
     private SuperTextView stvUsername;
     private SuperTextView stvPassword;
     private SuperTextView stvEmail;
@@ -69,7 +71,7 @@ public class ModifyFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         if (savedInstanceState != null) {
-            photoURI = Uri.parse((String) savedInstanceState.get("photo_uri"));
+            photoUri = Uri.parse((String) savedInstanceState.get("photo_uri"));
         }
 
         avatarOriginalFile = new File(getActivity().getExternalCacheDir(), "avatar_original.jpg");
@@ -80,8 +82,8 @@ public class ModifyFragment extends Fragment {
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
 
-        if (photoURI != null) {
-            outState.putString("photo_uri", photoURI.toString());
+        if (photoUri != null) {
+            outState.putString("photo_uri", photoUri.toString());
         }
     }
 
@@ -217,26 +219,18 @@ public class ModifyFragment extends Fragment {
 
         // Ensure that there's a camera activity to handle the intent
         if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
-            ///[avatar#图片选择器#相机拍照]适应Android 7.0
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                photoURI = FileProvider.getUriForFile(getActivity(),
-                        "cc.brainbook.android.project.login.fileProvider",
-                        avatarOriginalFile);
-            } else {
-                photoURI = Uri.fromFile(avatarOriginalFile);
-            }
-
-            intent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+            photoUri = FileUtil.getUriFromFile(getActivity(), avatarOriginalFile);
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
             startActivityForResult(intent, REQUEST_CODE_PICK_FROM_CAMERA);
         }
     }
 
     ///[avatar#裁剪/压缩#Yalantis/uCrop]https://github.com/Yalantis/uCrop
-    private void startCrop(@NonNull Uri uri) {
-        final UCrop uCrop = UCrop.of(uri, Uri.fromFile(avatarFile))
+    private void startCrop(Activity activity, @NonNull Uri source, @NonNull Uri destination) {
+        final UCrop uCrop = UCrop.of(source, destination)
                 .withAspectRatio(1, 1);
 
-        uCrop.start(getActivity());
+        uCrop.start(activity);
     }
 
     @Override
@@ -246,19 +240,23 @@ public class ModifyFragment extends Fragment {
             if (resultCode == RESULT_OK) {
                 final Uri selectedUri = data.getData();
                 if (selectedUri != null) {
-                    startCrop(selectedUri);
+                    startCrop(getActivity(), selectedUri, Uri.fromFile(avatarFile));
                 } else {
                     Toast.makeText(getActivity(), R.string.message_cannot_retrieve_selected_image, Toast.LENGTH_SHORT).show();
                 }
+            } else if (resultCode == RESULT_CANCELED) {
+                Toast.makeText(getActivity(), R.string.message_image_select_cancelled, Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(getActivity(), R.string.message_image_select_failed, Toast.LENGTH_SHORT).show();
             }
         }
 
         ///[avatar#图片选择器#相机拍照]
-        if (requestCode == REQUEST_CODE_PICK_FROM_CAMERA) {
+        else if (requestCode == REQUEST_CODE_PICK_FROM_CAMERA) {
             if (resultCode == RESULT_OK) {
-                startCrop(photoURI);
+                startCrop(getActivity(), photoUri, Uri.fromFile(avatarFile));
             } else if (resultCode == RESULT_CANCELED) {
-                Toast.makeText(getActivity(), R.string.message_cancelled_the_image_capture, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), R.string.message_image_capture_cancelled, Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(getActivity(), R.string.message_image_capture_failed, Toast.LENGTH_SHORT).show();
             }

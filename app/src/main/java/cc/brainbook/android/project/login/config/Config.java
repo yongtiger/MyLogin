@@ -3,8 +3,8 @@ package cc.brainbook.android.project.login.config;
 import com.amazonaws.regions.Regions;
 
 public class Config {
-    public static final String HTTP_DOMAIN = "http://192.168.1.104";
-    public static final String DEBUG_HOST = "192.168.1.104";
+    public static final String HTTP_DOMAIN = "http://192.168.1.71";
+    public static final String DEBUG_HOST = "192.168.1.71";
 
 //    public static final String REGISTER_URL = HTTP_DOMAIN + "/_study/_login/MyLogin/member/register.php?start_debug=1&debug_stop=1&use_remote=1&debug_host=" + DEBUG_HOST;
     public static final String REGISTER_URL = HTTP_DOMAIN + "/_study/_login/MyLogin/member/register.php";

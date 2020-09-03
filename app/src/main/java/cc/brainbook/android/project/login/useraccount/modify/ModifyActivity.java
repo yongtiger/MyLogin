@@ -2,8 +2,8 @@ package cc.brainbook.android.project.login.useraccount.modify;
 
 import android.content.Intent;
 import android.net.Uri;
-import android.support.annotation.StringRes;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.StringRes;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.Toast;
 
