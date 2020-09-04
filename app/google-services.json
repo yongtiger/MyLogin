@@ -10,7 +10,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:7406533500:android:59cb731bc4fa1f2e",
         "android_client_info": {
-          "package_name": "cc.brainbook.android.project.login"
+          "package_name": "cc.brainbook.android.project.user"
         }
       },
       "oauth_client": [
@@ -18,7 +18,7 @@
           "client_id": "7406533500-j9f0lmu9c4me0qmrqe94hknl08if20qh.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "cc.brainbook.android.project.login",
+            "package_name": "cc.brainbook.android.project.user",
             "certificate_hash": "bd1b3e74ed688354487d61c661c3e3c5a1058140"
           }
         },

@@ -12,14 +12,12 @@ android {
     buildToolsVersion setup.buildTools
 
     defaultConfig {
-        applicationId "cc.brainbook.android.project.login"
+        applicationId "cc.brainbook.android.project.user"
 
         minSdkVersion setup.minSdk
         targetSdkVersion setup.targetSdk
         versionCode release.versionCode
         versionName release.versionName
-
-        testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
 
         multiDexEnabled true
     }
@@ -42,10 +40,6 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
 
     implementation 'com.google.android.material:material:1.2.0'
-
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.2'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 
     implementation 'androidx.multidex:multidex:2.0.1'
 
