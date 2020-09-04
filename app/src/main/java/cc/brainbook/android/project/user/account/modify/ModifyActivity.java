@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.net.Uri;
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentTransaction;
+
 import android.os.Bundle;
 import android.widget.Toast;
 
@@ -54,7 +56,7 @@ public class ModifyActivity extends AppCompatActivity {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.container, modifyFragment)
 //                .addToBackStack(null)   ///[关闭其它fragment后回退显示ModifyFragment]注意：第一个Fragment不用添加addToBackStack()，就能解决空白页的问题
-                .setTransition(android.app.FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                 .commit();
 
     }
@@ -64,7 +66,7 @@ public class ModifyActivity extends AppCompatActivity {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.container, modifyUsernameFragment)
                 .addToBackStack(null)   ///[关闭其它fragment后回退显示ModifyFragment]
-                .setTransition(android.app.FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                 .commit();
     }
 
@@ -73,7 +75,7 @@ public class ModifyActivity extends AppCompatActivity {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.container, modifyPasswordFragment)
                 .addToBackStack(null)   ///[关闭其它fragment后回退显示ModifyFragment]
-                .setTransition(android.app.FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                 .commit();
     }
 
@@ -82,7 +84,7 @@ public class ModifyActivity extends AppCompatActivity {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.container, modifyEmailFragment)
                 .addToBackStack(null)   ///[关闭其它fragment后回退显示ModifyFragment]
-                .setTransition(android.app.FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                 .commit();
     }
 
@@ -91,7 +93,7 @@ public class ModifyActivity extends AppCompatActivity {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.container, modifyMobileFragment)
                 .addToBackStack(null)   ///[关闭其它fragment后回退显示ModifyFragment]
-                .setTransition(android.app.FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                 .commit();
     }
 
@@ -100,7 +102,7 @@ public class ModifyActivity extends AppCompatActivity {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.container, modifyOauthFragment)
                 .addToBackStack(null)   ///[关闭其它fragment后回退显示ModifyFragment]
-                .setTransition(android.app.FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                 .commit();
     }
 
