@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">android project login</string>
+    <string name="app_name">android project user</string>
 
     <string name="user_account">User account</string>
     <string name="user_profile">User profile</string>

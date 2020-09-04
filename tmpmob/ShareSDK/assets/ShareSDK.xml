@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<DevInfor>
+<SinaWeibo AppKey="1547322967" AppSecret="aed8b5d8cf12f8169ac83bec39c83055" RedirectUrl="http://www.sharesdk.cn" />
+<TencentWeibo AppKey="801307650" AppSecret="ae36f4ee3946e1cbb98d6965b0b2ff5c" RedirectUri="http://www.sharesdk.cn" />
+<Douban Enable="false" />
+<QZone Enable="false" />
+<Renren Enable="false" />
+<KaiXin Enable="false" />
+<Facebook ConsumerKey="2273428079403301" ConsumerSecret="2d82bc07341a9bd01915ce1317ff3cd5" RedirectUrl="https://ljdy.tv" />
+<Twitter ConsumerKey="vj7dh7Emr4qwu7CgTAR4U7Xpv " ConsumerSecret="WeuZkq08lXRMHU26JL0xc8gan2gKDmUn3U44A4ICgj95fBXnK1" CallbackUrl="twittersdk://" />
+<Evernote Enable="false" />
+<FourSquare Enable="false" />
+<GooglePlus Enable="false" />
+<Instagram Enable="false" />
+<LinkedIn ApiKey="781w4jcpremmbs" SecretKey="5IkIfHArPRTz6nmX" RedirectUrl="https://ljdy.tv" />
+<Tumblr Enable="false" />
+<Email Enable="false" />
+<ShortMessage Enable="false" />
+<Wechat AppId="wxbf9c29bd2d6b89c8" AppSecret="b97a95b266a2345127b35dfc25da434d" />
+<WechatMoments Enable="false" />
+<QQ AppId="101652380" AppKey="760921d89f2fbe934f644f6c98625cd1" />
+<Instapaper Enable="false" />
+<Pocket Enable="false" />
+<YouDao Enable="false" />
+<Pinterest Enable="false" />
+<Flickr Enable="false" />
+<Dropbox Enable="false" />
+<VKontakte Enable="false" />
+<WechatFavorite Enable="false" />
+<Yixin Enable="false" />
+<YixinMoments Enable="false" />
+<Mingdao Enable="false" />
+<Line Enable="false" />
+<WhatsApp Enable="false" />
+<KakaoTalk Enable="false" />
+<KakaoStory Enable="false" />
+<FacebookMessenger Enable="false" />
+<Alipay Enable="false" />
+<AlipayMoments Enable="false" />
+<Dingding Enable="false" />
+<Youtube Enable="false" />
+<Meipai Enable="false" />
+<Telegram Enable="false" />
+<Cmcc Enable="false" />
+<Reddit Enable="false" />
+<Telecom Enable="false" />
+<Accountkit Enable="false" />
+<Douyin Enable="false" />
+<Wework Enable="false" />
+<HWAccount Enable="false" />
+<Oasis Enable="false" />
+<XMAccount Enable="false" />
+<SnapChat Enable="false" />
+<Kuaishou Enable="false" />
+<Littleredbook Enable="false" />
+<Watermelonvideo Enable="false" />
+<Tiktok Enable="false" />
+</DevInfor>

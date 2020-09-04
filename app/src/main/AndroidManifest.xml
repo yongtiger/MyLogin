@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="cc.brainbook.android.project.login">
+    package="cc.brainbook.android.project.user">
 
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
-        android:name=".application.MyApplication"
+        android:name="cc.brainbook.android.project.user.application.MyApplication"
         android:usesCleartextTraffic="true"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -15,7 +15,7 @@
         android:theme="@style/AppTheme">
 
         <activity
-            android:name=".MainActivity"
+            android:name="cc.brainbook.android.project.user.MainActivity"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -24,7 +24,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".useraccount.authentication.ui.register.RegisterActivity">
+        <activity android:name="cc.brainbook.android.project.user.account.authentication.ui.register.RegisterActivity">
 
             <!-- <intent-filter> -->
             <!-- <action android:name="android.intent.action.MAIN" /> -->
@@ -34,7 +34,7 @@
             <!-- </intent-filter> -->
         </activity>
 
-        <activity android:name=".useraccount.authentication.ui.login.LoginActivity">
+        <activity android:name="cc.brainbook.android.project.user.account.authentication.ui.login.LoginActivity">
 
             <!-- <intent-filter> -->
             <!-- <action android:name="android.intent.action.MAIN" /> -->
@@ -45,7 +45,7 @@
         </activity>
 
         <activity
-            android:name=".useraccount.modify.ModifyActivity"
+            android:name="cc.brainbook.android.project.user.account.modify.ModifyActivity"
             android:label="@string/app_name">
             <!--<intent-filter>-->
                 <!--<action android:name="android.intent.action.MAIN" />-->
@@ -54,7 +54,7 @@
             <!--</intent-filter>-->
         </activity>
 
-        <activity android:name=".resetpassword.ui.ResetPasswordActivity" />
+        <activity android:name="cc.brainbook.android.project.user.resetpassword.ui.ResetPasswordActivity" />
 
         <!--///[oAuth#EasyLogin#Facebook]-->
         <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>
