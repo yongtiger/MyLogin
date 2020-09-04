@@ -3,6 +3,8 @@ package cc.brainbook.android.project.user.resetpassword.ui;
 import android.os.Bundle;
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentTransaction;
+
 import android.widget.Toast;
 
 import cc.brainbook.android.project.user.R;
@@ -36,7 +38,7 @@ public class ResetPasswordActivity extends AppCompatActivity {
         // with this one inside the frame.
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.container, resetPasswordStep1Fragment)
-                .setTransition(android.app.FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                 .commit();
     }
 
@@ -47,7 +49,7 @@ public class ResetPasswordActivity extends AppCompatActivity {
         // with this one inside the frame.
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.container, resetPasswordStep2Fragment)
-                .setTransition(android.app.FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                 .commit();
     }
 
@@ -58,7 +60,7 @@ public class ResetPasswordActivity extends AppCompatActivity {
         // with this one inside the frame.
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.container, resetPasswordStep3Fragment)
-                .setTransition(android.app.FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                 .commit();
     }
 
@@ -69,7 +71,7 @@ public class ResetPasswordActivity extends AppCompatActivity {
         // with this one inside the frame.
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.container, resetPasswordStep4Fragment)
-                .setTransition(android.app.FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                 .commit();
     }
 
